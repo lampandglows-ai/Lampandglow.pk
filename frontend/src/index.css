@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@keyframes lg-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.slick-prev:before,
+.slick-next:before {
+  content: none !important;
+}
+
+.slick-prev,
+.slick-next {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 20;
+}
+
+.slick-prev {
+  left: 24px !important;
+}
+
+.slick-next {
+  right: 24px !important;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+.lg-marquee {
+  overflow: hidden;
+}
+
+.lg-marquee__inner {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+  animation: lg-marquee 18s linear infinite;
+}
+
+.lg-marquee__track {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.lg-marquee__item {
+  display: inline-block;
+  padding: 0 24px 0 0;
+}
