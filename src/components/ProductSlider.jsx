@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
@@ -24,29 +25,38 @@ export default function ProductSlider({ products, theme = 'light' }) {
     return Math.round(((original - discounted) / original) * 100)
   }
 
+  // Remove duplicate products by ID to prevent the same product showing multiple times
+  const uniqueProducts = useMemo(() => {
+    const seen = new Set()
+    return products.filter((p) => {
+      if (seen.has(p.id)) return false
+      seen.add(p.id)
+      return true
+    })
+  }, [products])
+
+  const itemCount = uniqueProducts.length
+  const slidesToShow = Math.min(4, itemCount || 1)
+
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: itemCount > 3,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow,
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: Math.min(2, itemCount || 1),
+          infinite: itemCount > 2,
         },
       },
       {
         breakpoint: 640,
         settings: {
           slidesToShow: 1,
+          infinite: itemCount > 1,
         },
       },
     ],
@@ -56,11 +66,11 @@ export default function ProductSlider({ products, theme = 'light' }) {
     <section
       className={
         theme === 'dark'
-          ? 'bg-transparent border-b border-white/10'
-          : 'bg-white border-b border-stone-200/80'
+          ? 'bg-transparent border-y border-white/10'
+          : 'bg-white border-y border-stone-200/80'
       }
     >
-      <div className="w-full px-0 py-10 sm:py-12">
+      <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
@@ -81,9 +91,9 @@ export default function ProductSlider({ products, theme = 'light' }) {
         </div>
 
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="sm:-mx-2">
+          <div className="sm:-mx-2.5">
             <Slider {...settings}>
-              {products.map((product) => {
+              {uniqueProducts.map((product) => {
               const compareAtPrice = product.compareAtPrice
               const discountPercent = getDiscountPercent(product.price, compareAtPrice)
               const originalPrice =
@@ -92,7 +102,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                 typeof compareAtPrice === 'number' ? Math.min(product.price, compareAtPrice) : product.price
 
               return (
-                <div key={product.id} className="px-2">
+                <div key={product.id} className="px-2.5">
                   <Link
                     to={`/product/${product.id}`}
                     className="group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
@@ -104,7 +114,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                         </span>
                       ) : null}
                       <img
-                        src={product.image}
+                        src={product.image || (product.images && product.images[0])}
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                       />

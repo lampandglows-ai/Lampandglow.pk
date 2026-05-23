@@ -368,6 +368,8 @@ function AppContent() {
     navigate('/')
   }
 
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
   return (
     <div
       className={
@@ -376,23 +378,25 @@ function AppContent() {
           : 'min-h-screen bg-[#fff7e6] text-stone-900 flex flex-col'
       }
     >
-      {/* Header */}
-      <Header
-        activeSection={activeSection}
-        cartItemsCount={cartItemsCount}
-        handleNavigate={handleNavigate}
-        mobileNavOpen={mobileNavOpen}
-        navigateToWishlist={navigateToWishlist}
-        products={products}
-        searchQuery={searchQuery}
-        setMobileNavOpen={setMobileNavOpen}
-        setSearchQuery={setSearchQuery}
-        theme={theme}
-        toggleTheme={toggleTheme}
-      />
+      {/* Header - hidden on admin routes */}
+      {!isAdminRoute && (
+        <Header
+          activeSection={activeSection}
+          cartItemsCount={cartItemsCount}
+          handleNavigate={handleNavigate}
+          mobileNavOpen={mobileNavOpen}
+          navigateToWishlist={navigateToWishlist}
+          products={products}
+          searchQuery={searchQuery}
+          setMobileNavOpen={setMobileNavOpen}
+          setSearchQuery={setSearchQuery}
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
+      )}
 
       {/* Main content */}
-      <main className={theme === 'dark' ? 'flex-1 pt-32 md:pt-20' : 'flex-1 pt-32 md:pt-20'}>
+      <main className={isAdminRoute ? 'flex-1' : theme === 'dark' ? 'flex-1 pt-32 md:pt-20' : 'flex-1 pt-32 md:pt-20'}>
         <Routes>
           <Route
             path="/"
@@ -547,7 +551,8 @@ function AppContent() {
         </Routes>
       </main>
 
-      <Footer theme={theme} />
+      {/* Footer - hidden on admin routes */}
+      {!isAdminRoute && <Footer theme={theme} />}
     </div>
   )
 }

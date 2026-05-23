@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2 } from 'lucide-react'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
 import productsService from '../utils/productsService.js'
+import { storage } from '../utils/firebase.js'
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([])
@@ -10,12 +12,14 @@ export default function AdminProductsPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [message, setMessage] = useState({ type: '', text: '' })
+  const [imageUploading, setImageUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     price: '',
     description: '',
-    image: '',
+    images: [],
   })
 
   // Load products from Firebase
@@ -43,18 +47,50 @@ export default function AdminProductsPage() {
     }))
   }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setFormData((prev) => ({
-          ...prev,
-          image: reader.result,
-        }))
-      }
-      reader.readAsDataURL(file)
+  // Upload images to Firebase Storage and store download URLs
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files)
+    if (files.length === 0) return
+
+    setImageUploading(true)
+    try {
+      const uploadPromises = files.map(async (file) => {
+        const storageRef = ref(storage, `products/${Date.now()}_${file.name}`)
+        await uploadBytes(storageRef, file)
+        const url = await getDownloadURL(storageRef)
+        return url
+      })
+
+      const urls = await Promise.all(uploadPromises)
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...urls],
+      }))
+    } catch (err) {
+      console.error('Error uploading images:', err)
+      setMessage({ type: 'error', text: `Image upload failed: ${err.message}` })
+    } finally {
+      setImageUploading(false)
+      // Reset input so same file can be selected again if needed
+      e.target.value = ''
     }
+  }
+
+  const handleRemoveImage = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }))
+  }
+
+  // Helper: upload a base64/data URL image to Firebase Storage
+  const uploadBase64Image = async (dataUrl) => {
+    const response = await fetch(dataUrl)
+    const blob = await response.blob()
+    const ext = dataUrl.split(';')[0].split('/')[1] || 'png'
+    const storageRef = ref(storage, `products/${Date.now()}_image.${ext}`)
+    await uploadBytes(storageRef, blob)
+    return getDownloadURL(storageRef)
   }
 
   const handleSubmit = async (e) => {
@@ -65,15 +101,31 @@ export default function AdminProductsPage() {
       return
     }
 
-    const payload = {
-      name: formData.name.trim(),
-      category: formData.category,
-      price: parseFloat(formData.price),
-      description: formData.description.trim(),
-      image: formData.image,
-    }
+    setSaving(true)
 
     try {
+      // Migrate any base64 images to Storage URLs before saving
+      let finalImages = formData.images
+      if (finalImages.some((img) => img.startsWith('data:'))) {
+        finalImages = await Promise.all(
+          finalImages.map(async (img) => {
+            if (img.startsWith('data:')) {
+              return uploadBase64Image(img)
+            }
+            return img
+          })
+        )
+      }
+
+      const payload = {
+        name: formData.name.trim(),
+        category: formData.category,
+        price: parseFloat(formData.price),
+        description: formData.description.trim(),
+        images: finalImages,
+        image: finalImages[0] || '',
+      }
+
       if (editingId) {
         // Update existing product in Firebase
         await productsService.updateProduct(editingId, payload)
@@ -97,6 +149,8 @@ export default function AdminProductsPage() {
     } catch (error) {
       console.error('Error saving product:', error)
       setMessage({ type: 'error', text: 'Failed to save product. Please try again.' })
+    } finally {
+      setSaving(false)
     }
 
     setTimeout(() => {
@@ -110,18 +164,19 @@ export default function AdminProductsPage() {
       category: '',
       price: '',
       description: '',
-      image: '',
+      images: [],
     })
     setShowForm(false)
   }
 
   const handleEdit = (product) => {
+    const images = product.images || (product.image ? [product.image] : [])
     setFormData({
       name: product.name || '',
       category: product.category || '',
       price: String(product.price ?? ''),
       description: product.description || '',
-      image: product.image || '',
+      images,
     })
     setEditingId(product.id)
     setShowForm(true)
@@ -151,6 +206,12 @@ export default function AdminProductsPage() {
       p.description?.toLowerCase().includes(query)
     )
   })
+
+  const getProductImage = (product) => {
+    if (product.images && product.images.length > 0) return product.images[0]
+    if (product.image) return product.image
+    return null
+  }
 
   return (
     <AdminLayout>
@@ -284,49 +345,64 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
 
-                {/* Image Upload */}
+                {/* Multiple Images Upload */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Product Image
+                    Product Images
                   </label>
-                  <div className="flex gap-4">
-                    <label className="flex-1 border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-orange-500 cursor-pointer transition text-center">
+                  <div className="flex flex-wrap gap-4">
+                    {/* Upload Button */}
+                    <label className={`w-32 h-32 border-2 border-dashed rounded-lg transition flex flex-col items-center justify-center text-center cursor-pointer ${imageUploading ? 'border-orange-300 bg-orange-50' : 'border-gray-300 hover:border-orange-500'}`}>
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageChange}
+                        multiple
+                        onChange={handleImageUpload}
                         className="hidden"
+                        disabled={imageUploading}
                       />
-                      <div className="text-gray-600">
-                        <p className="font-medium">Click to upload image</p>
-                        <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
-                      </div>
+                      {imageUploading ? (
+                        <Loader2 className="w-6 h-6 text-orange-500 animate-spin mb-1" />
+                      ) : (
+                        <ImagePlus className="w-6 h-6 text-gray-400 mb-1" />
+                      )}
+                      <span className="text-xs text-gray-500">
+                        {imageUploading ? 'Uploading...' : 'Add Images'}
+                      </span>
                     </label>
 
-                    {formData.image && (
-                      <div className="w-40 flex-shrink-0">
-                        <img
-                          src={formData.image}
-                          alt="Preview"
-                          className="w-full h-40 object-cover rounded-lg"
-                        />
+                    {/* Image Previews */}
+                    {formData.images.map((img, idx) => (
+                      <div key={idx} className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-200">
+                        <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(idx)}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
                       </div>
-                    )}
+                    ))}
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">First image will be used as the main product image.</p>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-6 border-t border-gray-200">
                   <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition"
+                    disabled={saving || imageUploading}
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
+                    {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                     {editingId ? 'Update Product' : 'Add Product'}
                   </button>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="flex-1 bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-300 transition"
+                    disabled={saving}
+                    className="flex-1 bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-300 transition disabled:opacity-60"
                   >
                     Cancel
                   </button>
@@ -370,10 +446,10 @@ export default function AdminProductsPage() {
               filteredProducts.map((product) => (
                 <div key={product.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
                   {/* Image */}
-                  {product.image && (
+                  {getProductImage(product) && (
                     <div className="h-48 overflow-hidden bg-gray-100">
                       <img
-                        src={product.image}
+                        src={getProductImage(product)}
                         alt={product.name}
                         className="w-full h-full object-cover hover:scale-110 transition duration-300"
                       />
