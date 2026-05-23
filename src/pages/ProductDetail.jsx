@@ -51,8 +51,8 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
 export default function ProductDetail({ products, onAddToCart, reviews }) {
   const { id } = useParams()
   const navigate = useNavigate()
-  const productId = Number(id)
-  const product = products.find((p) => p.id === productId)
+  const productId = id
+  const product = products.find((p) => String(p.id) === String(productId))
   const [selectedBulbOption, setSelectedBulbOption] = useState('')
   const [selectedColorIndex, setSelectedColorIndex] = useState(0)
   const [isCompareOpen, setIsCompareOpen] = useState(false)

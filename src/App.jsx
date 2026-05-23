@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
 import ProductDetail from './pages/ProductDetail.jsx'
@@ -16,6 +17,12 @@ import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 
+// Admin Pages
+import AdminLoginPage from './pages/AdminLoginPage.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
+import AdminProductsPage from './pages/AdminProductsPage.jsx'
+import AdminOrdersPage from './pages/AdminOrdersPage.jsx'
+
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
 import ProductsSection from './sections/ProductsSection.jsx'
@@ -29,6 +36,17 @@ import { BLOGS } from './data/blogs.js'
 import { CATEGORIES } from './data/categories.js'
 import { REELS } from './data/reels.js'
 import { TESTIMONIALS } from './data/testimonials.js'
+
+// Protected Admin Route Component
+function ProtectedAdminRoute({ children }) {
+  const { isAdminLoggedIn } = useAdminAuth()
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
+
+  return children
+}
 
 function AppContent() {
   const navigate = useNavigate()
@@ -237,7 +255,7 @@ function AppContent() {
 
     const newReview = {
       id: reviews.length + 1,
-      productId: Number(reviewForm.productId),
+      productId: reviewForm.productId,
       name: reviewForm.name.trim(),
       rating: Number(reviewForm.rating),
       comment: reviewForm.comment.trim(),
@@ -498,6 +516,34 @@ function AppContent() {
               <ProductDetail products={products} onAddToCart={handleAddToCart} reviews={reviews} />
             )}
           />
+
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboard />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminProductsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <ProtectedAdminRoute>
+                <AdminOrdersPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         </Routes>
       </main>
 
@@ -508,9 +554,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <AdminAuthProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </AdminAuthProvider>
   )
 }
 

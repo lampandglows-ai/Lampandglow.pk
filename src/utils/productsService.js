@@ -6,8 +6,10 @@ import {
   doc,
   query,
   where,
-  orderBy,
   limit,
+  addDoc,
+  updateDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 
 export const productsService = {
@@ -96,7 +98,7 @@ export const productsService = {
   // Search products
   searchProducts: async (searchTerm) => {
     try {
-      const allProducts = await this.getAllProducts();
+      const allProducts = await productsService.getAllProducts();
       return allProducts.filter(
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -104,6 +106,52 @@ export const productsService = {
       );
     } catch (error) {
       console.error('Error searching products:', error);
+      throw error;
+    }
+  },
+
+  // Create product
+  createProduct: async (productData) => {
+    try {
+      const docRef = await addDoc(collection(db, 'products'), {
+        ...productData,
+        createdAt: new Date().toISOString(),
+      });
+      return {
+        id: docRef.id,
+        ...productData,
+      };
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  },
+
+  // Update product
+  updateProduct: async (id, productData) => {
+    try {
+      const docRef = doc(db, 'products', id);
+      await updateDoc(docRef, {
+        ...productData,
+        updatedAt: new Date().toISOString(),
+      });
+      return {
+        id,
+        ...productData,
+      };
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  // Delete product
+  deleteProduct: async (id) => {
+    try {
+      await deleteDoc(doc(db, 'products', id));
+      return { id };
+    } catch (error) {
+      console.error('Error deleting product:', error);
       throw error;
     }
   },
