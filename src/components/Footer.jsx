@@ -27,16 +27,16 @@ export default function Footer({ theme = 'light' }) {
               <div className={theme === 'dark' ? 'mt-4 space-y-3 text-sm text-stone-300' : 'mt-4 space-y-3 text-sm text-stone-700'}>
                 <div className="flex justify-center md:justify-start gap-3">
                   <FaMapMarkerAlt className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
-                  <span>Hameed Ullah Mokal Colony, Sahiwal</span>
+                  <span>Sahiwal</span>
                 </div>
                 <div className="flex justify-center md:justify-start gap-3">
                   <FaWhatsapp className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
-                  <span>WhatsApp: (302)-052-1000</span>
+                  <span>WhatsApp: 03134371467</span>
                 </div>
                 <div className="flex justify-center md:justify-start gap-3">
                   <FaEnvelope className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
-                  <a href="mailto:support@lampandglow.com" className="hover:underline">
-                    support@lampandglow.com
+                  <a href="mailto:lampandglowofficial01@gmail.com" className="hover:underline">
+                    lampandglowofficial01@gmail.com
                   </a>
                 </div>
               </div>
