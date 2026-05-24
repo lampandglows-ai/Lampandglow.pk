@@ -304,10 +304,13 @@ export default function AdminProductsPage() {
                       required
                     >
                       <option value="">Select Category</option>
-                      <option value="Lighting">Lighting</option>
-                      <option value="Furniture">Furniture</option>
-                      <option value="Decor">Decor</option>
-                      <option value="Accessories">Accessories</option>
+                      <option value="Table Lamps">Table Lamps</option>
+                      <option value="Floor Lamps">Floor Lamps</option>
+                      <option value="Candle Lamps">Candle Lamps</option>
+                      <option value="Roof/Ceiling Lamps">Roof/Ceiling Lamps</option>
+                      <option value="Wall Lamps">Wall Lamps</option>
+                      <option value="Hanging Lamps">Hanging Lamps</option>
+                      <option value="Bedside/Side Table Lamps">Bedside/Side Table Lamps</option>
                     </select>
                   </div>
 
@@ -373,19 +376,50 @@ export default function AdminProductsPage() {
 
                     {/* Image Previews */}
                     {formData.images.map((img, idx) => (
-                      <div key={idx} className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-200">
+                      <div key={idx} className="relative w-32 h-32 rounded-lg overflow-hidden border-2 transition" style={{borderColor: idx === 0 ? '#FF8C00' : '#e5e7eb'}}>
                         <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(idx)}
-                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
+                        <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition flex flex-col gap-1 justify-center items-center opacity-0 hover:opacity-100">
+                          {idx > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newImages = [...formData.images]
+                                ;[newImages[idx], newImages[idx - 1]] = [newImages[idx - 1], newImages[idx]]
+                                setFormData((prev) => ({ ...prev, images: newImages }))
+                              }}
+                              className="bg-blue-500 text-white rounded-full p-1 hover:bg-blue-600 transition text-xs"
+                              title="Move up"
+                            >
+                              ↑
+                            </button>
+                          )}
+                          {idx < formData.images.length - 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newImages = [...formData.images]
+                                ;[newImages[idx], newImages[idx + 1]] = [newImages[idx + 1], newImages[idx]]
+                                setFormData((prev) => ({ ...prev, images: newImages }))
+                              }}
+                              className="bg-blue-500 text-white rounded-full p-1 hover:bg-blue-600 transition text-xs"
+                              title="Move down"
+                            >
+                              ↓
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                        {idx === 0 && <div className="absolute top-1 left-1 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">Main</div>}
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">First image will be used as the main product image.</p>
+                  <p className="text-xs text-gray-500 mt-2">First image will be the main product image. Use ↑↓ buttons to reorder images.</p>
                 </div>
 
                 {/* Action Buttons */}
