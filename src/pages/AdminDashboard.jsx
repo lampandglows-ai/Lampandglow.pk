@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Package, ShoppingCart, TrendingUp, AlertCircle } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
-import { PRODUCTS } from '../data/products'
+import { productsService } from '../utils/productsService'
 
 export default function AdminDashboard() {
   const [orders, setOrders] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(true)
+  const [productsLoading, setProductsLoading] = useState(true)
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -45,17 +46,34 @@ export default function AdminDashboard() {
     loadAllOrders()
   }, [])
 
+  // Load products count from Firebase
+  useEffect(() => {
+    const loadProductsCount = async () => {
+      try {
+        setProductsLoading(true)
+        const products = await productsService.getAllProducts()
+        setStats((prev) => ({ ...prev, totalProducts: products.length }))
+      } catch (error) {
+        console.error('Error loading products:', error)
+      } finally {
+        setProductsLoading(false)
+      }
+    }
+
+    loadProductsCount()
+  }, [])
+
   // Calculate statistics
   useEffect(() => {
     const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0)
     const pendingOrders = orders.filter((order) => order.status === 'pending').length
 
-    setStats({
-      totalProducts: PRODUCTS.length,
+    setStats((prev) => ({
+      ...prev,
       totalOrders: orders.length,
       totalRevenue,
       pendingOrders,
-    })
+    }))
   }, [orders])
 
   const StatCard = ({ icon: IconComponent, label, value, color }) => (
