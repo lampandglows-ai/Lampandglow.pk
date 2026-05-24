@@ -90,7 +90,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#4C2600] px-3 pb-6 pt-4 sm:px-5 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10">
+    <section className="relative overflow-hidden bg-[#4C2600] px-3 pb-6 pt-20 sm:pt-24 lg:pt-28 sm:px-5 sm:pb-8 lg:px-8 lg:pb-10">
       {/* Added wrapper div to ensure consistent layout */}
       <div className="relative overflow-hidden rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
         <Slider {...settings}>

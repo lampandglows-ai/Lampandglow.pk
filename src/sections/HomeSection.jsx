@@ -25,6 +25,7 @@ export default function HomeSection({
         categories={categories}
         onViewAll={onViewAllCategories}
         onPickCategory={onPickCategory}
+        theme={theme}
       />
 
       <HomeFeaturedProducts products={products} onViewAll={onViewAllProducts} theme={theme} />

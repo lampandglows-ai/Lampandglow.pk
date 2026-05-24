@@ -14,63 +14,63 @@ export default function Footer({ theme = 'light' }) {
       <div
         className={
           theme === 'dark'
-            ? 'border-t border-white/10 bg-transparent'
-            : 'border-t border-stone-200 bg-[#f7f3ea]'
+            ? 'border-t border-white/10 bg-[#2b1500]'
+            : 'border-t border-[#FFDA03]/20 bg-[#2b1500]'
         }
       >
-        <div className="max-w-none mx-auto px-0 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-stone-300/70">
-            <div className="py-8 md:py-0 md:px-6 text-center md:text-left">
-              <p className={theme === 'dark' ? 'text-sm font-semibold text-stone-100' : 'text-sm font-semibold text-stone-900'}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-4">
+            <div className="text-center sm:text-left">
+              <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
                 Pakistan
               </p>
-              <div className={theme === 'dark' ? 'mt-4 space-y-3 text-sm text-stone-300' : 'mt-4 space-y-3 text-sm text-stone-700'}>
-                <div className="flex justify-center md:justify-start gap-3">
-                  <FaMapMarkerAlt className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
+              <div className={theme === 'dark' ? 'mt-4 space-y-3 text-sm text-stone-300' : 'mt-4 space-y-3 text-sm text-yellow-100/80'}>
+                <div className="flex justify-center sm:justify-start gap-3">
+                  <FaMapMarkerAlt className={theme === 'dark' ? 'mt-1 h-4 w-4 text-[#FFDA03]' : 'mt-1 h-4 w-4 text-[#FFDA03]'} />
                   <span>Sahiwal</span>
                 </div>
-                <div className="flex justify-center md:justify-start gap-3">
-                  <FaWhatsapp className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
+                <div className="flex justify-center sm:justify-start gap-3">
+                  <FaWhatsapp className={theme === 'dark' ? 'mt-1 h-4 w-4 text-[#FFDA03]' : 'mt-1 h-4 w-4 text-[#FFDA03]'} />
                   <span>WhatsApp: 03134371467</span>
                 </div>
-                <div className="flex justify-center md:justify-start gap-3">
-                  <FaEnvelope className={theme === 'dark' ? 'mt-1 h-4 w-4 text-stone-300' : 'mt-1 h-4 w-4 text-stone-700'} />
+                <div className="flex justify-center sm:justify-start gap-3">
+                  <FaEnvelope className={theme === 'dark' ? 'mt-1 h-4 w-4 text-[#FFDA03]' : 'mt-1 h-4 w-4 text-[#FFDA03]'} />
                   <a href="mailto:lampandglowofficial01@gmail.com" className="hover:underline">
                     lampandglowofficial01@gmail.com
                   </a>
                 </div>
               </div>
 
-              <div className={theme === 'dark' ? 'mt-6 flex items-center justify-center md:justify-start gap-5 text-stone-300' : 'mt-6 flex items-center justify-center md:justify-start gap-5 text-stone-700'}>
+              <div className={theme === 'dark' ? 'mt-6 flex items-center justify-center sm:justify-start gap-5 text-stone-300' : 'mt-6 flex items-center justify-center sm:justify-start gap-5 text-yellow-100/80'}>
                 <a
                   href="#"
                   aria-label="Facebook"
-                  className={theme === 'dark' ? 'hover:text-stone-100' : 'hover:text-stone-900'}
+                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
                 >
                   <FaFacebookF className="h-4 w-4" />
                 </a>
                 <a
                   href="#"
                   aria-label="Instagram"
-                  className={theme === 'dark' ? 'hover:text-stone-100' : 'hover:text-stone-900'}
+                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
                 >
                   <FaInstagram className="h-4 w-4" />
                 </a>
                 <a
                   href="#"
                   aria-label="Pinterest"
-                  className={theme === 'dark' ? 'hover:text-stone-100' : 'hover:text-stone-900'}
+                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
                 >
                   <FaPinterestP className="h-4 w-4" />
                 </a>
               </div>
             </div>
 
-            <div className="py-8 md:py-0 md:px-6 text-center md:text-left">
-              <p className={theme === 'dark' ? 'text-sm font-semibold text-stone-100' : 'text-sm font-semibold text-stone-900'}>
+            <div className="text-center sm:text-left">
+              <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
                 Quick Links
               </p>
-              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center md:items-start' : 'mt-4 space-y-2 text-sm text-stone-700 flex flex-col items-center md:items-start'}>
+              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center sm:items-start' : 'mt-4 space-y-2 text-sm text-yellow-100/80 flex flex-col items-center sm:items-start'}>
                 <li>
                   <Link to="/" className="hover:underline">
                     Home
@@ -109,11 +109,11 @@ export default function Footer({ theme = 'light' }) {
               </ul>
             </div>
 
-            <div className="py-8 md:py-0 md:px-6 text-center md:text-left">
-              <p className={theme === 'dark' ? 'text-sm font-semibold text-stone-100' : 'text-sm font-semibold text-stone-900'}>
+            <div className="text-center sm:text-left">
+              <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
                 Collections
               </p>
-              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center md:items-start' : 'mt-4 space-y-2 text-sm text-stone-700 flex flex-col items-center md:items-start'}>
+              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center sm:items-start' : 'mt-4 space-y-2 text-sm text-yellow-100/80 flex flex-col items-center sm:items-start'}>
                 <li>
                   <a href="#" className="hover:underline">
                     Table Lamps
@@ -147,11 +147,11 @@ export default function Footer({ theme = 'light' }) {
               </ul>
             </div>
 
-            <div className="py-8 md:py-0 md:px-6 text-center md:text-left">
-              <p className={theme === 'dark' ? 'text-sm font-semibold text-stone-100' : 'text-sm font-semibold text-stone-900'}>
+            <div className="text-center sm:text-left">
+              <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
                 Policies
               </p>
-              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center md:items-start' : 'mt-4 space-y-2 text-sm text-stone-700 flex flex-col items-center md:items-start'}>
+              <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center sm:items-start' : 'mt-4 space-y-2 text-sm text-yellow-100/80 flex flex-col items-center sm:items-start'}>
                 <li>
                   <a href="#" className="hover:underline">
                     Privacy Policy
@@ -180,27 +180,27 @@ export default function Footer({ theme = 'light' }) {
               </ul>
             </div>
 
-            <div className="py-8 md:py-0 md:px-6 text-center md:text-left">
-              <p className={theme === 'dark' ? 'text-sm font-semibold text-stone-100' : 'text-sm font-semibold text-stone-900'}>
+            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-1">
+              <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
                 Newsletter Sign Up
               </p>
-              <p className={theme === 'dark' ? 'mt-4 text-sm text-stone-300' : 'mt-4 text-sm text-stone-700'}>
+              <p className={theme === 'dark' ? 'mt-4 text-sm text-stone-300' : 'mt-4 text-sm text-yellow-100/80'}>
                 Receive our latest updates about our products &amp; promotions.
               </p>
 
-              <div className="mt-4 max-w-sm mx-auto md:mx-0">
+              <div className="mt-4 max-w-sm mx-auto sm:mx-0">
                 <input
                   type="email"
                   placeholder="Email address"
                   className={
                     theme === 'dark'
-                      ? 'w-full rounded-sm border border-white/15 bg-white/5 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-400'
-                      : 'w-full rounded-sm border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-400'
+                      ? 'w-full rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
+                      : 'w-full rounded-lg border border-[#FFDA03]/30 bg-[#4C2600]/50 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
                   }
                 />
                 <button
                   type="button"
-                  className="mt-4 w-full rounded-sm bg-amber-500 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-600"
+                  className="mt-4 w-full rounded-lg bg-[#FFDA03] px-4 py-3 text-sm font-semibold text-[#4C2600] hover:bg-yellow-300 transition-colors"
                 >
                   Subscribe
                 </button>
@@ -210,8 +210,8 @@ export default function Footer({ theme = 'light' }) {
         </div>
       </div>
 
-      <div className={theme === 'dark' ? 'bg-transparent border-t border-white/10' : 'bg-white border-t border-stone-200'}>
-        <div className={theme === 'dark' ? 'max-w-none mx-auto px-0 py-4 text-center text-xs text-stone-400' : 'max-w-none mx-auto px-0 py-4 text-center text-xs text-stone-700'}>
+      <div className={theme === 'dark' ? 'bg-[#1a0f00] border-t border-white/10' : 'bg-[#1a0f00] border-t border-[#FFDA03]/20'}>
+        <div className={theme === 'dark' ? 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-stone-400' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-yellow-100/60'}>
           © {new Date().getFullYear()} All rights reserved by Lampandglow.
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useMemo } from 'react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 
 const formatPricePKR = (value) => {
@@ -9,13 +10,30 @@ const formatPricePKR = (value) => {
   }).format(value)
 }
 
+// Shuffle array using Fisher-Yates algorithm
+function shuffleArray(array) {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
 export default function HomeFeaturedProducts({ products, onViewAll, theme = 'light' }) {
+  // Randomly shuffle and pick 4 products
+  const randomProducts = useMemo(() => {
+    if (!products || products.length === 0) return []
+    const shuffled = shuffleArray(products)
+    return shuffled.slice(0, 4)
+  }, [products])
+
   return (
     <section
       className={
         theme === 'dark'
           ? 'bg-transparent border-y border-white/10'
-          : 'bg-white border-y border-stone-200/80'
+          : 'bg-[#3d1f00]/80 border-y border-[#FFDA03]/20'
       }
     >
       <div className="w-full px-0 py-10 sm:py-14">
@@ -26,12 +44,12 @@ export default function HomeFeaturedProducts({ products, onViewAll, theme = 'lig
                 className={
                   theme === 'dark'
                     ? 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-100'
-                    : 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-900'
+                    : 'text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]'
                 }
               >
                 Featured Pieces
               </h2>
-              <p className={theme === 'dark' ? 'mt-1 text-xs sm:text-sm text-stone-300' : 'mt-1 text-xs sm:text-sm text-stone-600'}>
+              <p className={theme === 'dark' ? 'mt-1 text-xs sm:text-sm text-stone-300' : 'mt-1 text-xs sm:text-sm text-yellow-100/80'}>
                 Handpicked decor to start your Lamp &amp; Glow collection.
               </p>
             </div>
@@ -40,7 +58,7 @@ export default function HomeFeaturedProducts({ products, onViewAll, theme = 'lig
               className={
                 theme === 'dark'
                   ? 'hidden sm:inline-flex text-xs font-medium text-amber-300 hover:text-amber-200'
-                  : 'hidden sm:inline-flex text-xs font-medium text-amber-700 hover:text-amber-800'
+                  : 'hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300'
               }
             >
               View all products
@@ -50,14 +68,14 @@ export default function HomeFeaturedProducts({ products, onViewAll, theme = 'lig
 
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {products.slice(0, 4).map((product) => {
+            {randomProducts.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
               return (
                 <Link
                   key={product.id}
                   to={`/product/${product.id}`}
-                  className="group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                  className="group block overflow-hidden rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/30 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]/60 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     {hasDiscount ? (
@@ -77,11 +95,11 @@ export default function HomeFeaturedProducts({ products, onViewAll, theme = 'lig
 
                     <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                       {hasDiscount ? (
-                        <span className="text-stone-700 line-through">
+                        <span className="text-stone-600 line-through">
                           Rs.{formatPricePKR(originalPrice)}
                         </span>
                       ) : null}
-                      <span className="font-semibold text-red-600">Rs.{formatPricePKR(discountedPrice)}</span>
+                      <span className="font-semibold text-orange-700">Rs.{formatPricePKR(discountedPrice)}</span>
                     </div>
                   </div>
                 </Link>
