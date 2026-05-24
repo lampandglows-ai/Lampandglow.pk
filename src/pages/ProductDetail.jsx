@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import classNames from '../utils/classNames.js'
+import { getDiscountInfo } from '../utils/discountHelpers.js'
 
 /* ────────── helper: accordion chevron icon ────────── */
 function ChevronDown({ open }) {
@@ -135,8 +136,9 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   const selectedImage = images[Math.min(activeImageIndex, images.length - 1)]
 
   // ── Price Calculation ──
-  const basePrice = product.price
-  const baseCompareAt = typeof product.compareAtPrice === 'number' ? product.compareAtPrice : null
+  const discountInfo = getDiscountInfo(product)
+  const basePrice = discountInfo.discountedPrice
+  const baseOriginalPrice = discountInfo.originalPrice
 
   // Option 1: Bulb Add-on (+500 if "With Bulb" is explicitly selected)
   // Fix: Ensure we don't match "Without Bulb" which contains "with" substring.
@@ -150,11 +152,11 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   const colorAddon = (selectedColor && (selectedColor.toLowerCase().includes('black') || selectedColor.toLowerCase().includes('blue'))) ? 250 : 0
 
   const effectivePrice = basePrice + bulbAddon + colorAddon
-  const effectiveCompareAt = baseCompareAt ? (baseCompareAt + bulbAddon + colorAddon) : null
+  const effectiveOriginalPrice = baseOriginalPrice + bulbAddon + colorAddon
 
-  const hasDiscount = Boolean(effectiveCompareAt && effectiveCompareAt > effectivePrice)
+  const hasDiscount = discountInfo.hasDiscount
   const discountPercent = hasDiscount
-    ? Math.round(((effectiveCompareAt - effectivePrice) / effectiveCompareAt) * 100)
+    ? Math.round(((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100)
     : 0
 
   const formatPKR = (amount) =>
@@ -300,7 +302,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             <div className="mt-5 flex items-end gap-3">
               {hasDiscount ? (
                 <>
-                  <p className="text-base text-stone-400 line-through">{formatPKR(effectiveCompareAt)}</p>
+                  <p className="text-base text-stone-400 line-through">{formatPKR(effectiveOriginalPrice)}</p>
                   <p className="text-2xl font-bold text-red-600">{formatPKR(effectivePrice)}</p>
                   <span className="inline-flex items-center bg-red-100 text-red-700 px-2 py-0.5 text-[11px] font-semibold rounded-sm">
                     Save {discountPercent}%
@@ -903,9 +905,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
 
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {relatedProducts.slice(0, 4).map((rp) => {
-                const rpOriginal = typeof rp.compareAtPrice === 'number' ? Math.max(rp.price, rp.compareAtPrice) : rp.price
-                const rpDiscounted = typeof rp.compareAtPrice === 'number' ? Math.min(rp.price, rp.compareAtPrice) : rp.price
-                const rpDiscount = rpOriginal > rpDiscounted ? Math.round(((rpOriginal - rpDiscounted) / rpOriginal) * 100) : null
+                const rpInfo = getDiscountInfo(rp)
 
                 return (
                   <Link
@@ -914,9 +914,9 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                     className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-stone-300"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
-                      {rpDiscount && (
+                      {rpInfo.hasDiscount && (
                         <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide">
-                          -{rpDiscount}%
+                          -{rpInfo.discountPercent}%
                         </span>
                       )}
                       <img
@@ -930,13 +930,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                         {rp.name}
                       </h3>
                       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                        {rpDiscount ? (
+                        {rpInfo.hasDiscount ? (
                           <>
                             <span className="text-stone-400 line-through text-[12px]">
-                              Rs.{rpOriginal.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
+                              Rs.{rpInfo.originalPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
                             </span>
                             <span className="font-bold text-red-600 text-[13px]">
-                              Rs.{rpDiscounted.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
+                              Rs.{rpInfo.discountedPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
                             </span>
                           </>
                         ) : (
@@ -961,7 +961,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Recently Viewed Products</h2>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {relatedProducts.slice(0, 5).map((rp) => {
-                const rpHasDiscount = typeof rp.compareAtPrice === 'number' && rp.compareAtPrice > rp.price
+                const rpInfo = getDiscountInfo(rp)
                 return (
                   <Link key={`rv-${rp.id}`} to={`/product/${rp.id}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                     <div className="aspect-square overflow-hidden bg-stone-100">
@@ -970,8 +970,8 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                     <div className="p-3">
                       <h3 className="text-[12px] font-semibold text-stone-900 leading-snug line-clamp-2">{rp.name}</h3>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-[12px]">
-                        {rpHasDiscount && <span className="text-stone-400 line-through">Rs.{rp.compareAtPrice.toLocaleString('en-PK')}</span>}
-                        <span className={rpHasDiscount ? 'font-bold text-red-600' : 'font-bold text-stone-900'}>Rs.{rp.price.toLocaleString('en-PK')}</span>
+                        {rpInfo.hasDiscount && <span className="text-stone-400 line-through">Rs.{rpInfo.originalPrice.toLocaleString('en-PK')}</span>}
+                        <span className={rpInfo.hasDiscount ? 'font-bold text-red-600' : 'font-bold text-stone-900'}>Rs.{rpInfo.discountedPrice.toLocaleString('en-PK')}</span>
                       </div>
                     </div>
                   </Link>

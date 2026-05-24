@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { getDiscountInfo } from '../utils/discountHelpers.js'
 
 export default function ProductSlider({ products, theme = 'light' }) {
   const formatPrice = (value) => {
@@ -8,18 +9,6 @@ export default function ProductSlider({ products, theme = 'light' }) {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value)
-  }
-
-  const getDiscountPercent = (price, compareAtPrice) => {
-    if (typeof price !== 'number' || Number.isNaN(price)) return null
-    if (typeof compareAtPrice !== 'number' || Number.isNaN(compareAtPrice)) return null
-
-    const original = Math.max(price, compareAtPrice)
-    const discounted = Math.min(price, compareAtPrice)
-    if (original <= 0 || discounted <= 0 || original === discounted) return null
-    if (original <= discounted) return null
-
-    return Math.round(((original - discounted) / original) * 100)
   }
 
   // Remove duplicate products by ID
@@ -65,12 +54,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {displayProducts.map((product) => {
-              const compareAtPrice = product.compareAtPrice
-              const discountPercent = getDiscountPercent(product.price, compareAtPrice)
-              const originalPrice =
-                typeof compareAtPrice === 'number' ? Math.max(product.price, compareAtPrice) : product.price
-              const discountedPrice =
-                typeof compareAtPrice === 'number' ? Math.min(product.price, compareAtPrice) : product.price
+              const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
               return (
                 <Link
@@ -79,7 +63,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                   className="group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
-                    {discountPercent !== null ? (
+                    {hasDiscount ? (
                       <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
                         -{discountPercent}%
                       </span>
@@ -97,7 +81,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                     </h3>
 
                     <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                      {discountPercent !== null ? (
+                      {hasDiscount ? (
                         <span className="text-stone-700 line-through">
                           Rs.{formatPrice(originalPrice)}
                         </span>

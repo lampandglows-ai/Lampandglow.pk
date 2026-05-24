@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2 } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2, Tag } from 'lucide-react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
 import productsService from '../utils/productsService.js'
 import { storage } from '../utils/firebase.js'
+import { calculateFinalPrice } from '../utils/discountHelpers.js'
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([])
@@ -22,7 +23,9 @@ export default function AdminProductsPage() {
     images: [],
     stock: '',
     status: 'active',
-    compareAtPrice: '',
+    discountType: '',
+    discountValue: '',
+    sku: '',
   })
 
   // Load products from Firebase
@@ -44,10 +47,19 @@ export default function AdminProductsPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value }
+      // Auto-calculate final price when discount fields change
+      if (name === 'price' || name === 'discountType' || name === 'discountValue') {
+        const base = parseFloat(next.price)
+        if (!Number.isNaN(base) && base > 0 && next.discountType && next.discountValue) {
+          next.finalPrice = String(calculateFinalPrice(base, next.discountType, next.discountValue))
+        } else {
+          next.finalPrice = next.price
+        }
+      }
+      return next
+    })
   }
 
   // Upload images to Firebase Storage and store download URLs
@@ -120,14 +132,22 @@ export default function AdminProductsPage() {
         )
       }
 
+      const basePrice = parseFloat(formData.price)
+      const discountType = formData.discountType || ''
+      const discountValue = parseFloat(formData.discountValue)
+      const finalPrice = calculateFinalPrice(basePrice, discountType, discountValue)
+
       const payload = {
         name: formData.name.trim(),
         category: formData.category,
-        price: parseFloat(formData.price),
-        compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : null,
+        originalPrice: basePrice,
+        price: finalPrice,
+        discountType: discountType || null,
+        discountValue: discountType && !Number.isNaN(discountValue) ? discountValue : null,
         description: formData.description.trim(),
         stock: parseInt(formData.stock, 10),
         status: formData.status,
+        sku: formData.sku.trim() || null,
         images: finalImages,
         image: finalImages[0] || '',
       }
@@ -173,21 +193,50 @@ export default function AdminProductsPage() {
       images: [],
       stock: '',
       status: 'active',
-      compareAtPrice: '',
+      discountType: '',
+      discountValue: '',
+      sku: '',
     })
     setShowForm(false)
   }
 
   const handleEdit = (product) => {
     const images = product.images || (product.image ? [product.image] : [])
+
+    // Migrate legacy compareAtPrice to new discount fields on edit
+    let basePrice = product.originalPrice ?? product.price ?? ''
+    let discountType = product.discountType || ''
+    let discountValue = product.discountValue ?? ''
+
+    if (!product.discountType && typeof product.compareAtPrice === 'number' && product.compareAtPrice > product.price) {
+      basePrice = product.compareAtPrice
+      const pct = ((product.compareAtPrice - product.price) / product.compareAtPrice) * 100
+      if (Number.isInteger(pct)) {
+        discountType = 'percentage'
+        discountValue = pct
+      } else {
+        discountType = 'fixed'
+        discountValue = Math.round((product.compareAtPrice - product.price) * 100) / 100
+      }
+    }
+
+    const finalPrice = calculateFinalPrice(
+      typeof basePrice === 'number' ? basePrice : parseFloat(basePrice),
+      discountType,
+      typeof discountValue === 'number' ? discountValue : parseFloat(discountValue)
+    )
+
     setFormData({
       name: product.name || '',
       category: product.category || '',
-      price: String(product.price ?? ''),
-      compareAtPrice: String(product.compareAtPrice ?? ''),
+      price: String(basePrice),
+      discountType,
+      discountValue: String(discountValue),
+      finalPrice: String(finalPrice || basePrice),
       description: product.description || '',
       stock: String(product.stock ?? ''),
       status: product.status || 'active',
+      sku: product.sku || '',
       images,
     })
     setEditingId(product.id)
@@ -215,7 +264,8 @@ export default function AdminProductsPage() {
     return (
       p.name.toLowerCase().includes(query) ||
       p.category.toLowerCase().includes(query) ||
-      p.description?.toLowerCase().includes(query)
+      p.description?.toLowerCase().includes(query) ||
+      p.sku?.toLowerCase().includes(query)
     )
   })
 
@@ -326,7 +376,25 @@ export default function AdminProductsPage() {
                     </select>
                   </div>
 
-                  {/* Price */}
+                  {/* SKU */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Product Code / SKU
+                    </label>
+                    <div className="relative">
+                      <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        name="sku"
+                        value={formData.sku}
+                        onChange={handleInputChange}
+                        placeholder="e.g. LAMP-001"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Price (Base / Original) */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Price (Rs) *
@@ -343,21 +411,58 @@ export default function AdminProductsPage() {
                       required
                     />
                   </div>
+                </div>
 
-                  {/* Compare At Price */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Discount Type */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Original Price (Rs)
+                      Discount Type
+                    </label>
+                    <select
+                      name="discountType"
+                      value={formData.discountType}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    >
+                      <option value="">No Discount</option>
+                      <option value="percentage">Percentage (%)</option>
+                      <option value="fixed">Fixed Amount (Rs)</option>
+                    </select>
+                  </div>
+
+                  {/* Discount Value */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Discount Value
                     </label>
                     <input
                       type="number"
-                      name="compareAtPrice"
-                      value={formData.compareAtPrice}
+                      name="discountValue"
+                      value={formData.discountValue}
                       onChange={handleInputChange}
-                      placeholder="For discount display"
+                      placeholder={formData.discountType === 'percentage' ? 'e.g. 10' : formData.discountType === 'fixed' ? 'e.g. 500' : 'Select discount type first'}
                       step="0.01"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      disabled={!formData.discountType}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:text-gray-400"
+                    />
+                  </div>
+
+                  {/* Final Price (Auto-calculated) */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Final Price (Rs)
+                    </label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={
+                        formData.price
+                          ? `Rs.${Number(formData.finalPrice || formData.price).toLocaleString('en-PK', { minimumFractionDigits: 2 })}`
+                          : ''
+                      }
+                      className="w-full px-4 py-2 border border-gray-200 bg-gray-50 rounded-lg text-gray-700 font-semibold"
                     />
                   </div>
                 </div>
@@ -396,20 +501,23 @@ export default function AdminProductsPage() {
                     </select>
                   </div>
 
-                  {/* Description */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Description
-                    </label>
-                    <input
-                      type="text"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      placeholder="Enter product description"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
+                  {/* Spacer for alignment */}
+                  <div />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    placeholder="Enter product description..."
+                    rows={5}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                  />
                 </div>
 
                 {/* Multiple Images Upload */}
@@ -515,7 +623,7 @@ export default function AdminProductsPage() {
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Search products by name, category, or description..."
+            placeholder="Search products by name, category, SKU, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -563,12 +671,25 @@ export default function AdminProductsPage() {
                       </span>
                     </div>
 
+                    {product.sku && (
+                      <p className="text-xs text-gray-500 mb-2 font-mono">SKU: {product.sku}</p>
+                    )}
+
                     {product.description && (
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
                     )}
 
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-2xl font-bold text-orange-500">Rs.{product.price.toLocaleString()}</p>
+                      <div>
+                        {product.originalPrice && product.originalPrice > product.price ? (
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-400 line-through">Rs.{product.originalPrice.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-orange-500">Rs.{product.price.toLocaleString()}</p>
+                          </div>
+                        ) : (
+                          <p className="text-2xl font-bold text-orange-500">Rs.{product.price.toLocaleString()}</p>
+                        )}
+                      </div>
                       <span className={`text-xs font-semibold px-2 py-1 rounded ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {product.status === 'active' ? 'Active' : 'Inactive'}
                       </span>

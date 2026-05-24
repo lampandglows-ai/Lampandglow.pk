@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import classNames from '../utils/classNames.js'
+import { getDiscountInfo } from '../utils/discountHelpers.js'
 
 const formatPricePKR = (value) => {
   if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -7,18 +8,6 @@ const formatPricePKR = (value) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value)
-}
-
-const getDiscountPercent = (price, compareAtPrice) => {
-  if (typeof price !== 'number' || Number.isNaN(price)) return null
-  if (typeof compareAtPrice !== 'number' || Number.isNaN(compareAtPrice)) return null
-
-  const original = Math.max(price, compareAtPrice)
-  const discounted = Math.min(price, compareAtPrice)
-  if (original <= 0 || discounted <= 0 || original === discounted) return null
-  if (original <= discounted) return null
-
-  return Math.round(((original - discounted) / original) * 100)
 }
 
 export default function ProductsSection({
@@ -79,12 +68,7 @@ export default function ProductsSection({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {filteredProducts.map((product) => {
           const avg = productAverageRating[product.id]
-          const compareAtPrice = product.compareAtPrice
-          const discountPercent = getDiscountPercent(product.price, compareAtPrice)
-          const originalPrice =
-            typeof compareAtPrice === 'number' ? Math.max(product.price, compareAtPrice) : product.price
-          const discountedPrice =
-            typeof compareAtPrice === 'number' ? Math.min(product.price, compareAtPrice) : product.price
+          const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
           return (
             <article
@@ -93,7 +77,7 @@ export default function ProductsSection({
             >
               <Link to={`/product/${product.id}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
-                  {discountPercent !== null ? (
+                  {hasDiscount ? (
                     <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
                       -{discountPercent}%
                     </span>
@@ -117,7 +101,7 @@ export default function ProductsSection({
                   </h2>
 
                   <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                    {discountPercent !== null ? (
+                    {hasDiscount ? (
                       <span className="text-stone-700 line-through">
                         Rs.{formatPricePKR(originalPrice)}
                       </span>
