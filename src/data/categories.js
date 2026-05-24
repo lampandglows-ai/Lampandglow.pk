@@ -4,7 +4,7 @@ export const CATEGORIES = [
     title: 'Table Lamps',
     description: 'Elegant table lamps for desks, bedside tables, and more.',
     image:
-      'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/categories%2F28be8ef4e2ac214f69407bfc25290fc7.jpg?alt=media&token=2a4f2272-5974-488e-8024-a2923ff6e848',
+      'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/categories%2Fd221f592b5ac4fad1d46068f2a463781.jpg?alt=media&token=1b643120-70dd-44b3-9a1e-e8e558aa639a',
   },
   {
     id: 'Floor Lamps',
@@ -18,7 +18,7 @@ export const CATEGORIES = [
     title: 'Candle Lamps',
     description: 'Warm ambient lighting with candle-style lamps.',
     image:
-      'https://images.pexels.com/photos/2716397/pexels-photo-2716397.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/categories%2F28be8ef4e2ac214f69407bfc25290fc7.jpg?alt=media&token=2a4f2272-5974-488e-8024-a2923ff6e848',
   },
   {
     id: 'Roof/Ceiling Lamps',
