@@ -20,7 +20,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
               onClick={() => onPickCategory(category.id)}
               className="group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]/60 motion-reduce:transform-none motion-reduce:transition-none text-left"
             >
-              <div className="relative aspect-[4/5] overflow-hidden">
+              <div className="relative aspect-[3/4] overflow-hidden">
                 <img
                   src={category.image}
                   alt={category.title}

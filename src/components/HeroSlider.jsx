@@ -96,7 +96,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         <Slider {...settings}>
           {slides.map((slide) => (
             <div key={slide.id}>
-              <div className="relative h-[360px] sm:h-[500px] lg:h-[620px]">
+              <div className="relative h-[65vh] min-h-[360px] max-h-[700px]">
                 <img
                   src={slide.image}
                   alt={slide.alt}

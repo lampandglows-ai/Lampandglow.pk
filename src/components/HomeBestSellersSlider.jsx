@@ -124,7 +124,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
           <div className="px-4 sm:px-6 lg:px-8">
             <div
               ref={scrollContainerRef}
-              className="flex gap-5 overflow-x-auto scroll-smooth pb-2"
+              className="flex gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >

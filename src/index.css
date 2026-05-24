@@ -61,3 +61,13 @@ body {
   padding: 0 48px 0 0;
   white-space: nowrap;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
