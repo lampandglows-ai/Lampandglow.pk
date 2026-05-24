@@ -304,7 +304,7 @@ function AppContent() {
       {
         id: 'slide-1',
         image:
-          'https://images.pexels.com/photos/8132705/pexels-photo-8132705.jpeg?auto=compress&cs=tinysrgb&w=1600',
+          'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/banners%2Fbnner.jpg?alt=media&token=d252c11e-5982-491e-873c-30cc33ced613',
         alt: 'Wooden lamp on bedside table',
         badge: 'New arrivals',
         title: 'Warm wooden decor that makes every room glow',
