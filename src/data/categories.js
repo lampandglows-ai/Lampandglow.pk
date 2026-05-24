@@ -4,14 +4,14 @@ export const CATEGORIES = [
     title: 'Table Lamps',
     description: 'Elegant table lamps for desks, bedside tables, and more.',
     image:
-      'https://images.pexels.com/photos/462235/pexels-photo-462235.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/categories%2F172372025686739922ca14b7b4a2ef99.jpg?alt=media&token=13ac5f42-f542-4e52-8aab-1309e74948d7',
   },
   {
     id: 'Floor Lamps',
     title: 'Floor Lamps',
     description: 'Tall standing lamps to brighten any room.',
     image:
-      'https://images.pexels.com/photos/3965520/pexels-photo-3965520.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/categories%2F28be8ef4e2ac214f69407bfc25290fc7.jpg?alt=media&token=2a4f2272-5974-488e-8024-a2923ff6e848',
   },
   {
     id: 'Candle Lamps',
