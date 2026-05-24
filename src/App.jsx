@@ -22,6 +22,9 @@ import AdminLoginPage from './pages/AdminLoginPage.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
 import AdminProductsPage from './pages/AdminProductsPage.jsx'
 import AdminOrdersPage from './pages/AdminOrdersPage.jsx'
+import AdminCustomersPage from './pages/AdminCustomersPage.jsx'
+import AdminCouponsPage from './pages/AdminCouponsPage.jsx'
+import AdminPaymentHistoryPage from './pages/AdminPaymentHistoryPage.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
@@ -541,6 +544,30 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminOrdersPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/customers"
+            element={
+              <ProtectedAdminRoute>
+                <AdminCustomersPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/coupons"
+            element={
+              <ProtectedAdminRoute>
+                <AdminCouponsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/payments"
+            element={
+              <ProtectedAdminRoute>
+                <AdminPaymentHistoryPage />
               </ProtectedAdminRoute>
             }
           />

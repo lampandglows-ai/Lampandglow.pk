@@ -9,6 +9,9 @@ import {
   ShoppingCart,
   LogOut,
   ChevronDown,
+  Users,
+  Ticket,
+  DollarSign,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -33,6 +36,21 @@ export default function AdminLayout({ children }) {
       label: 'Orders',
       icon: ShoppingCart,
       path: '/admin/orders',
+    },
+    {
+      label: 'Customers',
+      icon: Users,
+      path: '/admin/customers',
+    },
+    {
+      label: 'Coupons',
+      icon: Ticket,
+      path: '/admin/coupons',
+    },
+    {
+      label: 'Payments',
+      icon: DollarSign,
+      path: '/admin/payments',
     },
   ]
 

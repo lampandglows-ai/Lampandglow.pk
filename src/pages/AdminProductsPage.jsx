@@ -20,6 +20,9 @@ export default function AdminProductsPage() {
     price: '',
     description: '',
     images: [],
+    stock: '',
+    status: 'active',
+    compareAtPrice: '',
   })
 
   // Load products from Firebase
@@ -96,8 +99,8 @@ export default function AdminProductsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!formData.name.trim() || !formData.category.trim() || !formData.price.trim()) {
-      setMessage({ type: 'error', text: 'Please fill all required fields' })
+    if (!formData.name.trim() || !formData.category.trim() || !formData.price.trim() || !formData.stock.trim()) {
+      setMessage({ type: 'error', text: 'Please fill all required fields (Name, Category, Price, Stock)' })
       return
     }
 
@@ -121,7 +124,10 @@ export default function AdminProductsPage() {
         name: formData.name.trim(),
         category: formData.category,
         price: parseFloat(formData.price),
+        compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : null,
         description: formData.description.trim(),
+        stock: parseInt(formData.stock, 10),
+        status: formData.status,
         images: finalImages,
         image: finalImages[0] || '',
       }
@@ -165,6 +171,9 @@ export default function AdminProductsPage() {
       price: '',
       description: '',
       images: [],
+      stock: '',
+      status: 'active',
+      compareAtPrice: '',
     })
     setShowForm(false)
   }
@@ -175,7 +184,10 @@ export default function AdminProductsPage() {
       name: product.name || '',
       category: product.category || '',
       price: String(product.price ?? ''),
+      compareAtPrice: String(product.compareAtPrice ?? ''),
       description: product.description || '',
+      stock: String(product.stock ?? ''),
+      status: product.status || 'active',
       images,
     })
     setEditingId(product.id)
@@ -330,6 +342,58 @@ export default function AdminProductsPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       required
                     />
+                  </div>
+
+                  {/* Compare At Price */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Original Price (Rs)
+                    </label>
+                    <input
+                      type="number"
+                      name="compareAtPrice"
+                      value={formData.compareAtPrice}
+                      onChange={handleInputChange}
+                      placeholder="For discount display"
+                      step="0.01"
+                      min="0"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Stock Quantity */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Stock Quantity *
+                    </label>
+                    <input
+                      type="number"
+                      name="stock"
+                      value={formData.stock}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      min="0"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      required
+                    />
+                  </div>
+
+                  {/* Product Status */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Status
+                    </label>
+                    <select
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
                   </div>
 
                   {/* Description */}
@@ -503,8 +567,18 @@ export default function AdminProductsPage() {
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
                     )}
 
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <p className="text-2xl font-bold text-orange-500">Rs.{product.price.toLocaleString()}</p>
+                      <span className={`text-xs font-semibold px-2 py-1 rounded ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {product.status === 'active' ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-4 text-sm">
+                      <div>
+                        <p className="text-gray-600">Stock: <span className="font-semibold text-gray-900">{product.stock || 0}</span></p>
+                        {product.stock === 0 && <p className="text-red-600 font-semibold text-xs">Out of Stock</p>}
+                      </div>
                       <p className="text-xs text-gray-500">
                         {product.createdAt ? new Date(product.createdAt).toLocaleDateString() : ''}
                       </p>

@@ -39,13 +39,6 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
       .slice(0, 12)
   }, [products])
 
-  // Check scroll position on mount and when content changes
-  useEffect(() => {
-    checkScroll()
-    window.addEventListener('resize', checkScroll)
-    return () => window.removeEventListener('resize', checkScroll)
-  }, [uniqueProducts])
-
   const checkScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
@@ -53,6 +46,13 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
     }
   }
+
+  // Check scroll position on mount and when content changes
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [uniqueProducts])
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {

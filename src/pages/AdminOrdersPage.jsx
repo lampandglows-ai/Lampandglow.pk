@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Search, Eye, MapPin, Phone, Mail, CheckCircle, Clock, Truck } from 'lucide-react'
+import { Search, Eye, MapPin, Phone, Mail, CheckCircle, Clock, Truck, Loader2 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 
 export default function AdminOrdersPage() {
@@ -7,6 +7,13 @@ export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [filterStatus, setFilterStatus] = useState('all')
+  const [showTrackingForm, setShowTrackingForm] = useState(false)
+  const [trackingData, setTrackingData] = useState({
+    trackingNumber: '',
+    carrier: '',
+    estimatedDelivery: '',
+  })
+  const [saving, setSaving] = useState(false)
 
   // Load orders from localStorage
   useEffect(() => {
@@ -58,13 +65,61 @@ export default function AdminOrdersPage() {
 
   const updateOrderStatus = (orderId, newStatus) => {
     const newOrders = orders.map((order) =>
-      order.id === orderId ? { ...order, status: newStatus } : order
+      order.id === orderId ? { ...order, status: newStatus, updatedAt: new Date().toISOString() } : order
     )
     setOrders(newOrders)
     saveOrders(newOrders)
     setSelectedOrder((prev) =>
-      prev ? { ...prev, status: newStatus } : null
+      prev ? { ...prev, status: newStatus, updatedAt: new Date().toISOString() } : null
     )
+  }
+
+  const addTrackingDetails = (orderId, tracking) => {
+    const newOrders = orders.map((order) =>
+      order.id === orderId
+        ? {
+            ...order,
+            tracking: {
+              trackingNumber: tracking.trackingNumber,
+              carrier: tracking.carrier,
+              estimatedDelivery: tracking.estimatedDelivery,
+              addedAt: new Date().toISOString(),
+            },
+            updatedAt: new Date().toISOString(),
+          }
+        : order
+    )
+    setOrders(newOrders)
+    saveOrders(newOrders)
+    setSelectedOrder((prev) =>
+      prev
+        ? {
+            ...prev,
+            tracking: {
+              trackingNumber: tracking.trackingNumber,
+              carrier: tracking.carrier,
+              estimatedDelivery: tracking.estimatedDelivery,
+              addedAt: new Date().toISOString(),
+            },
+            updatedAt: new Date().toISOString(),
+          }
+        : null
+    )
+  }
+
+  const handleSaveTracking = () => {
+    if (!trackingData.trackingNumber.trim() || !trackingData.carrier.trim()) {
+      return
+    }
+
+    setSaving(true)
+    try {
+      addTrackingDetails(selectedOrder.id, trackingData)
+      setShowTrackingForm(false)
+      setTrackingData({ trackingNumber: '', carrier: '', estimatedDelivery: '' })
+    } finally {
+      setSaving(false)
+    }
   }
 
   // Filter and search
@@ -347,6 +402,112 @@ export default function AdminOrdersPage() {
                       </span>
                     </div>
                   </div>
+                </div>
+
+                {/* Tracking Details */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                      <Truck className="w-5 h-5 text-blue-500" />
+                      Tracking Details
+                    </h4>
+                    {!showTrackingForm && (
+                      <button
+                        onClick={() => {
+                          setShowTrackingForm(true)
+                          setTrackingData({
+                            trackingNumber: selectedOrder.tracking?.trackingNumber || '',
+                            carrier: selectedOrder.tracking?.carrier || '',
+                            estimatedDelivery: selectedOrder.tracking?.estimatedDelivery || '',
+                          })
+                        }}
+                        className="text-blue-500 hover:text-blue-700 text-sm font-semibold"
+                      >
+                        {selectedOrder.tracking ? 'Edit' : 'Add'} Tracking
+                      </button>
+                    )}
+                  </div>
+
+                  {!showTrackingForm ? (
+                    selectedOrder.tracking ? (
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-3">
+                        <div>
+                          <p className="text-xs text-blue-600 font-semibold">Tracking Number</p>
+                          <p className="font-mono font-bold text-gray-900">{selectedOrder.tracking.trackingNumber}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-blue-600 font-semibold">Carrier</p>
+                          <p className="font-semibold text-gray-900">{selectedOrder.tracking.carrier}</p>
+                        </div>
+                        {selectedOrder.tracking.estimatedDelivery && (
+                          <div>
+                            <p className="text-xs text-blue-600 font-semibold">Estimated Delivery</p>
+                            <p className="font-semibold text-gray-900">
+                              {new Date(selectedOrder.tracking.estimatedDelivery).toLocaleDateString()}
+                            </p>
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-500 pt-2">
+                          Added: {new Date(selectedOrder.tracking.addedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 text-sm italic">No tracking details added yet</p>
+                    )
+                  ) : (
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-3">
+                      <div>
+                        <label className="text-xs font-semibold text-blue-900 mb-1 block">Tracking Number *</label>
+                        <input
+                          type="text"
+                          value={trackingData.trackingNumber}
+                          onChange={(e) => setTrackingData({ ...trackingData, trackingNumber: e.target.value })}
+                          placeholder="Enter tracking number"
+                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-blue-900 mb-1 block">Carrier *</label>
+                        <select
+                          value={trackingData.carrier}
+                          onChange={(e) => setTrackingData({ ...trackingData, carrier: e.target.value })}
+                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Carrier</option>
+                          <option value="TCS">TCS</option>
+                          <option value="Daewoo">Daewoo</option>
+                          <option value="LEA">LEA</option>
+                          <option value="Hundi">Hundi</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-blue-900 mb-1 block">Estimated Delivery</label>
+                        <input
+                          type="date"
+                          value={trackingData.estimatedDelivery}
+                          onChange={(e) => setTrackingData({ ...trackingData, estimatedDelivery: e.target.value })}
+                          className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleSaveTracking}
+                          disabled={saving}
+                          className="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-60 font-semibold text-sm flex items-center justify-center gap-2"
+                        >
+                          {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setShowTrackingForm(false)}
+                          className="flex-1 bg-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-400 transition font-semibold text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Order Status Update */}
