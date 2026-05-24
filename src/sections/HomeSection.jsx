@@ -1,5 +1,5 @@
 import HeroSlider from '../components/HeroSlider.jsx'
-import ProductSlider from '../components/ProductSlider.jsx'
+import HomeBestSellersSlider from '../components/HomeBestSellersSlider.jsx'
 import HomeCategoriesPreview from './HomeCategoriesPreview.jsx'
 import HomeFeaturedProducts from './HomeFeaturedProducts.jsx'
 import HomeTestimonials from './HomeTestimonials.jsx'
@@ -19,7 +19,7 @@ export default function HomeSection({
     <section className={theme === 'dark' ? 'bg-transparent' : 'bg-white'}>
       <HeroSlider slides={heroSlides} onPrimaryAction={onHeroAction} />
 
-      <ProductSlider products={products} theme={theme} />
+      <HomeBestSellersSlider products={products} theme={theme} />
 
       <HomeCategoriesPreview
         categories={categories}
