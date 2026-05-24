@@ -90,20 +90,20 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-stone-900">
+    <section className="relative overflow-hidden bg-[#4C2600] px-3 pb-6 pt-4 sm:px-5 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10">
       {/* Added wrapper div to ensure consistent layout */}
-      <div className="relative">
+      <div className="relative overflow-hidden rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
         <Slider {...settings}>
           {slides.map((slide) => (
             <div key={slide.id}>
-              <div className="relative h-[420px] sm:h-[520px] lg:h-[600px]">
+              <div className="relative h-[360px] sm:h-[500px] lg:h-[620px]">
                 <img
                   src={slide.image}
                   alt={slide.alt}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#4C2600]/80 via-black/35 to-black/10" />
 
                 <div className="relative h-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
                   <div className="max-w-xl">
@@ -127,7 +127,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                     <div className="mt-7 flex flex-col sm:flex-row gap-3">
                       <button
                         onClick={() => onPrimaryAction(slide.primaryAction)}
-                        className="inline-flex items-center justify-center rounded-full bg-amber-600 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-700 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                        className="inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-6 py-2.5 text-sm font-semibold text-[#4C2600] transition-all duration-200 hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
                       >
                         {slide.primaryLabel}
                       </button>

@@ -65,7 +65,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
       className={
         theme === 'dark'
           ? 'bg-transparent border-b border-white/10'
-          : 'bg-white border-b border-stone-200/80'
+          : 'bg-[#4C2600]/95 border-b border-[#FFDA03]/20'
       }
     >
       <div className="w-full px-0 py-10 sm:py-14">
@@ -74,7 +74,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
             className={
               theme === 'dark'
                 ? 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-100'
-                : 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-900'
+                : 'text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]'
             }
           >
             Explore our best sellers
@@ -83,7 +83,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
             className={
               theme === 'dark'
                 ? 'mt-1 text-xs sm:text-sm text-stone-300'
-                : 'mt-1 text-xs sm:text-sm text-stone-600'
+                : 'mt-1 text-xs sm:text-sm text-yellow-100/85'
             }
           >
             Handpicked decor to start your Lamp & Glow collection.
@@ -98,8 +98,8 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
             disabled={!canScrollLeft}
             className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                ? 'bg-white/90 hover:bg-white text-orange-500 hover:text-orange-600 shadow-lg'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
+                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
             } opacity-0 group-hover:opacity-100 md:opacity-100`}
             title="Scroll left"
           >
@@ -112,8 +112,8 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
             disabled={!canScrollRight}
             className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                ? 'bg-white/90 hover:bg-white text-orange-500 hover:text-orange-600 shadow-lg'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
+                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
             } opacity-0 group-hover:opacity-100 md:opacity-100`}
             title="Scroll right"
           >
@@ -124,7 +124,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
           <div className="px-4 sm:px-6 lg:px-8">
             <div
               ref={scrollContainerRef}
-              className="flex gap-4 overflow-x-auto scroll-smooth"
+              className="flex gap-5 overflow-x-auto scroll-smooth pb-2"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
@@ -135,7 +135,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
                   <Link
                     key={product.id}
                     to={`/product/${product.id}`}
-                    className="flex-shrink-0 w-48 group block overflow-hidden rounded-2xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70"
+                    className="flex-shrink-0 w-[78vw] sm:w-[44vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {hasDiscount ? (
@@ -150,7 +150,7 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
                       />
                     </div>
 
-                    <div className="p-3">
+                    <div className="p-4">
                       <h3 className="text-sm font-semibold text-stone-900 leading-snug line-clamp-2">
                         {product.name}
                       </h3>

@@ -75,19 +75,19 @@ export default function Header({
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
     >
-      <div className="bg-amber-600 text-white text-xs sm:text-sm font-semibold lg-marquee">
+      <div className="bg-[#FFDA03] text-[#4C2600] text-xs sm:text-sm font-semibold lg-marquee">
         <div className="lg-marquee__inner py-2">
           <div className="lg-marquee__track">
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
           </div>
           <div className="lg-marquee__track" aria-hidden="true">
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
-            <span className="lg-marquee__item">Enjoy Free Shipping on orders over 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
           </div>
         </div>
       </div>
