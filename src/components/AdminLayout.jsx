@@ -12,6 +12,7 @@ import {
   Users,
   Ticket,
   DollarSign,
+  FolderOpen,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -31,6 +32,11 @@ export default function AdminLayout({ children }) {
       label: 'Products',
       icon: Package,
       path: '/admin/products',
+    },
+    {
+      label: 'Categories',
+      icon: FolderOpen,
+      path: '/admin/categories',
     },
     {
       label: 'Orders',

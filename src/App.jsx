@@ -25,6 +25,7 @@ import AdminOrdersPage from './pages/AdminOrdersPage.jsx'
 import AdminCustomersPage from './pages/AdminCustomersPage.jsx'
 import AdminCouponsPage from './pages/AdminCouponsPage.jsx'
 import AdminPaymentHistoryPage from './pages/AdminPaymentHistoryPage.jsx'
+import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
@@ -568,6 +569,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminPaymentHistoryPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/categories"
+            element={
+              <ProtectedAdminRoute>
+                <AdminCategoriesPage />
               </ProtectedAdminRoute>
             }
           />
