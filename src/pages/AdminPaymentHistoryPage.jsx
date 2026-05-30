@@ -55,7 +55,10 @@ export default function AdminPaymentHistoryPage() {
       (filterPaymentStatus === 'pending' && order.status !== 'delivered')
 
     const matchesPaymentMethod =
-      filterPaymentMethod === 'all' || order.paymentMethod === filterPaymentMethod
+      filterPaymentMethod === 'all' ||
+      (filterPaymentMethod === 'cod' && (order.paymentMethod === 'cod' || order.paymentMethod === 'cash_on_delivery')) ||
+      (filterPaymentMethod === 'bank' && (order.paymentMethod === 'bank' || order.paymentMethod === 'bank_transfer')) ||
+      order.paymentMethod === filterPaymentMethod
 
     const orderDate = new Date(order.createdAt || new Date())
     const fromDate = dateRange.from ? new Date(dateRange.from) : null
@@ -75,10 +78,10 @@ export default function AdminPaymentHistoryPage() {
   }
 
   const paymentMethodStats = {
-    cod: orders.filter((o) => o.paymentMethod === 'cash_on_delivery').length,
+    cod: orders.filter((o) => o.paymentMethod === 'cod' || o.paymentMethod === 'cash_on_delivery').length,
     card: orders.filter((o) => o.paymentMethod === 'card').length,
-    bank: orders.filter((o) => o.paymentMethod === 'bank_transfer').length,
-    other: orders.filter((o) => !['cash_on_delivery', 'card', 'bank_transfer'].includes(o.paymentMethod)).length,
+    bank: orders.filter((o) => o.paymentMethod === 'bank' || o.paymentMethod === 'bank_transfer').length,
+    other: orders.filter((o) => !['cod', 'cash_on_delivery', 'card', 'bank', 'bank_transfer'].includes(o.paymentMethod)).length,
   }
 
   const downloadReport = () => {
@@ -229,9 +232,8 @@ export default function AdminPaymentHistoryPage() {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             >
               <option value="all">All Payment Methods</option>
-              <option value="cash_on_delivery">Cash on Delivery</option>
-              <option value="card">Card Payment</option>
-              <option value="bank_transfer">Bank Transfer</option>
+              <option value="cod">Cash on Delivery</option>
+              <option value="bank">Bank Deposit</option>
             </select>
 
             {/* Date Range Filter */}
@@ -309,11 +311,11 @@ export default function AdminPaymentHistoryPage() {
                           </td>
                           <td className="px-6 py-4 text-sm">
                             <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
-                              {order.paymentMethod === 'cash_on_delivery'
+                              {order.paymentMethod === 'cod' || order.paymentMethod === 'cash_on_delivery'
                                 ? 'COD'
-                                : order.paymentMethod === 'card'
-                                  ? 'Card'
-                                  : 'Bank'}
+                                : order.paymentMethod === 'bank' || order.paymentMethod === 'bank_transfer'
+                                  ? 'Bank'
+                                  : 'Card'}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-sm">

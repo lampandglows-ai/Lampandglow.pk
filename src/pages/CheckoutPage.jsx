@@ -18,6 +18,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder, theme }) {
   const [error, setError] = useState('')
   const [placedOrderId, setPlacedOrderId] = useState('')
   const [loading, setLoading] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('cod')
 
   const shipping = cartTotal >= 150 || cartTotal === 0 ? 0 : 12
   const grandTotal = cartTotal + shipping
@@ -55,7 +56,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder, theme }) {
       state: state.trim(),
       postalCode: postalCode.trim(),
       note: note.trim(),
-      paymentMethod: 'cash_on_delivery',
+      paymentMethod,
       items: cart.map((item) => ({
         id: item.id,
         productId: item.product?.id,
@@ -115,8 +116,18 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder, theme }) {
                   Payment method
                 </p>
                 <div className={classNames('mt-3 space-y-2 text-sm', isDark ? 'text-stone-300' : 'text-stone-700')}>
-                  <p className="font-semibold">Cash on Delivery (COD)</p>
-                  <p>Your order will arrive at your address. Please have the exact payment amount ready.</p>
+                  {paymentMethod === 'cod' ? (
+                    <>
+                      <p className="font-semibold">Cash on Delivery (COD)</p>
+                      <p>Your order will arrive at your address. Please have the exact payment amount ready.</p>
+                      <p className="text-xs mt-1 text-amber-600">Note: 50% advance payment required via Bank Deposit. Remaining 50% will be paid on delivery.</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-semibold">Bank Deposit</p>
+                      <p>Please transfer the full amount to our bank account. We will process your order once payment is confirmed.</p>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -367,9 +378,91 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder, theme }) {
             <p className={classNames('text-xs font-semibold', isDark ? 'text-stone-200' : 'text-stone-800')}>
               Payment method
             </p>
-            <div className={classNames('mt-3 space-y-2 text-sm', isDark ? 'text-stone-300' : 'text-stone-700')}>
-              <p className="font-semibold">Cash on Delivery (COD)</p>
-              <p className="text-xs">Your order will be delivered to your address. You can pay in cash when the courier arrives.</p>
+
+            {/* Payment Method Options */}
+            <div className="mt-4 space-y-3">
+              {/* Cash on Delivery */}
+              <label
+                className={classNames(
+                  'flex items-start gap-3 rounded-xl border p-3 cursor-pointer transition',
+                  paymentMethod === 'cod'
+                    ? isDark
+                      ? 'border-amber-500 bg-amber-900/20'
+                      : 'border-amber-500 bg-amber-50'
+                    : isDark
+                    ? 'border-stone-700 hover:border-stone-600'
+                    : 'border-stone-200 hover:border-stone-300'
+                )}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={paymentMethod === 'cod'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mt-0.5 accent-amber-600"
+                />
+                <div className="text-sm">
+                  <p className={classNames('font-semibold', isDark ? 'text-stone-100' : 'text-stone-900')}>Cash on Delivery (COD)</p>
+                  <p className={classNames('text-xs mt-0.5', isDark ? 'text-stone-400' : 'text-stone-600')}>Pay at your doorstep on delivery.</p>
+                </div>
+              </label>
+
+              {/* Bank Deposit */}
+              <label
+                className={classNames(
+                  'flex items-start gap-3 rounded-xl border p-3 cursor-pointer transition',
+                  paymentMethod === 'bank'
+                    ? isDark
+                      ? 'border-amber-500 bg-amber-900/20'
+                      : 'border-amber-500 bg-amber-50'
+                    : isDark
+                    ? 'border-stone-700 hover:border-stone-600'
+                    : 'border-stone-200 hover:border-stone-300'
+                )}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="bank"
+                  checked={paymentMethod === 'bank'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mt-0.5 accent-amber-600"
+                />
+                <div className="text-sm">
+                  <p className={classNames('font-semibold', isDark ? 'text-stone-100' : 'text-stone-900')}>Bank Deposit</p>
+                  <p className={classNames('text-xs mt-0.5', isDark ? 'text-stone-400' : 'text-stone-600')}>Full payment via bank transfer before dispatch.</p>
+                </div>
+              </label>
+            </div>
+
+            {/* Conditional Bank Details */}
+            <div
+              className={classNames(
+                'mt-4 rounded-xl border p-4',
+                isDark ? 'border-stone-700 bg-stone-950/30' : 'border-stone-200 bg-stone-50'
+              )}
+            >
+              <p className={classNames('text-xs font-semibold', isDark ? 'text-stone-200' : 'text-stone-800')}>
+                Bank Account Details
+              </p>
+              <div className={classNames('mt-2 space-y-1 text-xs', isDark ? 'text-stone-300' : 'text-stone-700')}>
+                <p><span className="font-semibold">Bank Name:</span> Bank Alfalah</p>
+                <p><span className="font-semibold">Account Title:</span> Lamp & Glow</p>
+                <p><span className="font-semibold">Account Number:</span> 0051-1006789012</p>
+                <p><span className="font-semibold">IBAN:</span> PK95ALFH000511006789012</p>
+              </div>
+              {paymentMethod === 'cod' && (
+                <div className={classNames('mt-3 rounded-lg border p-3 text-xs', isDark ? 'border-amber-700/50 bg-amber-900/20 text-amber-200' : 'border-amber-200 bg-amber-50 text-amber-800')}>
+                  <p className="font-semibold">Advance Payment Required (50%)</p>
+                  <p className="mt-1">Please deposit <span className="font-bold">50% ({'Rs.'}{Math.round((cartTotal + shipping) * 0.5).toLocaleString()})</span> of the order total to the above bank account. The remaining <span className="font-bold">50% ({'Rs.'}{Math.round((cartTotal + shipping) * 0.5).toLocaleString()})</span> will be collected as Cash on Delivery when your order arrives.</p>
+                </div>
+              )}
+              {paymentMethod === 'bank' && (
+                <p className={classNames('mt-3 text-xs', isDark ? 'text-stone-400' : 'text-stone-600')}>
+                  Please transfer the full amount <span className="font-semibold">({'Rs.'}{(cartTotal + shipping).toLocaleString()})</span> and share the payment receipt via WhatsApp for faster processing.
+                </p>
+              )}
             </div>
 
             <div className={classNames('mt-5 rounded-xl border p-4', isDark ? 'border-stone-700 bg-stone-950/30' : 'border-stone-200 bg-stone-50')}>

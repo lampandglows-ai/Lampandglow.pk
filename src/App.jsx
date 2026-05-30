@@ -242,7 +242,7 @@ function AppContent() {
         shipping: payload.shipping,
         total: payload.total,
         status: 'pending',
-        paymentMethod: 'cash_on_delivery',
+        paymentMethod: payload.paymentMethod || 'cash_on_delivery',
       })
 
       setOrders((prev) => [order, ...prev])

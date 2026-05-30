@@ -19,7 +19,6 @@ export const ordersService = {
         userId,
         ...orderData,
         status: 'pending',
-        paymentMethod: 'cash_on_delivery',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -28,7 +27,6 @@ export const ordersService = {
         userId,
         ...orderData,
         status: 'pending',
-        paymentMethod: 'cash_on_delivery',
       };
     } catch (error) {
       console.error('Error creating order:', error);
