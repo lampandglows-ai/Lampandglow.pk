@@ -78,13 +78,20 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       return { user: userData };
     } catch (err) {
-      const message = err.code === 'auth/email-already-in-use'
-        ? 'Email already in use'
-        : err.code === 'auth/weak-password'
-        ? 'Password should be at least 6 characters'
-        : err.message || 'Signup failed';
+      let message = 'Signup failed';
+      if (err.code === 'auth/configuration-not-found') {
+        message = 'Authentication is not configured. Please enable Email/Password sign-in in your Firebase Console.';
+      } else if (err.code === 'auth/email-already-in-use') {
+        message = 'Email already in use';
+      } else if (err.code === 'auth/weak-password') {
+        message = 'Password should be at least 6 characters';
+      } else if (err.code === 'auth/invalid-api-key') {
+        message = 'Invalid Firebase API key. Check your .env configuration.';
+      } else if (err.message) {
+        message = err.message;
+      }
       setError(message);
-      throw err;
+      throw new Error(message);
     }
   };
 
@@ -110,13 +117,22 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       return { user: userData };
     } catch (err) {
-      const message = err.code === 'auth/user-not-found'
-        ? 'User not found'
-        : err.code === 'auth/wrong-password'
-        ? 'Wrong password'
-        : err.message || 'Signin failed';
+      let message = 'Signin failed';
+      if (err.code === 'auth/configuration-not-found') {
+        message = 'Authentication is not configured. Please enable Email/Password sign-in in your Firebase Console.';
+      } else if (err.code === 'auth/user-not-found') {
+        message = 'User not found';
+      } else if (err.code === 'auth/wrong-password') {
+        message = 'Wrong password';
+      } else if (err.code === 'auth/invalid-api-key') {
+        message = 'Invalid Firebase API key. Check your .env configuration.';
+      } else if (err.code === 'auth/invalid-credential') {
+        message = 'Invalid email or password';
+      } else if (err.message) {
+        message = err.message;
+      }
       setError(message);
-      throw err;
+      throw new Error(message);
     }
   };
 
