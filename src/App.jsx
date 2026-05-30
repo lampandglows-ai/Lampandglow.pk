@@ -35,9 +35,9 @@ import ProfileSection from './sections/ProfileSection.jsx'
 import ReviewsSection from './sections/ReviewsSection.jsx'
 
 import useProducts from './hooks/useProducts.js'
+import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import { BLOGS } from './data/blogs.js'
-import { CATEGORIES } from './data/categories.js'
 import { REELS } from './data/reels.js'
 import { TESTIMONIALS } from './data/testimonials.js'
 
@@ -57,6 +57,7 @@ function AppContent() {
   const location = useLocation()
   const { user, isLoggedIn, logout } = useAuth()
   const { products, loading: productsLoading } = useProducts()
+  const { categories: dynamicCategories, loading: categoriesLoading } = useCategories()
   
   const [activeSection, setActiveSection] = useState('home')
   const [theme, setTheme] = useState(() => {
@@ -409,7 +410,7 @@ function AppContent() {
                     heroSlides={heroSlides}
                     onHeroAction={handleHeroAction}
                     products={products}
-                    categories={CATEGORIES}
+                    categories={dynamicCategories}
                     testimonials={TESTIMONIALS}
                     onViewAllCategories={() => handleNavigate('categories')}
                     onPickCategory={(categoryId) => {
@@ -422,7 +423,7 @@ function AppContent() {
 
                 {activeSection === 'categories' && (
                   <CategoriesSection
-                    categories={CATEGORIES}
+                    categories={dynamicCategories}
                     onGoToProducts={() => handleNavigate('products')}
                     onCategorySelect={(categoryId) => {
                       setSelectedCategory(categoryId)
@@ -433,7 +434,7 @@ function AppContent() {
 
                 {activeSection === 'products' && (
                   <ProductsSection
-                    categories={CATEGORIES}
+                    categories={dynamicCategories}
                     filteredProducts={filteredProducts}
                     productAverageRating={productAverageRating}
                     selectedCategory={selectedCategory}

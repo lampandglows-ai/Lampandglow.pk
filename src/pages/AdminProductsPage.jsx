@@ -3,6 +3,7 @@ import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loa
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
 import productsService from '../utils/productsService.js'
+import categoriesService from '../utils/categoriesService.js'
 import { storage } from '../utils/firebase.js'
 import { calculateFinalPrice } from '../utils/discountHelpers.js'
 
@@ -15,6 +16,8 @@ export default function AdminProductsPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [imageUploading, setImageUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -43,6 +46,23 @@ export default function AdminProductsPage() {
       }
     }
     loadProducts()
+  }, [])
+
+  // Load categories from Firebase for dropdown
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        setCategoriesLoading(true)
+        const data = await categoriesService.getAllCategories()
+        setCategories(data)
+      } catch (e) {
+        console.error('Error loading categories:', e)
+        setMessage({ type: 'error', text: 'Failed to load categories from Firebase' })
+      } finally {
+        setCategoriesLoading(false)
+      }
+    }
+    loadCategories()
   }, [])
 
   const handleInputChange = (e) => {
@@ -108,9 +128,7 @@ export default function AdminProductsPage() {
     return getDownloadURL(storageRef)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
+  const saveProduct = async (statusOverride = null) => {
     if (!formData.name.trim() || !formData.category.trim() || !formData.price.trim() || !formData.stock.trim()) {
       setMessage({ type: 'error', text: 'Please fill all required fields (Name, Category, Price, Stock)' })
       return
@@ -146,7 +164,7 @@ export default function AdminProductsPage() {
         discountValue: discountType && !Number.isNaN(discountValue) ? discountValue : null,
         description: formData.description.trim(),
         stock: parseInt(formData.stock, 10),
-        status: formData.status,
+        status: statusOverride || formData.status,
         sku: formData.sku.trim() || null,
         images: finalImages,
         image: finalImages[0] || '',
@@ -168,7 +186,8 @@ export default function AdminProductsPage() {
         // Add new product to Firebase
         const newProduct = await productsService.createProduct(payload)
         setProducts((prev) => [newProduct, ...prev])
-        setMessage({ type: 'success', text: 'Product added successfully!' })
+        const actionText = (statusOverride || formData.status) === 'draft' ? 'saved as draft' : 'published'
+        setMessage({ type: 'success', text: `Product ${actionText} successfully!` })
       }
 
       resetForm()
@@ -182,6 +201,16 @@ export default function AdminProductsPage() {
     setTimeout(() => {
       setMessage({ type: '', text: '' })
     }, 3000)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await saveProduct()
+  }
+
+  const handleSaveAsDraft = async (e) => {
+    e.preventDefault()
+    await saveProduct('draft')
   }
 
   const resetForm = () => {
@@ -257,6 +286,23 @@ export default function AdminProductsPage() {
         setMessage({ type: '', text: '' })
       }, 3000)
     }
+  }
+
+  const handlePublish = async (product) => {
+    try {
+      const payload = { ...product, status: 'active' }
+      await productsService.updateProduct(product.id, payload)
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, status: 'active' } : p))
+      )
+      setMessage({ type: 'success', text: 'Product published successfully!' })
+    } catch (error) {
+      console.error('Error publishing product:', error)
+      setMessage({ type: 'error', text: 'Failed to publish product. Please try again.' })
+    }
+    setTimeout(() => {
+      setMessage({ type: '', text: '' })
+    }, 3000)
   }
 
   const filteredProducts = products.filter((p) => {
@@ -366,13 +412,15 @@ export default function AdminProductsPage() {
                       required
                     >
                       <option value="">Select Category</option>
-                      <option value="Table Lamps">Table Lamps</option>
-                      <option value="Floor Lamps">Floor Lamps</option>
-                      <option value="Candle Lamps">Candle Lamps</option>
-                      <option value="Roof/Ceiling Lamps">Roof/Ceiling Lamps</option>
-                      <option value="Wall Lamps">Wall Lamps</option>
-                      <option value="Hanging Lamps">Hanging Lamps</option>
-                      <option value="Bedside/Side Table Lamps">Bedside/Side Table Lamps</option>
+                      {categoriesLoading ? (
+                        <option disabled>Loading categories...</option>
+                      ) : (
+                        categories.map((cat) => (
+                          <option key={cat.id} value={cat.name}>
+                            {cat.name}
+                          </option>
+                        ))
+                      )}
                     </select>
                   </div>
 
@@ -496,8 +544,9 @@ export default function AdminProductsPage() {
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
-                      <option value="active">Active</option>
+                      <option value="active">Active (Published)</option>
                       <option value="inactive">Inactive</option>
+                      <option value="draft">Draft</option>
                     </select>
                   </div>
 
@@ -601,8 +650,17 @@ export default function AdminProductsPage() {
                     disabled={saving || imageUploading}
                     className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {editingId ? 'Update Product' : 'Add Product'}
+                    {saving && formData.status !== 'draft' && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {editingId ? 'Update & Publish' : 'Publish Product'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveAsDraft}
+                    disabled={saving || imageUploading}
+                    className="flex-1 bg-gray-600 text-white font-semibold py-3 rounded-lg hover:bg-gray-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {saving && formData.status === 'draft' && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {editingId ? 'Save as Draft' : 'Save as Draft'}
                   </button>
                   <button
                     type="button"
@@ -690,8 +748,14 @@ export default function AdminProductsPage() {
                           <p className="text-2xl font-bold text-orange-500">Rs.{product.price.toLocaleString()}</p>
                         )}
                       </div>
-                      <span className={`text-xs font-semibold px-2 py-1 rounded ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {product.status === 'active' ? 'Active' : 'Inactive'}
+                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                        product.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : product.status === 'draft'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {product.status === 'active' ? 'Active' : product.status === 'draft' ? 'Draft' : 'Inactive'}
                       </span>
                     </div>
 
@@ -707,6 +771,15 @@ export default function AdminProductsPage() {
 
                     {/* Action Buttons */}
                     <div className="flex gap-2">
+                      {product.status === 'draft' && (
+                        <button
+                          onClick={() => handlePublish(product)}
+                          className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold py-2 rounded-lg hover:shadow-lg transition flex items-center justify-center gap-2"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          Publish
+                        </button>
+                      )}
                       <button
                         onClick={() => handleEdit(product)}
                         className="flex-1 bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2"

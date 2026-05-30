@@ -12,7 +12,9 @@ export const useProducts = () => {
         setLoading(true);
         setError(null);
         const data = await productsService.getAllProducts();
-        setProducts(data);
+        // Filter out draft products — they are only visible in admin panel
+        const published = data.filter((p) => p.status !== 'draft');
+        setProducts(published);
       } catch (err) {
         setError(err.message || 'Failed to fetch products');
         console.error('Error fetching products:', err);
