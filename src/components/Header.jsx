@@ -1,7 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, LogIn } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import logoPng from '../assets/logo.png'
 
 function classNames(...classes) {
@@ -22,6 +23,7 @@ export default function Header({
   toggleTheme,
 }) {
   const navigate = useNavigate()
+  const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
 
@@ -212,18 +214,34 @@ export default function Header({
               <Moon className="h-4 w-4" />
             )}
           </button>
-          <button
-            onClick={() => handleNavigate('profile')}
-            className={classNames(
-              'inline-flex h-10 w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
-              theme === 'dark'
-                ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
-                : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
-            )}
-            aria-label="Profile"
-          >
-            <FaUserAlt className="h-4 w-4" />
-          </button>
+          {isLoggedIn() ? (
+            <button
+              onClick={() => handleNavigate('profile')}
+              className={classNames(
+                'inline-flex h-10 w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                theme === 'dark'
+                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
+                  : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+              )}
+              aria-label="Profile"
+            >
+              <FaUserAlt className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className={classNames(
+                'inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                theme === 'dark'
+                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
+                  : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+              )}
+              aria-label="Sign In"
+            >
+              <LogIn className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign In</span>
+            </button>
+          )}
           <button
             onClick={navigateToWishlist}
             className={classNames(
@@ -424,15 +442,24 @@ export default function Header({
               >
                 Cart
               </button>
-              <button
-                onClick={() => handleNavigate('profile')}
-                className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
-                  activeSection === 'profile' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
-                )}
-              >
-                Profile
-              </button>
+              {isLoggedIn() ? (
+                <button
+                  onClick={() => handleNavigate('profile')}
+                  className={classNames(
+                    'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
+                    activeSection === 'profile' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
+                  )}
+                >
+                  Profile
+                </button>
+              ) : (
+                <button
+                  onClick={() => { navigate('/login'); setMobileNavOpen(false); }}
+                  className="w-full text-right rounded-xl px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50"
+                >
+                  Sign In
+                </button>
+              )}
               <button
                 onClick={navigateToWishlist}
                 className="w-full text-right rounded-xl px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50"

@@ -26,6 +26,8 @@ import AdminCustomersPage from './pages/AdminCustomersPage.jsx'
 import AdminCouponsPage from './pages/AdminCouponsPage.jsx'
 import AdminPaymentHistoryPage from './pages/AdminPaymentHistoryPage.jsx'
 import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx'
+import AdminSocialLinksPage from './pages/AdminSocialLinksPage.jsx'
+import AdminOnboardingPage from './pages/AdminOnboardingPage.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
@@ -578,6 +580,22 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminCategoriesPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/social-links"
+            element={
+              <ProtectedAdminRoute>
+                <AdminSocialLinksPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/onboarding"
+            element={
+              <ProtectedAdminRoute>
+                <AdminOnboardingPage />
               </ProtectedAdminRoute>
             }
           />

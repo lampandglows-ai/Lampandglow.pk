@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext'
+import OnboardingPopup from './OnboardingPopup'
 import {
   Menu,
   X,
@@ -13,6 +14,8 @@ import {
   Ticket,
   DollarSign,
   FolderOpen,
+  Share2,
+  Lightbulb,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -58,6 +61,16 @@ export default function AdminLayout({ children }) {
       icon: DollarSign,
       path: '/admin/payments',
     },
+    {
+      label: 'Social Links',
+      icon: Share2,
+      path: '/admin/social-links',
+    },
+    {
+      label: 'Onboarding',
+      icon: Lightbulb,
+      path: '/admin/onboarding',
+    },
   ]
 
   const isActive = (path) => location.pathname === path
@@ -69,6 +82,9 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {/* Onboarding Popup - shown on all admin pages */}
+      <OnboardingPopup />
+
       {/* Sidebar */}
       <aside
         className={`${

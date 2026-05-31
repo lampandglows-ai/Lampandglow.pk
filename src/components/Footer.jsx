@@ -1,14 +1,50 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   FaEnvelope,
-  FaFacebookF,
-  FaInstagram,
   FaMapMarkerAlt,
-  FaPinterestP,
   FaWhatsapp,
 } from 'react-icons/fa'
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+  FaLinkedin,
+  FaXTwitter,
+  FaPinterestP,
+} from 'react-icons/fa6'
+import socialLinksService from '../utils/socialLinksService.js'
+
+const PLATFORM_ICONS = {
+  facebook: FaFacebook,
+  instagram: FaInstagram,
+  tiktok: FaTiktok,
+  youtube: FaYoutube,
+  linkedin: FaLinkedin,
+  x: FaXTwitter,
+  pinterest: FaPinterestP,
+  whatsapp: FaWhatsapp,
+}
 
 export default function Footer({ theme = 'light' }) {
+  const [socialLinks, setSocialLinks] = useState([])
+  const [loadingLinks, setLoadingLinks] = useState(true)
+
+  useEffect(() => {
+    const loadLinks = async () => {
+      try {
+        const links = await socialLinksService.getActiveSocialLinks()
+        setSocialLinks(links)
+      } catch (e) {
+        console.error('Error loading social links:', e)
+      } finally {
+        setLoadingLinks(false)
+      }
+    }
+    loadLinks()
+  }, [])
+
   return (
     <footer>
       <div
@@ -42,27 +78,27 @@ export default function Footer({ theme = 'light' }) {
               </div>
 
               <div className={theme === 'dark' ? 'mt-6 flex items-center justify-center sm:justify-start gap-5 text-stone-300' : 'mt-6 flex items-center justify-center sm:justify-start gap-5 text-yellow-100/80'}>
-                <a
-                  href="#"
-                  aria-label="Facebook"
-                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
-                >
-                  <FaFacebookF className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
-                >
-                  <FaInstagram className="h-4 w-4" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Pinterest"
-                  className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
-                >
-                  <FaPinterestP className="h-4 w-4" />
-                </a>
+                {loadingLinks ? (
+                  <span className="text-xs text-stone-400">Loading...</span>
+                ) : socialLinks.length > 0 ? (
+                  socialLinks.map((link) => {
+                    const Icon = PLATFORM_ICONS[link.platform] || FaFacebook
+                    return (
+                      <a
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={link.platform}
+                        className={theme === 'dark' ? 'hover:text-[#FFDA03]' : 'hover:text-[#FFDA03]'}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    )
+                  })
+                ) : (
+                  <span className="text-xs text-stone-400">No social links configured</span>
+                )}
               </div>
             </div>
 
