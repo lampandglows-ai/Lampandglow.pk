@@ -29,6 +29,7 @@ import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx'
 import AdminSocialLinksPage from './pages/AdminSocialLinksPage.jsx'
 import AdminOnboardingPage from './pages/AdminOnboardingPage.jsx'
 import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
+import AdminAnnouncementsPage from './pages/AdminAnnouncementsPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
@@ -606,6 +607,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminWebsitePopupsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/announcements"
+            element={
+              <ProtectedAdminRoute>
+                <AdminAnnouncementsPage />
               </ProtectedAdminRoute>
             }
           />

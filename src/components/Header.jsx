@@ -3,6 +3,7 @@ import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
 import { Moon, Sun, LogIn } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import announcementService from '../utils/announcementService.js'
 import logoPng from '../assets/logo.png'
 
 function classNames(...classes) {
@@ -26,6 +27,21 @@ export default function Header({
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [announcement, setAnnouncement] = useState('')
+
+  useEffect(() => {
+    const loadAnnouncement = async () => {
+      try {
+        const data = await announcementService.getActiveAnnouncement()
+        if (data?.message) {
+          setAnnouncement(data.message)
+        }
+      } catch (e) {
+        console.error('Error loading announcement:', e)
+      }
+    }
+    loadAnnouncement()
+  }, [])
 
   useEffect(() => {
     if (!searchOpen) return
@@ -80,24 +96,18 @@ export default function Header({
       <div className="bg-[#FFDA03] text-[#4C2600] text-xs sm:text-sm font-semibold lg-marquee">
         <div className="lg-marquee__inner py-2">
           <div className="lg-marquee__track">
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            {[...Array(8)].map((_, i) => (
+              <span key={i} className="lg-marquee__item">
+                {announcement || 'Free Shipping on Orders Above 10,000'}
+              </span>
+            ))}
           </div>
           <div className="lg-marquee__track" aria-hidden="true">
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
-            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            {[...Array(8)].map((_, i) => (
+              <span key={i} className="lg-marquee__item">
+                {announcement || 'Free Shipping on Orders Above 10,000'}
+              </span>
+            ))}
           </div>
         </div>
       </div>

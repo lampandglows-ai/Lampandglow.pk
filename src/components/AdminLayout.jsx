@@ -17,6 +17,7 @@ import {
   Share2,
   Lightbulb,
   Image,
+  Megaphone,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -76,6 +77,11 @@ export default function AdminLayout({ children }) {
       label: 'Website Popups',
       icon: Image,
       path: '/admin/website-popups',
+    },
+    {
+      label: 'Announcement Bar',
+      icon: Megaphone,
+      path: '/admin/announcements',
     },
   ]
 
