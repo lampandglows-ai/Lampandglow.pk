@@ -16,6 +16,7 @@ import {
   FolderOpen,
   Share2,
   Lightbulb,
+  Image,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -70,6 +71,11 @@ export default function AdminLayout({ children }) {
       label: 'Onboarding',
       icon: Lightbulb,
       path: '/admin/onboarding',
+    },
+    {
+      label: 'Website Popups',
+      icon: Image,
+      path: '/admin/website-popups',
     },
   ]
 

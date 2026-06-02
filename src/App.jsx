@@ -28,6 +28,8 @@ import AdminPaymentHistoryPage from './pages/AdminPaymentHistoryPage.jsx'
 import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx'
 import AdminSocialLinksPage from './pages/AdminSocialLinksPage.jsx'
 import AdminOnboardingPage from './pages/AdminOnboardingPage.jsx'
+import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
+import WebsitePopup from './components/WebsitePopup.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
@@ -599,9 +601,20 @@ function AppContent() {
               </ProtectedAdminRoute>
             }
           />
+          <Route
+            path="/admin/website-popups"
+            element={
+              <ProtectedAdminRoute>
+                <AdminWebsitePopupsPage />
+              </ProtectedAdminRoute>
+            }
+          />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         </Routes>
       </main>
+
+      {/* Website Popup - hidden on admin routes */}
+      {!isAdminRoute && <WebsitePopup />}
 
       {/* Footer - hidden on admin routes */}
       {!isAdminRoute && <Footer theme={theme} />}
