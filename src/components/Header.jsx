@@ -84,8 +84,16 @@ export default function Header({
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
           </div>
           <div className="lg-marquee__track" aria-hidden="true">
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
+            <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
             <span className="lg-marquee__item">Free Shipping on Orders Above 10,000</span>
