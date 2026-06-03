@@ -36,9 +36,9 @@ export default function AdminHeroBannersPage() {
 
   const [formData, setFormData] = useState({
     title: '', subtitle: '', badge: '', image: '', alt: '',
-    primaryLabel: 'Shop Now', primaryActionType: 'section', primaryActionValue: 'products',
+    primaryLabel: '', primaryActionType: 'section', primaryActionValue: '',
     secondaryLabel: '', secondaryActionType: 'section', secondaryActionValue: '',
-    displayOrder: 0, isActive: true,
+    displayOrder: 0, isActive: true, fitToScreen: true, fullScreen: false,
   })
 
   useEffect(() => {
@@ -84,7 +84,6 @@ export default function AdminHeroBannersPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.title.trim()) { setMessage({ type: 'error', text: 'Please enter a banner title' }); return }
     if (!formData.image) { setMessage({ type: 'error', text: 'Please upload a banner image' }); return }
 
     setSaving(true)
@@ -93,11 +92,14 @@ export default function AdminHeroBannersPage() {
         title: formData.title.trim(), subtitle: formData.subtitle.trim(), badge: formData.badge.trim(),
         image: formData.image, alt: formData.alt.trim() || formData.title.trim(),
         primaryLabel: formData.primaryLabel.trim(),
-        primaryAction: { type: formData.primaryActionType, value: formData.primaryActionValue },
+        primaryAction: formData.primaryLabel.trim()
+          ? { type: formData.primaryActionType, value: formData.primaryActionValue }
+          : null,
         secondaryLabel: formData.secondaryLabel.trim(),
         secondaryAction: formData.secondaryLabel.trim() && formData.secondaryActionValue
           ? { type: formData.secondaryActionType, value: formData.secondaryActionValue } : null,
         displayOrder: Number(formData.displayOrder) || 0, isActive: formData.isActive,
+        fitToScreen: formData.fitToScreen, fullScreen: formData.fullScreen,
       }
       if (editingId) {
         await heroBannersService.updateBanner(editingId, payload)
@@ -118,9 +120,9 @@ export default function AdminHeroBannersPage() {
   const resetForm = () => {
     setFormData({
       title: '', subtitle: '', badge: '', image: '', alt: '',
-      primaryLabel: 'Shop Now', primaryActionType: 'section', primaryActionValue: 'products',
+      primaryLabel: '', primaryActionType: 'section', primaryActionValue: '',
       secondaryLabel: '', secondaryActionType: 'section', secondaryActionValue: '',
-      displayOrder: 0, isActive: true,
+      displayOrder: 0, isActive: true, fitToScreen: true, fullScreen: false,
     })
     setImagePreview('')
     if (fileInputRef.current) fileInputRef.current.value = ''
@@ -132,9 +134,11 @@ export default function AdminHeroBannersPage() {
     setFormData({
       title: banner.title || '', subtitle: banner.subtitle || '', badge: banner.badge || '',
       image: banner.image || '', alt: banner.alt || '',
-      primaryLabel: banner.primaryLabel || 'Shop Now',
+      primaryLabel: banner.primaryLabel || '',
       primaryActionType: banner.primaryAction?.type || 'section',
-      primaryActionValue: banner.primaryAction?.value || 'products',
+      primaryActionValue: banner.primaryAction?.value || '',
+      fitToScreen: banner.fitToScreen !== false,
+      fullScreen: banner.fullScreen === true,
       secondaryLabel: banner.secondaryLabel || '',
       secondaryActionType: banner.secondaryAction?.type || 'section',
       secondaryActionValue: banner.secondaryAction?.value || '',
@@ -258,7 +262,7 @@ export default function AdminHeroBannersPage() {
                           <button onClick={() => moveBanner(index, 'down')} disabled={index === filteredBanners.length - 1} className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 rounded transition"><ChevronDown className="w-4 h-4" /></button>
                         </div>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900">{banner.title}</h3>
+                      <h3 className="text-lg font-bold text-gray-900">{banner.title || <span className="text-gray-400 italic">(No title)</span>}</h3>
                       {banner.subtitle && <p className="text-sm text-gray-500 mt-1 line-clamp-2">{banner.subtitle}</p>}
                       <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-gray-500">
                         {banner.primaryLabel && <span className="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full"><span className="font-semibold">Btn:</span> {banner.primaryLabel} &middot; {getActionLabel(banner.primaryAction)}</span>}
@@ -312,7 +316,7 @@ export default function AdminHeroBannersPage() {
                 </div>
               </div>
 
-              {/* Order + Active */}
+              {/* Order + Toggles */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Display Order</label>
@@ -326,13 +330,23 @@ export default function AdminHeroBannersPage() {
                     <label htmlFor="isActive" className="text-sm font-medium text-gray-700">Active (show on homepage)</label>
                   </div>
                 </div>
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" id="fitToScreen" name="fitToScreen" checked={formData.fitToScreen} onChange={handleInputChange}
+                    className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 border-gray-300" />
+                  <label htmlFor="fitToScreen" className="text-sm font-medium text-gray-700">Fit to Screen (cover)</label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" id="fullScreen" name="fullScreen" checked={formData.fullScreen} onChange={handleInputChange}
+                    className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 border-gray-300" />
+                  <label htmlFor="fullScreen" className="text-sm font-medium text-gray-700">Full Screen (100vh)</label>
+                </div>
               </div>
 
               {/* Content */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-3">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
-                  <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="e.g., Illuminate Your Home" required
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Title</label>
+                  <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="e.g., Illuminate Your Home"
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" />
                 </div>
                 <div className="sm:col-span-3">
@@ -354,7 +368,7 @@ export default function AdminHeroBannersPage() {
 
               {/* Primary Button */}
               <div className="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-3">
-                <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Primary Button</h4>
+                <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Primary Button (Optional)</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-2">Button Text</label>

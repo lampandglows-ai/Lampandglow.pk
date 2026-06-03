@@ -100,53 +100,63 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         <Slider {...settings}>
           {slides.map((slide) => (
             <div key={slide.id}>
-              <div className="relative h-[65vh] min-h-[360px] max-h-[700px]">
+              <div className={`relative ${slide.fullScreen ? 'h-screen' : 'h-[65vh] min-h-[360px] max-h-[700px]'}`}>
                 <img
                   src={slide.image}
                   alt={slide.alt}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className={`absolute inset-0 h-full w-full ${slide.fitToScreen !== false ? 'object-cover' : 'object-contain bg-[#4C2600]'}`}
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-r from-[#4C2600]/80 via-black/35 to-black/10" />
+                {(slide.title || slide.subtitle || slide.badge || slide.primaryLabel || slide.secondaryLabel) && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#4C2600]/80 via-black/35 to-black/10" />
+                )}
 
-                <div className="relative h-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-                  <div className="max-w-xl">
-                    {slide.badge && (
-                      <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
-                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
-                        {slide.badge}
-                      </p>
-                    )}
+                {(slide.title || slide.subtitle || slide.badge || slide.primaryLabel || slide.secondaryLabel) && (
+                  <div className="relative h-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+                    <div className="max-w-xl">
+                      {slide.badge && (
+                        <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                          {slide.badge}
+                        </p>
+                      )}
 
-                    <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
-                      {slide.title}
-                    </h1>
+                      {slide.title && (
+                        <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white ${slide.badge ? 'mt-4' : ''}`}>
+                          {slide.title}
+                        </h1>
+                      )}
 
-                    {slide.subtitle && (
-                      <p className="mt-4 text-sm sm:text-base text-white/85 leading-relaxed">
-                        {slide.subtitle}
-                      </p>
-                    )}
+                      {slide.subtitle && (
+                        <p className={`text-sm sm:text-base text-white/85 leading-relaxed ${slide.title || slide.badge ? 'mt-4' : ''}`}>
+                          {slide.subtitle}
+                        </p>
+                      )}
 
-                    <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                      <button
-                        onClick={() => onPrimaryAction(slide.primaryAction)}
-                        className="inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-6 py-2.5 text-sm font-semibold text-[#4C2600] transition-all duration-200 hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
-                      >
-                        {slide.primaryLabel}
-                      </button>
+                      {(slide.primaryLabel || slide.secondaryLabel) && (
+                        <div className={`flex flex-col sm:flex-row gap-3 ${slide.title || slide.subtitle || slide.badge ? 'mt-7' : ''}`}>
+                          {slide.primaryLabel && slide.primaryAction && (
+                            <button
+                              onClick={() => onPrimaryAction(slide.primaryAction)}
+                              className="inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-6 py-2.5 text-sm font-semibold text-[#4C2600] transition-all duration-200 hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                            >
+                              {slide.primaryLabel}
+                            </button>
+                          )}
 
-                      {slide.secondaryLabel && slide.secondaryAction && (
-                        <button
-                          onClick={() => onPrimaryAction(slide.secondaryAction)}
-                          className="inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
-                        >
-                          {slide.secondaryLabel}
-                        </button>
+                          {slide.secondaryLabel && slide.secondaryAction && (
+                            <button
+                              onClick={() => onPrimaryAction(slide.secondaryAction)}
+                              className="inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                            >
+                              {slide.secondaryLabel}
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           ))}

@@ -328,6 +328,8 @@ function AppContent() {
           primaryAction: b.primaryAction || null,
           secondaryLabel: b.secondaryLabel || '',
           secondaryAction: b.secondaryAction || null,
+          fitToScreen: b.fitToScreen !== false,
+          fullScreen: b.fullScreen === true,
         }))
         setHeroSlides(mapped)
       } catch (e) {
