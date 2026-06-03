@@ -75,13 +75,15 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
   // This ensures consistent spacing regardless of scrollbar presence
   const nextEdgeOffset = `${baseEdgeOffsetPx + scrollbarWidthPx}px`
 
+  const hasMultiple = slides.length > 1
+
   const settings = {
-    dots: true,
-    arrows: !isMobile,
+    dots: hasMultiple,
+    arrows: hasMultiple && !isMobile,
     prevArrow: isMobile ? undefined : <SliderArrow direction="prev" edgeOffset={prevEdgeOffset} />,
     nextArrow: isMobile ? undefined : <SliderArrow direction="next" edgeOffset={nextEdgeOffset} />,
-    infinite: true,
-    autoplay: true,
+    infinite: hasMultiple,
+    autoplay: hasMultiple,
     autoplaySpeed: 4500,
     speed: 600,
     slidesToShow: 1,
