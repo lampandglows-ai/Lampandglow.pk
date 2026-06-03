@@ -311,49 +311,25 @@ function AppContent() {
     setMobileNavOpen(false)
   }
 
-  const [heroSlides, setHeroSlides] = useState([
-    {
-      id: 'slide-1',
-      image: 'https://firebasestorage.googleapis.com/v0/b/lampandglow-bf771.firebasestorage.app/o/banners%2Fbnner.jpg?alt=media&token=d252c11e-5982-491e-873c-30cc33ced613',
-      alt: 'Wooden lamp on bedside table',
-      badge: '', title: '', subtitle: '', primaryLabel: '', primaryAction: null,
-      secondaryLabel: '', secondaryAction: null,
-    },
-    {
-      id: 'slide-2',
-      image: 'https://images.pexels.com/photos/1128114/pexels-photo-1128114.jpeg?auto=compress&cs=tinysrgb&w=1600',
-      alt: 'Desk lamp warm glow',
-      badge: '', title: '', subtitle: '', primaryLabel: '', primaryAction: null,
-      secondaryLabel: '', secondaryAction: null,
-    },
-    {
-      id: 'slide-3',
-      image: 'https://images.pexels.com/photos/3965520/pexels-photo-3965520.jpeg?auto=compress&cs=tinysrgb&w=1600',
-      alt: 'Wooden furniture in living room',
-      badge: '', title: '', subtitle: '', primaryLabel: '', primaryAction: null,
-      secondaryLabel: '', secondaryAction: null,
-    },
-  ])
+  const [heroSlides, setHeroSlides] = useState([])
 
   useEffect(() => {
     const loadBanners = async () => {
       try {
         const banners = await heroBannersService.getActiveBanners()
-        if (banners.length > 0) {
-          const mapped = banners.map((b) => ({
-            id: b.id,
-            image: b.image,
-            alt: b.alt || b.title,
-            badge: b.badge || '',
-            title: b.title || '',
-            subtitle: b.subtitle || '',
-            primaryLabel: b.primaryLabel || '',
-            primaryAction: b.primaryAction || null,
-            secondaryLabel: b.secondaryLabel || '',
-            secondaryAction: b.secondaryAction || null,
-          }))
-          setHeroSlides(mapped)
-        }
+        const mapped = banners.map((b) => ({
+          id: b.id,
+          image: b.image,
+          alt: b.alt || b.title,
+          badge: b.badge || '',
+          title: b.title || '',
+          subtitle: b.subtitle || '',
+          primaryLabel: b.primaryLabel || '',
+          primaryAction: b.primaryAction || null,
+          secondaryLabel: b.secondaryLabel || '',
+          secondaryAction: b.secondaryAction || null,
+        }))
+        setHeroSlides(mapped)
       } catch (e) {
         console.error('Error loading hero banners:', e)
       }
