@@ -18,6 +18,7 @@ import {
   Lightbulb,
   Image,
   Megaphone,
+  Tv,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -82,6 +83,11 @@ export default function AdminLayout({ children }) {
       label: 'Announcement Bar',
       icon: Megaphone,
       path: '/admin/announcements',
+    },
+    {
+      label: 'Hero Banners',
+      icon: Tv,
+      path: '/admin/hero-banners',
     },
   ]
 
