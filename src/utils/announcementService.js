@@ -7,9 +7,6 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-  query,
-  orderBy,
-  where,
   setDoc,
 } from 'firebase/firestore';
 
@@ -30,15 +27,12 @@ function isAnnouncementActive(ann) {
 export const announcementService = {
   getAllAnnouncements: async () => {
     try {
-      const q = query(collection(db, 'announcements'), orderBy('displayOrder', 'asc'));
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(collection(db, 'announcements'));
       const announcements = [];
       querySnapshot.forEach((doc) => {
-        announcements.push({
-          id: doc.id,
-          ...doc.data(),
-        });
+        announcements.push({ id: doc.id, ...doc.data() });
       });
+      announcements.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
       return announcements;
     } catch (error) {
       console.error('Error getting announcements:', error);
@@ -48,17 +42,12 @@ export const announcementService = {
 
   getActiveAnnouncements: async () => {
     try {
-      const q = query(
-        collection(db, 'announcements'),
-        where('isActive', '==', true),
-        orderBy('displayOrder', 'asc')
-      );
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(collection(db, 'announcements'));
       const announcements = [];
       querySnapshot.forEach((doc) => {
         announcements.push({ id: doc.id, ...doc.data() });
       });
-      return announcements.filter(isAnnouncementActive);
+      return announcements.filter(isAnnouncementActive).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
     } catch (error) {
       console.error('Error getting active announcements:', error);
       throw error;
@@ -67,17 +56,12 @@ export const announcementService = {
 
   getActiveAnnouncement: async () => {
     try {
-      const q = query(
-        collection(db, 'announcements'),
-        where('isActive', '==', true),
-        orderBy('displayOrder', 'asc')
-      );
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(collection(db, 'announcements'));
       const announcements = [];
       querySnapshot.forEach((doc) => {
         announcements.push({ id: doc.id, ...doc.data() });
       });
-      const active = announcements.filter(isAnnouncementActive);
+      const active = announcements.filter(isAnnouncementActive).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
       return active.length > 0 ? active[0] : null;
     } catch (error) {
       console.error('Error getting active announcement:', error);

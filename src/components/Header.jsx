@@ -3,7 +3,6 @@ import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
 import { Moon, Sun, LogIn } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import announcementService from '../utils/announcementService.js'
 import logoPng from '../assets/logo.png'
 
 function classNames(...classes) {
@@ -27,21 +26,6 @@ export default function Header({
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [announcement, setAnnouncement] = useState('')
-
-  useEffect(() => {
-    const loadAnnouncement = async () => {
-      try {
-        const data = await announcementService.getActiveAnnouncement()
-        if (data?.message) {
-          setAnnouncement(data.message)
-        }
-      } catch (e) {
-        console.error('Error loading announcement:', e)
-      }
-    }
-    loadAnnouncement()
-  }, [])
 
   useEffect(() => {
     if (!searchOpen) return
@@ -93,25 +77,6 @@ export default function Header({
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
     >
-      <div className="bg-[#FFDA03] text-[#4C2600] text-xs sm:text-sm font-semibold lg-marquee">
-        <div className="lg-marquee__inner py-2">
-          <div className="lg-marquee__track">
-            {[...Array(8)].map((_, i) => (
-              <span key={i} className="lg-marquee__item">
-                {announcement || 'Free Shipping on Orders Above 10,000'}
-              </span>
-            ))}
-          </div>
-          <div className="lg-marquee__track" aria-hidden="true">
-            {[...Array(8)].map((_, i) => (
-              <span key={i} className="lg-marquee__item">
-                {announcement || 'Free Shipping on Orders Above 10,000'}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
       <div className="w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center gap-4">
         <button onClick={() => handleNavigate('home')} className="flex items-center gap-2 flex-shrink-0">
           {logoError ? (
