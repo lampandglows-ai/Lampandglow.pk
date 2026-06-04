@@ -73,7 +73,7 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'fixed top-0 left-0 right-0 z-50 border-b',
+        'sticky top-9 left-0 right-0 z-50 border-b',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
     >

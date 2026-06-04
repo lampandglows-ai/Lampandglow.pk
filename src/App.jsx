@@ -394,7 +394,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={isAdminRoute ? 'flex-1' : theme === 'dark' ? 'flex-1 pt-32 md:pt-20' : 'flex-1 pt-32 md:pt-20'}>
+      <main className="flex-1">
         <Routes>
           <Route
             path="/"
