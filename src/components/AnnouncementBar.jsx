@@ -69,6 +69,8 @@ export default function AnnouncementBar() {
     }
   }
 
+  if (!visible || announcements.length === 0) return null
+
   const announcement = announcements[currentIndex] || announcements[0]
   const bg = announcement.bgColor || '#1a0f00'
   const tc = announcement.textColor || '#ffffff'
