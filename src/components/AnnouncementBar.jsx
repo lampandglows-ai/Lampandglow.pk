@@ -9,6 +9,7 @@ export default function AnnouncementBar() {
   const [announcements, setAnnouncements] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [dismissed, setDismissed] = useState(false)
+  const [debugInfo, setDebugInfo] = useState(null)
 
   useEffect(() => {
     let mounted = true
@@ -19,6 +20,8 @@ export default function AnnouncementBar() {
           announcementService.getAnnouncementBarEnabled(),
         ])
         if (!mounted) return
+        console.log('AnnouncementBar debug:', { activeCount: active.length, enabled, dismissed })
+        setDebugInfo({ activeCount: active.length, enabled, error: null })
         if (!enabled) {
           setVisible(false)
           return
@@ -27,6 +30,8 @@ export default function AnnouncementBar() {
         setVisible(active.length > 0 && !dismissed)
       } catch (e) {
         console.error('Error loading announcement bar:', e)
+        if (!mounted) return
+        setDebugInfo({ activeCount: 0, enabled: null, error: e.message || String(e) })
       }
     }
     load()
@@ -65,7 +70,25 @@ export default function AnnouncementBar() {
     }
   }
 
-  if (!visible || announcements.length === 0) return null
+  if ((!visible || announcements.length === 0) && !debugInfo?.error) {
+    // Temporarily render a thin debug strip so we can diagnose empty-state issues
+    if (debugInfo && debugInfo.activeCount === 0) {
+      return (
+        <div className="w-full bg-yellow-100 text-yellow-800 text-[10px] px-2 py-0.5 text-center">
+          Debug: 0 active announcements (bar enabled: {String(debugInfo.enabled)})
+        </div>
+      )
+    }
+    return null
+  }
+
+  if (debugInfo?.error) {
+    return (
+      <div className="w-full bg-red-100 text-red-800 text-[10px] px-2 py-0.5 text-center">
+        Debug: {debugInfo.error}
+      </div>
+    )
+  }
 
   const announcement = announcements[currentIndex] || announcements[0]
   const bg = announcement.bgColor || '#1a0f00'
