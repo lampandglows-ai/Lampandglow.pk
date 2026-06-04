@@ -32,6 +32,7 @@ import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
 import AdminAnnouncementsPage from './pages/AdminAnnouncementsPage.jsx'
 import AdminHeroBannersPage from './pages/AdminHeroBannersPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
+import AnnouncementBar from './components/AnnouncementBar.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
 import CategoriesSection from './sections/CategoriesSection.jsx'
@@ -372,6 +373,9 @@ function AppContent() {
           : 'min-h-screen bg-[#fff7e6] text-stone-900 flex flex-col'
       }
     >
+      {/* Announcement Bar - hidden on admin routes */}
+      {!isAdminRoute && <AnnouncementBar />}
+
       {/* Header - hidden on admin routes */}
       {!isAdminRoute && (
         <Header

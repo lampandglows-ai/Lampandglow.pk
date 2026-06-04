@@ -10,12 +10,27 @@ import {
   query,
   orderBy,
   where,
+  setDoc,
 } from 'firebase/firestore';
+
+function isAnnouncementActive(ann) {
+  if (!ann.isActive) return false;
+  const now = new Date();
+  if (ann.startDate) {
+    const start = new Date(ann.startDate);
+    if (now < start) return false;
+  }
+  if (ann.endDate) {
+    const end = new Date(ann.endDate);
+    if (now > end) return false;
+  }
+  return true;
+}
 
 export const announcementService = {
   getAllAnnouncements: async () => {
     try {
-      const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'announcements'), orderBy('displayOrder', 'asc'));
       const querySnapshot = await getDocs(q);
       const announcements = [];
       querySnapshot.forEach((doc) => {
@@ -31,21 +46,66 @@ export const announcementService = {
     }
   },
 
+  getActiveAnnouncements: async () => {
+    try {
+      const q = query(
+        collection(db, 'announcements'),
+        where('isActive', '==', true),
+        orderBy('displayOrder', 'asc')
+      );
+      const querySnapshot = await getDocs(q);
+      const announcements = [];
+      querySnapshot.forEach((doc) => {
+        announcements.push({ id: doc.id, ...doc.data() });
+      });
+      return announcements.filter(isAnnouncementActive);
+    } catch (error) {
+      console.error('Error getting active announcements:', error);
+      throw error;
+    }
+  },
+
   getActiveAnnouncement: async () => {
     try {
       const q = query(
         collection(db, 'announcements'),
         where('isActive', '==', true),
-        orderBy('createdAt', 'desc')
+        orderBy('displayOrder', 'asc')
       );
       const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        return { id: doc.id, ...doc.data() };
-      }
-      return null;
+      const announcements = [];
+      querySnapshot.forEach((doc) => {
+        announcements.push({ id: doc.id, ...doc.data() });
+      });
+      const active = announcements.filter(isAnnouncementActive);
+      return active.length > 0 ? active[0] : null;
     } catch (error) {
       console.error('Error getting active announcement:', error);
+      throw error;
+    }
+  },
+
+  getAnnouncementBarEnabled: async () => {
+    try {
+      const docRef = doc(db, 'settings', 'announcementBar');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data().enabled !== false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error getting announcement bar setting:', error);
+      return true;
+    }
+  },
+
+  setAnnouncementBarEnabled: async (enabled) => {
+    try {
+      const docRef = doc(db, 'settings', 'announcementBar');
+      await setDoc(docRef, { enabled, updatedAt: new Date().toISOString() }, { merge: true });
+      return { enabled };
+    } catch (error) {
+      console.error('Error setting announcement bar setting:', error);
       throw error;
     }
   },
