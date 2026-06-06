@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { X, Truck } from 'lucide-react'
+import { Truck } from 'lucide-react'
 import announcementService from '../utils/announcementService.js'
 
 export default function AnnouncementBar() {
@@ -8,7 +8,6 @@ export default function AnnouncementBar() {
   const [visible, setVisible] = useState(false)
   const [announcements, setAnnouncements] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [dismissed, setDismissed] = useState(false)
   const [debugInfo, setDebugInfo] = useState(null)
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function AnnouncementBar() {
           return
         }
         setAnnouncements(active)
-        setVisible(active.length > 0 && !dismissed)
+        setVisible(active.length > 0)
       } catch (e) {
         console.error('Error loading announcement bar:', e)
         if (!mounted) return
@@ -39,7 +38,7 @@ export default function AnnouncementBar() {
       mounted = false
       clearInterval(interval)
     }
-  }, [dismissed])
+  }, [])
 
   useEffect(() => {
     if (announcements.length <= 1) return
@@ -48,11 +47,6 @@ export default function AnnouncementBar() {
     }, 6000)
     return () => clearInterval(timer)
   }, [announcements.length])
-
-  const handleClose = () => {
-    setVisible(false)
-    setDismissed(true)
-  }
 
   const handleClick = (announcement) => {
     const hasCta = !!announcement.buttonUrl?.trim()
@@ -119,15 +113,6 @@ export default function AnnouncementBar() {
           </div>
         )}
       </div>
-
-      {/* Close button */}
-      <button
-        onClick={handleClose}
-        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/20 transition"
-        aria-label="Close announcement"
-      >
-        <X className="w-4 h-4" />
-      </button>
 
       <style>{`
         @keyframes marquee-scroll {
