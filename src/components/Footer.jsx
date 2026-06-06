@@ -143,9 +143,9 @@ export default function Footer({ theme = 'light' }) {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/shipping-policy" className="hover:underline">
+                  <a href="https://lampandglow.pk/shipping-policy" className="hover:underline">
                     Shipping Policy
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -204,7 +204,7 @@ export default function Footer({ theme = 'light' }) {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
+                  <a href="https://lampandglow.pk/shipping-policy" className="hover:underline">
                     Shipping Policy
                   </a>
                 </li>
