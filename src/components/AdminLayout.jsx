@@ -19,6 +19,7 @@ import {
   Image,
   Megaphone,
   Tv,
+  Truck,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -88,6 +89,11 @@ export default function AdminLayout({ children }) {
       label: 'Hero Banners',
       icon: Tv,
       path: '/admin/hero-banners',
+    },
+    {
+      label: 'Shipping Policy',
+      icon: Truck,
+      path: '/admin/shipping-policy',
     },
   ]
 

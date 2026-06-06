@@ -31,6 +31,8 @@ import AdminOnboardingPage from './pages/AdminOnboardingPage.jsx'
 import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
 import AdminAnnouncementsPage from './pages/AdminAnnouncementsPage.jsx'
 import AdminHeroBannersPage from './pages/AdminHeroBannersPage.jsx'
+import AdminShippingPolicyPage from './pages/AdminShippingPolicyPage.jsx'
+import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
 import AnnouncementBar from './components/AnnouncementBar.jsx'
 
@@ -499,6 +501,7 @@ function AppContent() {
             }
           />
           <Route path="/contact" element={<ContactPage theme={theme} />} />
+          <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
           <Route
@@ -614,6 +617,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminHeroBannersPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/shipping-policy"
+            element={
+              <ProtectedAdminRoute>
+                <AdminShippingPolicyPage />
               </ProtectedAdminRoute>
             }
           />

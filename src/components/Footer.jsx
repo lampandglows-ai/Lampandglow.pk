@@ -142,6 +142,11 @@ export default function Footer({ theme = 'light' }) {
                     Blog
                   </Link>
                 </li>
+                <li>
+                  <Link to="/shipping-policy" className="hover:underline">
+                    Shipping Policy
+                  </Link>
+                </li>
               </ul>
             </div>
 
