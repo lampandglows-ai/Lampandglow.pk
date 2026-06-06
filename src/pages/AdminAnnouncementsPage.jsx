@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import {
   Plus, Edit, Trash2, Search, AlertCircle, CheckCircle, Loader2, Megaphone,
-  X, Eye, EyeOff, ArrowUp, ArrowDown, Palette, CalendarDays, MousePointerClick,
-  MonitorPlay, Type, Save, ChevronDown,
+  X, Eye, EyeOff, ArrowUp, ArrowDown, Palette, CalendarDays,
+  MonitorPlay, Type, ChevronDown,
 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import announcementService from '../utils/announcementService.js'
@@ -16,29 +16,24 @@ function fmtDT(v){ if(!v) return ''; const d=new Date(v),p=n=>String(n).padStart
 
 function PreviewBar({data}){
   const bg=data.bgColor||'#1a0f00', tc=data.textColor||'#ffffff', mq=data.displayStyle==='marquee'
-  const hasCta=!!data.buttonText?.trim()&&!!data.buttonUrl?.trim()
-  const fs=data.message?.toLowerCase().includes('free shipping')
   return (
     <div className="w-full rounded-lg overflow-hidden" style={{backgroundColor:bg,color:tc}}>
       <div className="flex items-center justify-center gap-3 px-4 py-2 text-sm">
         {mq?(
           <div className="overflow-hidden w-full"><div className="whitespace-nowrap animate-marquee">
-            <span className="inline-block px-4">{data.message}</span>
-            <span className="inline-block px-4">{data.message}</span>
-            <span className="inline-block px-4">{data.message}</span>
+            <span className="inline-block px-4" dangerouslySetInnerHTML={{__html:data.message}} />
+            <span className="inline-block px-4" dangerouslySetInnerHTML={{__html:data.message}} />
+            <span className="inline-block px-4" dangerouslySetInnerHTML={{__html:data.message}} />
           </div></div>
         ):(
-          <>
-            <span className="font-medium">{data.message}</span>
-            {(hasCta||fs)&&<button className="px-3 py-1 rounded text-xs font-semibold" style={{backgroundColor:tc,color:bg}}>{fs&&!hasCta?'View Policy':data.buttonText}</button>}
-          </>
+          <span className="font-medium" dangerouslySetInnerHTML={{__html:data.message}} />
         )}
       </div>
     </div>
   )
 }
 
-function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', buttonText:'', buttonUrl:'', freeShippingLink:true, displayOrder:0, startDate:'', endDate:'' } }
+function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', displayOrder:0, startDate:'', endDate:'' } }
 
 export default function AdminAnnouncementsPage(){
   const [announcements,setAnnouncements]=useState([])
@@ -67,7 +62,7 @@ export default function AdminAnnouncementsPage(){
     e.preventDefault(); if(!form.message.trim()){ setMsg({type:'error',text:'Please enter an announcement message'}); return }
     setSaving(true)
     try{
-      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, buttonText:form.buttonText?.trim()||'', buttonUrl:form.buttonUrl?.trim()||'', freeShippingLink:form.freeShippingLink, displayOrder:Number(form.displayOrder)||0, startDate:form.startDate||null, endDate:form.endDate||null }
+      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, displayOrder:Number(form.displayOrder)||0, startDate:form.startDate||null, endDate:form.endDate||null }
       if(editingId){ await announcementService.updateAnnouncement(editingId,payload); setAnnouncements(p=>p.map(a=>a.id===editingId?{...a,...payload,updatedAt:new Date().toISOString()}:a).sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement updated!'}); setEditingId(null) }
       else { const n=await announcementService.createAnnouncement(payload); setAnnouncements(p=>[...p,n].sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement created!'}) }
       resetForm()
@@ -77,7 +72,7 @@ export default function AdminAnnouncementsPage(){
 
   const resetForm=()=>{ setForm(emptyForm()); setShowForm(false); setEditingId(null); setPreviewOpen(false) }
 
-  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', buttonText:a.buttonText||'', buttonUrl:a.buttonUrl||'', freeShippingLink:a.freeShippingLink!==false, displayOrder:a.displayOrder??0, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
+  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', displayOrder:a.displayOrder??0, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
 
   const onDelete=async(id)=>{ if(!window.confirm('Delete this announcement?')) return; try{ await announcementService.deleteAnnouncement(id); setAnnouncements(p=>p.filter(a=>a.id!==id)); setMsg({type:'success',text:'Deleted!'}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to delete.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
@@ -87,7 +82,7 @@ export default function AdminAnnouncementsPage(){
 
   const toggleBar=async()=>{ setBarLoading(true); try{ const n=!barEnabled; await announcementService.setAnnouncementBarEnabled(n); setBarEnabled(n); setMsg({type:'success',text:`Bar ${n?'enabled':'disabled'}.`}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to update bar setting.'}) } setBarLoading(false); setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
-  const filtered=announcements.filter(a=>{ const q=searchQuery.toLowerCase(); return a.message?.toLowerCase().includes(q)||a.buttonText?.toLowerCase().includes(q) })
+  const filtered=announcements.filter(a=>{ const q=searchQuery.toLowerCase(); return a.message?.toLowerCase().includes(q) })
 
   return (
     <AdminLayout>
@@ -146,8 +141,6 @@ export default function AdminAnnouncementsPage(){
                 </tr></thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((a,i)=>{
-                    const hasCta=!!a.buttonText?.trim()&&!!a.buttonUrl?.trim()
-                    const fs=a.message?.toLowerCase().includes('free shipping')
                     const scheduled=a.startDate||a.endDate
                     return (
                       <tr key={a.id} className="hover:bg-gray-50/50 transition">
@@ -161,9 +154,8 @@ export default function AdminAnnouncementsPage(){
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{backgroundColor:a.bgColor||'#1a0f00',color:a.textColor||'#ffffff'}}>{a.displayStyle==='marquee'?'Marquee':'Static'}</span>
-                            {(hasCta||fs)&&<span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 font-medium">CTA</span>}
                           </div>
-                          <p className="text-sm text-gray-800 font-medium line-clamp-2">{a.message}</p>
+                          <p className="text-sm text-gray-800 font-medium line-clamp-2" dangerouslySetInnerHTML={{__html:a.message}} />
                           <p className="text-xs text-gray-400 mt-1">{a.createdAt?new Date(a.createdAt).toLocaleString():''}</p>
                         </td>
                         <td className="px-4 py-4 text-center">
@@ -220,7 +212,8 @@ export default function AdminAnnouncementsPage(){
               {/* Message */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1"><Type className="w-4 h-4 text-gray-400" /> Announcement Message *</label>
-                <textarea name="message" value={form.message} onChange={onChange} placeholder="e.g., Free Shipping on Orders Above 10,000" rows={3} required className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white resize-none" />
+                <textarea name="message" value={form.message} onChange={onChange} placeholder="e.g., Free Shipping on Orders Above 10,000. <a href='/shipping-policy' style='text-decoration:underline'>Learn more</a>" rows={3} required className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white resize-none" />
+                <p className="mt-1.5 text-xs text-gray-400">Tip: You can add clickable links using HTML tags. Example: &lt;a href="/shipping-policy"&gt;Learn more&lt;/a&gt;</p>
               </div>
 
               {/* Display Style & Order */}
@@ -256,19 +249,6 @@ export default function AdminAnnouncementsPage(){
                       {DEFAULT_COLORS.map(c=><button key={c} type="button" onClick={()=>setForm(p=>({...p,textColor:c}))} className="w-6 h-6 rounded-full border border-gray-200" style={{backgroundColor:c}} />)}
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="border border-gray-100 rounded-xl p-4 space-y-4">
-                <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1"><MousePointerClick className="w-4 h-4 text-gray-400" /> Call-to-Action Button</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <input type="text" name="buttonText" value={form.buttonText} onChange={onChange} placeholder="Button text e.g. Shop Now" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" />
-                  <input type="text" name="buttonUrl" value={form.buttonUrl} onChange={onChange} placeholder="URL or /path" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <input type="checkbox" id="freeShippingLink" name="freeShippingLink" checked={form.freeShippingLink} onChange={onChange} className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 border-gray-300" />
-                  <label htmlFor="freeShippingLink" className="text-sm font-medium text-gray-700">Auto-link "Free Shipping" messages to Shipping Policy page</label>
                 </div>
               </div>
 
