@@ -80,19 +80,33 @@ export default function AnnouncementBar() {
     >
       <div className="flex items-center justify-center px-8 py-2 text-sm">
         {isMarquee ? (
-          <div className="overflow-hidden w-full">
-            <div
-              className="whitespace-nowrap flex"
-              style={{
-                animation: 'marquee-scroll 20s linear infinite',
-              }}
-            >
-              {Array.from({ length: 6 }).map((_, i) => (
-                <span key={i} className="inline-block px-8 shrink-0">
-                  {announcement.message}
-                </span>
-              ))}
+          <div className="flex items-center w-full gap-4">
+            <div className="overflow-hidden flex-1">
+              <div
+                className="whitespace-nowrap flex"
+                style={{
+                  animation: 'marquee-scroll 20s linear infinite',
+                }}
+              >
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <span key={i} className="inline-block px-8 shrink-0">
+                    {announcement.message}
+                  </span>
+                ))}
+              </div>
             </div>
+            {(hasCta || isFreeShipping) && (
+              <button
+                onClick={() => handleClick(announcement)}
+                className="px-3 py-1 rounded text-xs font-semibold transition hover:opacity-90 shrink-0"
+                style={{
+                  backgroundColor: tc,
+                  color: bg,
+                }}
+              >
+                {isFreeShipping && !hasCta ? 'View Policy' : announcement.buttonText}
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex items-center justify-center gap-3 flex-wrap">
