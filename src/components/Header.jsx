@@ -82,7 +82,7 @@ export default function Header({
           {logoError ? (
             <div className="h-[68px] w-[68px] p-3 sm:h-20 sm:w-20">
               <div className="h-full w-full rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-md">
-                <span className="text-white font-semibold text-2xl">LG</span>
+                <span className="text-white font-bold text-2xl">LG</span>
               </div>
             </div>
           ) : (
@@ -99,8 +99,8 @@ export default function Header({
 
         <nav
           className={classNames(
-            'hidden lg:flex items-center gap-7 text-xs font-semibold tracking-[0.12em]',
-            theme === 'dark' ? 'text-stone-200' : 'text-stone-700',
+            'hidden lg:flex items-center gap-7 text-xs font-black tracking-[0.12em]',
+            theme === 'dark' ? 'text-stone-200' : 'text-stone-800',
           )}
         >
           <button
@@ -148,7 +148,7 @@ export default function Header({
               type="text"
               placeholder="Search entire store here..."
               className={classNames(
-                'w-full bg-transparent text-sm placeholder:text-stone-400 focus:outline-none',
+                'w-full bg-transparent text-sm font-medium placeholder:text-stone-400 focus:outline-none',
                 theme === 'dark' ? 'text-stone-100' : 'text-stone-800',
               )}
             />
@@ -157,7 +157,7 @@ export default function Header({
           {searchOpen ? (
             <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-stone-200 bg-white shadow-lg overflow-hidden z-30">
               {searchSuggestions.length === 0 ? (
-                <div className="px-4 py-3 text-sm text-stone-600">No matching products.</div>
+                <div className="px-4 py-3 text-sm font-medium text-stone-600">No matching products.</div>
               ) : (
                 <ul className="py-2">
                   {searchSuggestions.map((p) => (
@@ -168,8 +168,8 @@ export default function Header({
                         onClick={() => handlePickSuggestion(p)}
                         className="w-full px-4 py-2.5 text-left hover:bg-stone-50"
                       >
-                        <div className="text-sm font-semibold text-stone-900">{p.name}</div>
-                        <div className="mt-0.5 text-[11px] text-stone-500">{p.category}</div>
+                        <div className="text-sm font-bold text-stone-900">{p.name}</div>
+                        <div className="mt-0.5 text-[11px] font-semibold text-stone-500">{p.category}</div>
                       </button>
                     </li>
                   ))}
@@ -214,7 +214,7 @@ export default function Header({
             <button
               onClick={() => navigate('/login')}
               className={classNames(
-                'inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                'inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
                   ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
                   : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
@@ -310,14 +310,14 @@ export default function Header({
                 }}
                 type="text"
                 placeholder="Search entire store here..."
-                className="w-full bg-transparent text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none"
+                className="w-full bg-transparent text-sm font-medium text-stone-800 placeholder:text-stone-400 focus:outline-none"
               />
             </div>
 
             {searchOpen ? (
               <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-stone-200 bg-white shadow-lg overflow-hidden z-30">
                 {searchSuggestions.length === 0 ? (
-                  <div className="px-4 py-3 text-sm text-stone-600">No matching products.</div>
+                  <div className="px-4 py-3 text-sm font-medium text-stone-600">No matching products.</div>
                 ) : (
                   <ul className="py-2">
                     {searchSuggestions.map((p) => (
@@ -328,8 +328,8 @@ export default function Header({
                           onClick={() => handlePickSuggestion(p)}
                           className="w-full px-4 py-2.5 text-left hover:bg-stone-50"
                         >
-                          <div className="text-sm font-semibold text-stone-900">{p.name}</div>
-                          <div className="mt-0.5 text-[11px] text-stone-500">{p.category}</div>
+                          <div className="text-sm font-bold text-stone-900">{p.name}</div>
+                          <div className="mt-0.5 text-[11px] font-semibold text-stone-500">{p.category}</div>
                         </button>
                       </li>
                     ))}
@@ -379,10 +379,10 @@ export default function Header({
               <button
                 onClick={() => handleNavigate('categories')}
                 className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
+                  'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
                   activeSection === 'categories'
                     ? 'bg-amber-50 text-amber-800'
-                    : 'text-stone-700 hover:bg-stone-50',
+                    : 'text-stone-800 hover:bg-stone-50',
                 )}
               >
                 Collection
@@ -390,10 +390,10 @@ export default function Header({
               <button
                 onClick={() => handleNavigate('products')}
                 className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
+                  'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
                   activeSection === 'products'
                     ? 'bg-amber-50 text-amber-800'
-                    : 'text-stone-700 hover:bg-stone-50',
+                    : 'text-stone-800 hover:bg-stone-50',
                 )}
               >
                 Products
@@ -401,8 +401,8 @@ export default function Header({
               <button
                 onClick={() => handleNavigate('blogs')}
                 className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
-                  activeSection === 'blogs' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
+                  'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
+                  activeSection === 'blogs' ? 'bg-amber-50 text-amber-800' : 'text-stone-800 hover:bg-stone-50',
                 )}
               >
                 Blog
@@ -410,8 +410,8 @@ export default function Header({
               <button
                 onClick={() => handleNavigate('reels')}
                 className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
-                  activeSection === 'reels' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
+                  'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
+                  activeSection === 'reels' ? 'bg-amber-50 text-amber-800' : 'text-stone-800 hover:bg-stone-50',
                 )}
               >
                 Reels
@@ -419,8 +419,8 @@ export default function Header({
               <button
                 onClick={() => handleNavigate('cart')}
                 className={classNames(
-                  'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
-                  activeSection === 'cart' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
+                  'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
+                  activeSection === 'cart' ? 'bg-amber-50 text-amber-800' : 'text-stone-800 hover:bg-stone-50',
                 )}
               >
                 Cart
@@ -429,8 +429,8 @@ export default function Header({
                 <button
                   onClick={() => handleNavigate('profile')}
                   className={classNames(
-                    'w-full text-right rounded-xl px-4 py-3 text-sm font-medium',
-                    activeSection === 'profile' ? 'bg-amber-50 text-amber-800' : 'text-stone-700 hover:bg-stone-50',
+                    'w-full text-right rounded-xl px-4 py-3 text-sm font-bold',
+                    activeSection === 'profile' ? 'bg-amber-50 text-amber-800' : 'text-stone-800 hover:bg-stone-50',
                   )}
                 >
                   Profile
@@ -438,14 +438,14 @@ export default function Header({
               ) : (
                 <button
                   onClick={() => { navigate('/login'); setMobileNavOpen(false); }}
-                  className="w-full text-right rounded-xl px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50"
+                  className="w-full text-right rounded-xl px-4 py-3 text-sm font-bold text-stone-800 hover:bg-stone-50"
                 >
                   Sign In
                 </button>
               )}
               <button
                 onClick={navigateToWishlist}
-                className="w-full text-right rounded-xl px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50"
+                className="w-full text-right rounded-xl px-4 py-3 text-sm font-bold text-stone-800 hover:bg-stone-50"
               >
                 Wishlist
               </button>
