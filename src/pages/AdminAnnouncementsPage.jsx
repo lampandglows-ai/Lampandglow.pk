@@ -33,7 +33,7 @@ function PreviewBar({data}){
   )
 }
 
-function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', displayOrder:0, startDate:'', endDate:'' } }
+function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', displayOrder:0, scrollSpeed:20, startDate:'', endDate:'' } }
 
 export default function AdminAnnouncementsPage(){
   const [announcements,setAnnouncements]=useState([])
@@ -62,7 +62,7 @@ export default function AdminAnnouncementsPage(){
     e.preventDefault(); if(!form.message.trim()){ setMsg({type:'error',text:'Please enter an announcement message'}); return }
     setSaving(true)
     try{
-      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, displayOrder:Number(form.displayOrder)||0, startDate:form.startDate||null, endDate:form.endDate||null }
+      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, displayOrder:Number(form.displayOrder)||0, scrollSpeed:Number(form.scrollSpeed)||20, startDate:form.startDate||null, endDate:form.endDate||null }
       if(editingId){ await announcementService.updateAnnouncement(editingId,payload); setAnnouncements(p=>p.map(a=>a.id===editingId?{...a,...payload,updatedAt:new Date().toISOString()}:a).sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement updated!'}); setEditingId(null) }
       else { const n=await announcementService.createAnnouncement(payload); setAnnouncements(p=>[...p,n].sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement created!'}) }
       resetForm()
@@ -72,7 +72,7 @@ export default function AdminAnnouncementsPage(){
 
   const resetForm=()=>{ setForm(emptyForm()); setShowForm(false); setEditingId(null); setPreviewOpen(false) }
 
-  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', displayOrder:a.displayOrder??0, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
+  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', displayOrder:a.displayOrder??0, scrollSpeed:a.scrollSpeed||20, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
 
   const onDelete=async(id)=>{ if(!window.confirm('Delete this announcement?')) return; try{ await announcementService.deleteAnnouncement(id); setAnnouncements(p=>p.filter(a=>a.id!==id)); setMsg({type:'success',text:'Deleted!'}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to delete.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
@@ -216,8 +216,8 @@ export default function AdminAnnouncementsPage(){
                 <p className="mt-1.5 text-xs text-gray-400">Tip: You can add clickable links using HTML tags. Example: &lt;a href="/shipping-policy"&gt;Learn more&lt;/a&gt;</p>
               </div>
 
-              {/* Display Style & Order */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Display Style, Order & Speed */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Display Style</label>
                   <select name="displayStyle" value={form.displayStyle} onChange={onChange} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
@@ -228,6 +228,11 @@ export default function AdminAnnouncementsPage(){
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Display Order</label>
                   <input type="number" name="displayOrder" value={form.displayOrder} onChange={onChange} min={0} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Scroll Speed (seconds) {form.displayStyle === 'marquee' && `(${form.scrollSpeed}s)`}</label>
+                  <input type="number" name="scrollSpeed" value={form.scrollSpeed} onChange={onChange} min={5} max={60} step={1} disabled={form.displayStyle !== 'marquee'} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed" />
+                  <p className="text-xs text-gray-400 mt-1">5-60 seconds (lower = faster)</p>
                 </div>
               </div>
 

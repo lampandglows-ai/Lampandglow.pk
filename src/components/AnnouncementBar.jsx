@@ -47,25 +47,26 @@ export default function AnnouncementBar() {
   const bg = announcement.bgColor || '#1a0f00'
   const tc = announcement.textColor || '#ffffff'
   const isMarquee = announcement.displayStyle === 'marquee'
+  const scrollSpeed = announcement.scrollSpeed || 20
 
   return (
     <div
-      className="sticky top-0 w-full z-[60]"
+      className="w-full z-[60]"
       style={{ backgroundColor: bg, color: tc }}
     >
-      <div className="flex items-center justify-center px-8 py-2 text-sm">
+      <div className="flex items-center justify-center px-4 sm:px-6 md:px-8 py-2 text-xs sm:text-sm md:text-base min-h-[2.5rem]">
         {isMarquee ? (
           <div className="overflow-hidden w-full">
             <div
               className="whitespace-nowrap flex"
               style={{
-                animation: 'marquee-scroll 20s linear infinite',
+                animation: `marquee-scroll ${scrollSpeed}s linear infinite`,
               }}
             >
               {Array.from({ length: 6 }).map((_, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-2 px-8 shrink-0"
+                  className="inline-flex items-center gap-2 px-4 sm:px-6 md:px-8 shrink-0"
                   dangerouslySetInnerHTML={{ __html: announcement.message }}
                 />
               ))}
@@ -73,7 +74,7 @@ export default function AnnouncementBar() {
           </div>
         ) : (
           <div
-            className="flex items-center justify-center gap-3 flex-wrap font-medium"
+            className="flex items-center justify-center gap-3 flex-wrap font-medium text-center"
             dangerouslySetInnerHTML={{ __html: announcement.message }}
           />
         )}
