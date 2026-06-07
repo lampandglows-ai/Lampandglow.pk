@@ -1,7 +1,6 @@
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { useEffect, useState } from 'react'
 
 export default function HeroSlider({ slides, onPrimaryAction }) {
   if (!slides || slides.length === 0) return null
@@ -58,20 +57,18 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
             {slides.map((slide) => (
               <div key={slide.id}>
                 <div
-                  className="relative w-full"
-                  style={{
-                    /* Exact image ratio 1366×768 = 16:9 — no maxHeight cap so it fills naturally */
-                    aspectRatio: slide.fullScreen ? undefined : '3780 / 1890',
-                    height: slide.fullScreen ? '100dvh' : undefined,
-                    maxHeight: slide.fullScreen ? undefined : '520px',
-                  }}
+                  className="relative w-full bg-[#4C2600]"
+                  style={{ aspectRatio: slide.fullScreen ? undefined : '3780 / 1890', height: slide.fullScreen ? '100dvh' : undefined }}
                 >
+                  {/*
+                    object-contain — image always fits fully inside the box,
+                    never stretched or cropped regardless of its original size/ratio.
+                    Background color fills any letterbox/pillarbox areas.
+                  */}
                   <img
                     src={slide.image}
                     alt={slide.alt}
-                    className={`absolute inset-0 h-full w-full ${
-                      slide.fitToScreen !== false ? 'object-cover' : 'object-contain bg-[#4C2600]'
-                    }`}
+                    className="absolute inset-0 h-full w-full object-contain"
                   />
 
                   {/* Primary button — bottom left only */}
