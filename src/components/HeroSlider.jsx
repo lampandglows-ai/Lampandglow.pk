@@ -78,13 +78,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
 
   const settings = {
     dots: hasMultiple,
-    arrows: hasMultiple && !isMobile,
-    prevArrow: isMobile ? undefined : (
-      <SliderArrow direction="prev" edgeOffset={prevEdgeOffset} />
-    ),
-    nextArrow: isMobile ? undefined : (
-      <SliderArrow direction="next" edgeOffset={nextEdgeOffset} />
-    ),
+    arrows: false,
     infinite: hasMultiple,
     autoplay: hasMultiple,
     autoplaySpeed: 4500,
