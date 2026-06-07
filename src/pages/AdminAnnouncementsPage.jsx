@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   Plus, Edit, Trash2, Search, AlertCircle, CheckCircle, Loader2, Megaphone,
-  X, Eye, EyeOff, ArrowUp, ArrowDown, Palette, CalendarDays,
+  X, Eye, EyeOff, Palette, CalendarDays,
   MonitorPlay, Type, ChevronDown,
 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
@@ -33,7 +33,7 @@ function PreviewBar({data}){
   )
 }
 
-function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', displayOrder:0, scrollSpeed:20, startDate:'', endDate:'' } }
+function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', scrollSpeed:20, startDate:'', endDate:'' } }
 
 export default function AdminAnnouncementsPage(){
   const [announcements,setAnnouncements]=useState([])
@@ -62,7 +62,7 @@ export default function AdminAnnouncementsPage(){
     e.preventDefault(); if(!form.message.trim()){ setMsg({type:'error',text:'Please enter an announcement message'}); return }
     setSaving(true)
     try{
-      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, displayOrder:Number(form.displayOrder)||0, scrollSpeed:Number(form.scrollSpeed)||20, startDate:form.startDate||null, endDate:form.endDate||null }
+      const payload={ message:form.message.trim(), isActive:form.isActive, displayStyle:form.displayStyle, bgColor:form.bgColor, textColor:form.textColor, scrollSpeed:Number(form.scrollSpeed)||20, startDate:form.startDate||null, endDate:form.endDate||null }
       if(editingId){ await announcementService.updateAnnouncement(editingId,payload); setAnnouncements(p=>p.map(a=>a.id===editingId?{...a,...payload,updatedAt:new Date().toISOString()}:a).sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement updated!'}); setEditingId(null) }
       else { const n=await announcementService.createAnnouncement(payload); setAnnouncements(p=>[...p,n].sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0))); setMsg({type:'success',text:'Announcement created!'}) }
       resetForm()
@@ -72,13 +72,11 @@ export default function AdminAnnouncementsPage(){
 
   const resetForm=()=>{ setForm(emptyForm()); setShowForm(false); setEditingId(null); setPreviewOpen(false) }
 
-  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', displayOrder:a.displayOrder??0, scrollSpeed:a.scrollSpeed||20, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
+  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', scrollSpeed:a.scrollSpeed||20, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
 
   const onDelete=async(id)=>{ if(!window.confirm('Delete this announcement?')) return; try{ await announcementService.deleteAnnouncement(id); setAnnouncements(p=>p.filter(a=>a.id!==id)); setMsg({type:'success',text:'Deleted!'}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to delete.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
   const onToggleActive=async(a)=>{ try{ const upd={...a,isActive:!a.isActive}; await announcementService.updateAnnouncement(a.id,upd); setAnnouncements(p=>p.map(x=>x.id===a.id?{...x,isActive:!x.isActive}:x)); setMsg({type:'success',text:`Announcement ${upd.isActive?'activated':'deactivated'}.`}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to update status.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
-
-  const onReorder=async(id,dir)=>{ const idx=announcements.findIndex(a=>a.id===id); if(idx===-1) return; const si=dir==='up'?idx-1:idx+1; if(si<0||si>=announcements.length) return; const u=[...announcements]; const t=u[idx].displayOrder; u[idx].displayOrder=u[si].displayOrder; u[si].displayOrder=t; u.sort((a,b)=>(a.displayOrder||0)-(b.displayOrder||0)); setAnnouncements(u); try{ await Promise.all([announcementService.updateAnnouncement(u[idx].id,{displayOrder:u[idx].displayOrder}),announcementService.updateAnnouncement(u[si].id,{displayOrder:u[si].displayOrder})]); setMsg({type:'success',text:'Order updated!'}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to update order.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
   const toggleBar=async()=>{ setBarLoading(true); try{ const n=!barEnabled; await announcementService.setAnnouncementBarEnabled(n); setBarEnabled(n); setMsg({type:'success',text:`Bar ${n?'enabled':'disabled'}.`}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to update bar setting.'}) } setBarLoading(false); setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
@@ -118,8 +116,8 @@ export default function AdminAnnouncementsPage(){
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
           <MonitorPlay className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-blue-800">Active announcements are shown in order on the website</p>
-            <p className="text-xs text-blue-600 mt-1">Use Display Order to manage the sequence. Only announcements within their scheduled window are visible.</p>
+            <p className="text-sm font-medium text-blue-800">Only announcements within their scheduled window are visible</p>
+            <p className="text-xs text-blue-600 mt-1">Active announcements will loop continuously on the website.</p>
           </div>
         </div>
 
@@ -133,24 +131,16 @@ export default function AdminAnnouncementsPage(){
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50"><tr>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3 w-12">Order</th>
                   <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">Message & Style</th>
                   <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3 w-28">Schedule</th>
                   <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3 w-24">Status</th>
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3 w-40">Actions</th>
                 </tr></thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filtered.map((a,i)=>{
+                  {filtered.map((a)=>{
                     const scheduled=a.startDate||a.endDate
                     return (
                       <tr key={a.id} className="hover:bg-gray-50/50 transition">
-                        <td className="px-4 py-4 align-middle">
-                          <div className="flex flex-col items-center gap-1">
-                            <button onClick={()=>onReorder(a.id,'up')} disabled={i===0} className="p-1 hover:bg-gray-200 rounded disabled:opacity-30"><ArrowUp className="w-3 h-3 text-gray-600" /></button>
-                            <span className="text-xs font-bold text-gray-700">{a.displayOrder??0}</span>
-                            <button onClick={()=>onReorder(a.id,'down')} disabled={i===filtered.length-1} className="p-1 hover:bg-gray-200 rounded disabled:opacity-30"><ArrowDown className="w-3 h-3 text-gray-600" /></button>
-                          </div>
-                        </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{backgroundColor:a.bgColor||'#1a0f00',color:a.textColor||'#ffffff'}}>{a.displayStyle==='marquee'?'Marquee':'Static'}</span>
@@ -216,18 +206,14 @@ export default function AdminAnnouncementsPage(){
                 <p className="mt-1.5 text-xs text-gray-400">Tip: You can add clickable links using HTML tags. Example: &lt;a href="/shipping-policy"&gt;Learn more&lt;/a&gt;</p>
               </div>
 
-              {/* Display Style, Order & Speed */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {/* Display Style & Speed */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Display Style</label>
                   <select name="displayStyle" value={form.displayStyle} onChange={onChange} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
                     <option value="static">Static</option>
                     <option value="marquee">Scrolling (Marquee)</option>
                   </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Display Order</label>
-                  <input type="number" name="displayOrder" value={form.displayOrder} onChange={onChange} min={0} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Scroll Speed (seconds) {form.displayStyle === 'marquee' && `(${form.scrollSpeed}s)`}</label>
