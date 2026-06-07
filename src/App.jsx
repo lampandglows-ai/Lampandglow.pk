@@ -396,7 +396,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-20' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[140px]' : ''}`}>
         <Routes>
           <Route
             path="/"

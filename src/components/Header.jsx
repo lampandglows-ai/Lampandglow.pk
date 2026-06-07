@@ -27,13 +27,26 @@ export default function Header({
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [headerTop, setHeaderTop] = useState('0px')
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0)
+      const announcementBar = document.querySelector('[data-announcement-bar="true"]')
+      const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0
+      
+      if (window.scrollY > announcementHeight) {
+        // Scrolled past announcement bar, move header to top
+        setHeaderTop('0px')
+        setIsScrolled(true)
+      } else {
+        // Still at top, position header below announcement bar
+        setHeaderTop(`${announcementHeight}px`)
+        setIsScrolled(false)
+      }
     }
 
     window.addEventListener('scroll', handleScroll)
+    handleScroll() // Initial call to set correct position
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -83,10 +96,11 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'fixed top-0 left-0 right-0 z-50 border-b transition-shadow duration-300',
+        'fixed left-0 right-0 z-40 border-b transition-shadow duration-300',
         isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
+      style={{ top: headerTop }}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center gap-4">
         <button onClick={() => handleNavigate('home')} className="flex items-center gap-2 flex-shrink-0">
