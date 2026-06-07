@@ -26,6 +26,16 @@ export default function Header({
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     if (!searchOpen) return
@@ -73,7 +83,8 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'sticky top-0 left-0 right-0 z-50 border-b',
+        'sticky top-0 left-0 right-0 z-50 border-b transition-shadow duration-300',
+        isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
     >
