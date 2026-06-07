@@ -20,7 +20,6 @@ function SliderArrow({ className, style, onClick, direction, edgeOffset }) {
         transform: 'translateY(-50%)',
         zIndex: 20,
         [isNext ? 'right' : 'left']: edgeOffset,
-        // Remove any default slick styles that might interfere
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -28,18 +27,15 @@ function SliderArrow({ className, style, onClick, direction, edgeOffset }) {
         height: 'auto',
       }}
     >
-      <span className="sr-only">
-        {isNext ? 'Next' : 'Previous'}
-      </span>
-
+      <span className="sr-only">{isNext ? 'Next' : 'Previous'}</span>
       <span
         aria-hidden
         className="inline-flex items-center justify-center text-white drop-shadow"
       >
         {isNext ? (
-          <ChevronRight className="h-8 w-8" />
+          <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8" />
         ) : (
-          <ChevronLeft className="h-8 w-8" />
+          <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />
         )}
       </span>
     </button>
@@ -47,7 +43,7 @@ function SliderArrow({ className, style, onClick, direction, edgeOffset }) {
 }
 
 export default function HeroSlider({ slides, onPrimaryAction }) {
-  const baseEdgeOffsetPx = 24
+  const baseEdgeOffsetPx = 12
   const [scrollbarWidthPx, setScrollbarWidthPx] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -58,32 +54,37 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
     }
 
     const updateIsMobile = () => {
-      setIsMobile(window.innerWidth < 640)
+      // Only hide arrows on very small screens (< 360px) — show on all normal mobile
+      setIsMobile(window.innerWidth < 360)
     }
 
     updateScrollbarWidth()
     updateIsMobile()
+
     window.addEventListener('resize', updateScrollbarWidth)
     window.addEventListener('resize', updateIsMobile)
-    return () => window.removeEventListener('resize', updateScrollbarWidth)
+    return () => {
+      window.removeEventListener('resize', updateScrollbarWidth)
+      window.removeEventListener('resize', updateIsMobile)
+    }
   }, [])
 
-  // For prev button: fixed offset from left
   const prevEdgeOffset = `${baseEdgeOffsetPx}px`
-  
-  // For next button: fixed offset from right, plus scrollbar width adjustment
-  // This ensures consistent spacing regardless of scrollbar presence
   const nextEdgeOffset = `${baseEdgeOffsetPx + scrollbarWidthPx}px`
 
-  if (slides.length === 0) return null
+  if (!slides || slides.length === 0) return null
 
   const hasMultiple = slides.length > 1
 
   const settings = {
     dots: hasMultiple,
     arrows: hasMultiple && !isMobile,
-    prevArrow: isMobile ? undefined : <SliderArrow direction="prev" edgeOffset={prevEdgeOffset} />,
-    nextArrow: isMobile ? undefined : <SliderArrow direction="next" edgeOffset={nextEdgeOffset} />,
+    prevArrow: isMobile ? undefined : (
+      <SliderArrow direction="prev" edgeOffset={prevEdgeOffset} />
+    ),
+    nextArrow: isMobile ? undefined : (
+      <SliderArrow direction="next" edgeOffset={nextEdgeOffset} />
+    ),
     infinite: hasMultiple,
     autoplay: hasMultiple,
     autoplaySpeed: 4500,
@@ -91,77 +92,151 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
     slidesToShow: 1,
     slidesToScroll: 1,
     pauseOnHover: true,
+    swipe: true,
+    touchMove: true,
+    // Dots styling via global CSS override below
+    appendDots: (dots) => (
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '12px',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <ul style={{ margin: 0, padding: 0, pointerEvents: 'auto' }}>{dots}</ul>
+      </div>
+    ),
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#4C2600] px-3 pb-6 pt-20 sm:pt-24 lg:pt-28 sm:px-5 sm:pb-8 lg:px-8 lg:pb-10">
-      {/* Added wrapper div to ensure consistent layout */}
-      <div className="relative overflow-hidden rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
-        <Slider {...settings}>
-          {slides.map((slide) => (
-            <div key={slide.id}>
-              <div className={`relative ${slide.fullScreen ? 'h-screen' : 'h-[65vh] min-h-[360px] max-h-[700px]'}`}>
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className={`absolute inset-0 h-full w-full ${slide.fitToScreen !== false ? 'object-cover' : 'object-contain bg-[#4C2600]'}`}
-                />
+    <>
+      {/* Scoped dot styles */}
+      <style>{`
+        .hero-slider .slick-dots li button:before {
+          color: rgba(255,255,255,0.6);
+          font-size: 8px;
+        }
+        .hero-slider .slick-dots li.slick-active button:before {
+          color: #FFDA03;
+          opacity: 1;
+        }
+        .hero-slider .slick-slide > div {
+          line-height: 0;
+        }
+      `}</style>
 
-                {(slide.title || slide.subtitle || slide.badge || slide.primaryLabel || slide.secondaryLabel) && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#4C2600]/80 via-black/35 to-black/10" />
-                )}
+      {/* No top padding/margin — section starts flush */}
+      <section className="hero-slider relative overflow-hidden bg-[#4C2600]">
+        <div className="relative overflow-hidden shadow-2xl ring-1 ring-[#FFDA03]/25">
+          <Slider {...settings}>
+            {slides.map((slide) => (
+              <div key={slide.id}>
+                {/*
+                  Use aspect-ratio so the image keeps its natural ratio on every screen.
+                  16/9 is the default; override per-slide via slide.aspectRatio e.g. "4/3".
+                  On very tall mobile screens we cap height so it doesn't dominate the viewport.
+                */}
+                <div
+                  className="relative w-full"
+                  style={{
+                    aspectRatio: slide.fullScreen
+                      ? undefined
+                      : slide.aspectRatio || '16/9',
+                    height: slide.fullScreen ? '100dvh' : undefined,
+                    maxHeight: slide.fullScreen ? undefined : '700px',
+                  }}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.alt}
+                    className={`absolute inset-0 h-full w-full ${
+                      slide.fitToScreen !== false
+                        ? 'object-cover'
+                        : 'object-contain bg-[#4C2600]'
+                    }`}
+                  />
 
-                {(slide.title || slide.subtitle || slide.badge || slide.primaryLabel || slide.secondaryLabel) && (
-                  <div className="relative h-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-                    <div className="max-w-xl">
-                      {slide.badge && (
-                        <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
-                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
-                          {slide.badge}
-                        </p>
-                      )}
+                  {(slide.title ||
+                    slide.subtitle ||
+                    slide.badge ||
+                    slide.primaryLabel ||
+                    slide.secondaryLabel) && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4C2600]/80 via-black/35 to-black/10" />
+                  )}
 
-                      {slide.title && (
-                        <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white ${slide.badge ? 'mt-4' : ''}`}>
-                          {slide.title}
-                        </h1>
-                      )}
+                  {(slide.title ||
+                    slide.subtitle ||
+                    slide.badge ||
+                    slide.primaryLabel ||
+                    slide.secondaryLabel) && (
+                    <div className="relative h-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+                      <div className="max-w-xl">
+                        {slide.badge && (
+                          <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                            {slide.badge}
+                          </p>
+                        )}
 
-                      {slide.subtitle && (
-                        <p className={`text-sm sm:text-base text-white/85 leading-relaxed ${slide.title || slide.badge ? 'mt-4' : ''}`}>
-                          {slide.subtitle}
-                        </p>
-                      )}
+                        {slide.title && (
+                          <h1
+                            className={`text-2xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white ${
+                              slide.badge ? 'mt-3 sm:mt-4' : ''
+                            }`}
+                          >
+                            {slide.title}
+                          </h1>
+                        )}
 
-                      {(slide.primaryLabel || slide.secondaryLabel) && (
-                        <div className={`flex flex-col sm:flex-row gap-3 ${slide.title || slide.subtitle || slide.badge ? 'mt-7' : ''}`}>
-                          {slide.primaryLabel && slide.primaryAction && (
-                            <button
-                              onClick={() => onPrimaryAction(slide.primaryAction)}
-                              className="inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-6 py-2.5 text-sm font-semibold text-[#4C2600] transition-all duration-200 hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
-                            >
-                              {slide.primaryLabel}
-                            </button>
-                          )}
+                        {slide.subtitle && (
+                          <p
+                            className={`text-sm sm:text-base text-white/85 leading-relaxed ${
+                              slide.title || slide.badge ? 'mt-3 sm:mt-4' : ''
+                            }`}
+                          >
+                            {slide.subtitle}
+                          </p>
+                        )}
 
-                          {slide.secondaryLabel && slide.secondaryAction && (
-                            <button
-                              onClick={() => onPrimaryAction(slide.secondaryAction)}
-                              className="inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
-                            >
-                              {slide.secondaryLabel}
-                            </button>
-                          )}
-                        </div>
-                      )}
+                        {(slide.primaryLabel || slide.secondaryLabel) && (
+                          <div
+                            className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+                              slide.title || slide.subtitle || slide.badge
+                                ? 'mt-5 sm:mt-7'
+                                : ''
+                            }`}
+                          >
+                            {slide.primaryLabel && slide.primaryAction && (
+                              <button
+                                onClick={() => onPrimaryAction(slide.primaryAction)}
+                                className="inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-5 py-2 sm:px-6 sm:py-2.5 text-sm font-semibold text-[#4C2600] transition-all duration-200 hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                              >
+                                {slide.primaryLabel}
+                              </button>
+                            )}
+
+                            {slide.secondaryLabel && slide.secondaryAction && (
+                              <button
+                                onClick={() => onPrimaryAction(slide.secondaryAction)}
+                                className="inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 py-2 sm:px-6 sm:py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                              >
+                                {slide.secondaryLabel}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
-    </section>
+            ))}
+          </Slider>
+        </div>
+      </section>
+    </>
   )
 }
