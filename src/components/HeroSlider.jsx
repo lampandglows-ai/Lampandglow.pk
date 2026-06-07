@@ -129,7 +129,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
       `}</style>
 
       {/* No top padding/margin — section starts flush */}
-      <section className="hero-slider relative overflow-hidden bg-[#4C2600]">
+      <section className="hero-slider relative overflow-hidden bg-[#4C2600] pt-4 sm:pt-6 lg:pt-8">
         <div className="relative overflow-hidden shadow-2xl ring-1 ring-[#FFDA03]/25">
           <Slider {...settings}>
             {slides.map((slide) => (
