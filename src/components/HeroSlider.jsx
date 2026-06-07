@@ -60,9 +60,9 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                 <div
                   className="relative w-full"
                   style={{
-                    aspectRatio: slide.fullScreen ? undefined : slide.aspectRatio || '16/9',
+                    /* Exact image ratio 1366×768 = 16:9 — no maxHeight cap so it fills naturally */
+                    aspectRatio: slide.fullScreen ? undefined : '1366 / 768',
                     height: slide.fullScreen ? '100dvh' : undefined,
-                    maxHeight: slide.fullScreen ? undefined : '700px',
                   }}
                 >
                   <img
