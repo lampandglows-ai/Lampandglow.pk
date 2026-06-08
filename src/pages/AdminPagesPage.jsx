@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, Eye, EyeOff, Loader2, Save } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import pagesService from '../utils/pagesService'
@@ -12,7 +12,6 @@ export default function AdminPagesPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [saving, setSaving] = useState(false)
   const editorRef = useRef(null)
-  const initialContentSet = useRef(false)
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -38,19 +37,12 @@ export default function AdminPagesPage() {
     loadPages()
   }, [])
 
-  // Sync editor innerHTML only when the form opens or edit mode changes.
-  // We avoid depending on formData.content to prevent overwriting the editor
-  // while the user is typing (which would cause cursor jumps and infinite loops).
-  useEffect(() => {
-    if (showForm && editorRef.current && !initialContentSet.current) {
-      editorRef.current.innerHTML = formData.content
-      initialContentSet.current = true
-    }
-    if (!showForm) {
-      initialContentSet.current = false
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showForm, editingId])
+  // Create a stable innerHTML object so React only writes to the editor
+  // when the form first opens or when switching edit modes — never while typing.
+  const editorInitialHtml = useMemo(
+    () => ({ __html: formData.content }),
+    [showForm, editingId],
+  )
 
   // Generate slug from title
   const generateSlug = (title) => {
@@ -418,12 +410,14 @@ export default function AdminPagesPage() {
                   <div
                     ref={editorRef}
                     contentEditable
-                    onInput={(e) =>
+                    onInput={(e) => {
+                      const html = e.currentTarget.innerHTML
                       setFormData((prev) => ({
                         ...prev,
-                        content: e.currentTarget.innerHTML,
+                        content: html,
                       }))
-                    }
+                    }}
+                    dangerouslySetInnerHTML={editorInitialHtml}
                     className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-y-auto"
                     suppressContentEditableWarning
                   />
