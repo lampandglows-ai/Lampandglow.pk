@@ -32,7 +32,9 @@ import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
 import AdminAnnouncementsPage from './pages/AdminAnnouncementsPage.jsx'
 import AdminHeroBannersPage from './pages/AdminHeroBannersPage.jsx'
 import AdminShippingPolicyPage from './pages/AdminShippingPolicyPage.jsx'
+import AdminPagesPage from './pages/AdminPagesPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
+import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
 import AnnouncementBar from './components/AnnouncementBar.jsx'
 
@@ -366,6 +368,7 @@ function AppContent() {
   }
 
   const isAdminRoute = location.pathname.startsWith('/admin')
+  const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/product', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
 
   return (
     <div
@@ -628,7 +631,18 @@ function AppContent() {
               </ProtectedAdminRoute>
             }
           />
+          <Route
+            path="/admin/pages"
+            element={
+              <ProtectedAdminRoute>
+                <AdminPagesPage />
+              </ProtectedAdminRoute>
+            }
+          />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+
+          {/* Public Pages Route */}
+          <Route path="/:slug" element={<PublicPage />} />
         </Routes>
       </main>
 

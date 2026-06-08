@@ -20,6 +20,7 @@ import {
   Megaphone,
   Tv,
   Truck,
+  FileText,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -94,6 +95,11 @@ export default function AdminLayout({ children }) {
       label: 'Shipping Policy',
       icon: Truck,
       path: '/admin/shipping-policy',
+    },
+    {
+      label: 'Pages',
+      icon: FileText,
+      path: '/admin/pages',
     },
   ]
 
