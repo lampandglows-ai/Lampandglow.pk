@@ -12,6 +12,7 @@ export default function AdminPagesPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [saving, setSaving] = useState(false)
   const editorRef = useRef(null)
+  const initialContentSet = useRef(false)
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -37,15 +38,19 @@ export default function AdminPagesPage() {
     loadPages()
   }, [])
 
-  // Sync editor innerHTML when formData.content changes (e.g., opening edit mode)
+  // Sync editor innerHTML only when the form opens or edit mode changes.
+  // We avoid depending on formData.content to prevent overwriting the editor
+  // while the user is typing (which would cause cursor jumps and infinite loops).
   useEffect(() => {
-    if (editorRef.current && showForm) {
-      const current = editorRef.current.innerHTML
-      if (current !== formData.content) {
-        editorRef.current.innerHTML = formData.content
-      }
+    if (showForm && editorRef.current && !initialContentSet.current) {
+      editorRef.current.innerHTML = formData.content
+      initialContentSet.current = true
     }
-  }, [formData.content, showForm])
+    if (!showForm) {
+      initialContentSet.current = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showForm, editingId])
 
   // Generate slug from title
   const generateSlug = (title) => {
