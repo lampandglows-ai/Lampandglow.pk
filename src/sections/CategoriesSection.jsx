@@ -1,6 +1,6 @@
 export default function CategoriesSection({ categories, onGoToProducts, onCategorySelect }) {
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">Categories</h1>
@@ -11,35 +11,46 @@ export default function CategoriesSection({ categories, onGoToProducts, onCatego
         </div>
         <button
           onClick={onGoToProducts}
-          className="inline-flex text-xs font-medium text-amber-700 hover:text-amber-800"
+          className="inline-flex text-xs font-medium text-amber-700 hover:text-amber-800 transition-colors"
         >
           Go to all products
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      {/* 2 cols on mobile → 3 on sm → 4 on lg */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
         {categories.map((category) => (
           <article
             key={category.id}
-            className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+            onClick={() => onCategorySelect(category.id)}
+            className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm cursor-pointer
+                       hover:shadow-xl hover:-translate-y-1 hover:border-amber-200
+                       transition-all duration-300 ease-out"
           >
+            {/* Image */}
             <div className="aspect-[4/3] overflow-hidden">
               <img
                 src={category.image}
                 alt={category.title}
-                className="h-full w-full object-cover transform transition-transform duration-300 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               />
             </div>
-            <div className="p-4 flex flex-col gap-2">
-              <h2 className="text-base font-semibold text-stone-900">{category.title}</h2>
-              <p className="text-xs text-stone-600">{category.description}</p>
-              <button
-                onClick={() => onCategorySelect(category.id)}
-                className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-amber-700 hover:text-amber-800"
-              >
-                View {category.title}
-                <span aria-hidden>→</span>
-              </button>
+
+            {/* Gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-900/30 via-transparent to-transparent
+                            opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" />
+
+            {/* Content */}
+            <div className="p-3 sm:p-4 flex flex-col gap-1.5">
+              <h2 className="text-sm sm:text-base font-semibold text-stone-900 group-hover:text-amber-800 transition-colors duration-200">
+                {category.title}
+              </h2>
+              <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-2">{category.description}</p>
+              <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-amber-700
+                               group-hover:gap-2 transition-all duration-200">
+                View collection
+                <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+              </span>
             </div>
           </article>
         ))}
