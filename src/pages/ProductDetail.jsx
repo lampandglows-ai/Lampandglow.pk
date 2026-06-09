@@ -228,8 +228,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
           <div className="flex flex-col gap-4">
             {/* Main Image */}
             <div className="relative overflow-hidden bg-stone-50 group">
+              {product.isNewArrival && (
+                <span className="absolute left-0 top-0 z-10 bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
+                  New Arrival
+                </span>
+              )}
               {hasDiscount && (
-                <span className="absolute left-0 top-0 z-10 bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
+                <span className={`absolute ${product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0'} z-10 bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase`}>
                   Sale
                 </span>
               )}
@@ -914,8 +919,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                     className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-stone-300"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+                      {rp.isNewArrival && (
+                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-[10px] font-bold text-white tracking-wide">
+                          New
+                        </span>
+                      )}
                       {rpInfo.hasDiscount && (
-                        <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide">
+                        <span className={`absolute ${rp.isNewArrival ? 'left-0 top-6' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide`}>
                           -{rpInfo.discountPercent}%
                         </span>
                       )}
@@ -964,7 +974,12 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                 const rpInfo = getDiscountInfo(rp)
                 return (
                   <Link key={`rv-${rp.id}`} to={`/product/${rp.id}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                    <div className="aspect-square overflow-hidden bg-stone-100">
+                    <div className="relative aspect-square overflow-hidden bg-stone-100">
+                      {rp.isNewArrival && (
+                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">
+                          New
+                        </span>
+                      )}
                       <img src={rp.image} alt={rp.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
                     <div className="p-3">

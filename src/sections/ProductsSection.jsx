@@ -77,8 +77,13 @@ export default function ProductsSection({
             >
               <Link to={`/product/${product.id}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+                  {product.isNewArrival && (
+                    <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                      New Arrival
+                    </span>
+                  )}
                   {hasDiscount ? (
-                    <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                    <span className={`absolute ${product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white`}>
                       -{discountPercent}%
                     </span>
                   ) : null}

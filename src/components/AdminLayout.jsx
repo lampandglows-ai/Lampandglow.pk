@@ -21,6 +21,7 @@ import {
   Tv,
   Truck,
   FileText,
+  Clapperboard,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -100,6 +101,11 @@ export default function AdminLayout({ children }) {
       label: 'Pages',
       icon: FileText,
       path: '/admin/pages',
+    },
+    {
+      label: 'Reels',
+      icon: Clapperboard,
+      path: '/admin/reels',
     },
   ]
 

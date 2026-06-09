@@ -1,8 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaHeart, FaRegHeart, FaShare } from 'react-icons/fa'
+import { Loader2, AlertCircle } from 'lucide-react'
+import reelsService from '../utils/reelsService'
 
-export default function ReelsPage({ reels }) {
+export default function ReelsPage() {
+  const [reels, setReels] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [liked, setLiked] = useState(() => new Set())
+
+  useEffect(() => {
+    const loadReels = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const data = await reelsService.getAllReels()
+        const activeReels = data.filter((r) => r.isActive !== false)
+        setReels(activeReels)
+      } catch (err) {
+        console.error('Error loading reels:', err)
+        setError('Failed to load reels')
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadReels()
+  }, [])
 
   function toggleLike(id) {
     setLiked((prev) => {
@@ -11,6 +34,55 @@ export default function ReelsPage({ reels }) {
       else next.add(id)
       return next
     })
+  }
+
+  if (loading) {
+    return (
+      <section className="w-full px-0 py-10 sm:py-14">
+        <div className="flex items-center justify-center min-h-[300px]">
+          <div className="text-center">
+            <Loader2 size={40} className="animate-spin mx-auto text-[#FFDA03] mb-4" />
+            <p className="text-gray-600 dark:text-gray-400">Loading reels...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="w-full px-0 py-10 sm:py-14">
+        <div className="flex items-center justify-center min-h-[300px]">
+          <div className="text-center max-w-md px-4">
+            <AlertCircle size={48} className="mx-auto text-red-600 mb-4" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Something went wrong</h2>
+            <p className="text-gray-600 dark:text-gray-400">{error}</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (reels.length === 0) {
+    return (
+      <section className="w-full px-0 py-10 sm:py-14">
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
+                Reels
+              </h1>
+              <p className="mt-1 text-xs sm:text-sm text-stone-600 max-w-2xl">
+                Short videos featuring warm-light setups, styling ideas, and product highlights.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-center min-h-[200px]">
+          <p className="text-gray-500 dark:text-gray-400">No reels available yet. Check back soon!</p>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -28,7 +100,7 @@ export default function ReelsPage({ reels }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-4 sm:px-6 lg:px-8">
         {reels.map((reel) => {
           const isLiked = liked.has(reel.id)
           return (

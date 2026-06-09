@@ -2,6 +2,8 @@ import HeroSlider from '../components/HeroSlider.jsx'
 import HomeBestSellersSlider from '../components/HomeBestSellersSlider.jsx'
 import HomeCategoriesPreview from './HomeCategoriesPreview.jsx'
 import HomeFeaturedProducts from './HomeFeaturedProducts.jsx'
+import HomeNewArrivals from './HomeNewArrivals.jsx'
+import HomeDiscountedProducts from './HomeDiscountedProducts.jsx'
 import HomeTestimonials from './HomeTestimonials.jsx'
 
 export default function HomeSection({
@@ -20,6 +22,10 @@ export default function HomeSection({
       <HeroSlider slides={heroSlides} onPrimaryAction={onHeroAction} />
 
       <HomeBestSellersSlider products={products} theme={theme} />
+
+      <HomeNewArrivals products={products} onViewAll={onViewAllProducts} theme={theme} />
+
+      <HomeDiscountedProducts products={products} onViewAll={onViewAllProducts} theme={theme} />
 
       <HomeCategoriesPreview
         categories={categories}

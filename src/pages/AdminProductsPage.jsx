@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2, Tag } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2, Tag, Sparkles, Percent } from 'lucide-react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
 import productsService from '../utils/productsService.js'
@@ -11,6 +11,7 @@ export default function AdminProductsPage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [message, setMessage] = useState({ type: '', text: '' })
@@ -29,6 +30,8 @@ export default function AdminProductsPage() {
     discountType: '',
     discountValue: '',
     sku: '',
+    isNewArrival: false,
+    isDiscounted: false,
   })
 
   // Load products from Firebase
@@ -168,6 +171,8 @@ export default function AdminProductsPage() {
         sku: formData.sku.trim() || null,
         images: finalImages,
         image: finalImages[0] || '',
+        isNewArrival: formData.isNewArrival === true,
+        isDiscounted: formData.isDiscounted === true,
       }
 
       if (editingId) {
@@ -225,6 +230,8 @@ export default function AdminProductsPage() {
       discountType: '',
       discountValue: '',
       sku: '',
+      isNewArrival: false,
+      isDiscounted: false,
     })
     setShowForm(false)
   }
@@ -267,6 +274,8 @@ export default function AdminProductsPage() {
       status: product.status || 'active',
       sku: product.sku || '',
       images,
+      isNewArrival: product.isNewArrival === true,
+      isDiscounted: product.isDiscounted === true,
     })
     setEditingId(product.id)
     setShowForm(true)
@@ -305,14 +314,49 @@ export default function AdminProductsPage() {
     }, 3000)
   }
 
+  const handleToggleNewArrival = async (product) => {
+    try {
+      const next = !product.isNewArrival
+      await productsService.toggleNewArrival(product.id, next)
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, isNewArrival: next } : p))
+      )
+      setMessage({ type: 'success', text: `Product ${next ? 'marked as' : 'removed from'} New Arrivals` })
+    } catch (error) {
+      console.error('Error toggling new arrival:', error)
+      setMessage({ type: 'error', text: 'Failed to update New Arrival status' })
+    }
+    setTimeout(() => setMessage({ type: '', text: '' }), 3000)
+  }
+
+  const handleToggleDiscounted = async (product) => {
+    try {
+      const next = !product.isDiscounted
+      await productsService.toggleDiscounted(product.id, next)
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, isDiscounted: next } : p))
+      )
+      setMessage({ type: 'success', text: `Product ${next ? 'marked as' : 'removed from'} Discounted` })
+    } catch (error) {
+      console.error('Error toggling discounted:', error)
+      setMessage({ type: 'error', text: 'Failed to update Discounted status' })
+    }
+    setTimeout(() => setMessage({ type: '', text: '' }), 3000)
+  }
+
   const filteredProducts = products.filter((p) => {
     const query = searchQuery.toLowerCase()
-    return (
+    const matchesSearch =
       p.name.toLowerCase().includes(query) ||
       p.category.toLowerCase().includes(query) ||
       p.description?.toLowerCase().includes(query) ||
       p.sku?.toLowerCase().includes(query)
-    )
+
+    if (!matchesSearch) return false
+
+    if (statusFilter === 'newArrivals') return p.isNewArrival === true
+    if (statusFilter === 'discounted') return p.isDiscounted === true
+    return true
   })
 
   const getProductImage = (product) => {
@@ -550,8 +594,37 @@ export default function AdminProductsPage() {
                     </select>
                   </div>
 
-                  {/* Spacer for alignment */}
-                  <div />
+                  {/* New Arrival Toggle */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="isNewArrival"
+                      name="isNewArrival"
+                      checked={formData.isNewArrival}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, isNewArrival: e.target.checked }))}
+                      className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
+                    />
+                    <label htmlFor="isNewArrival" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                      <Sparkles size={14} className="text-amber-500" />
+                      New Arrival
+                    </label>
+                  </div>
+
+                  {/* Discounted Toggle */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="isDiscounted"
+                      name="isDiscounted"
+                      checked={formData.isDiscounted}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, isDiscounted: e.target.checked }))}
+                      className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
+                    />
+                    <label htmlFor="isDiscounted" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                      <Percent size={14} className="text-red-500" />
+                      Discounted Product
+                    </label>
+                  </div>
                 </div>
 
                 {/* Description */}
@@ -676,16 +749,40 @@ export default function AdminProductsPage() {
           </div>
         )}
 
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search products by name, category, SKU, or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
+        {/* Search & Filter Bar */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search products by name, category, SKU, or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStatusFilter('all')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${statusFilter === 'all' ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setStatusFilter('newArrivals')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1 ${statusFilter === 'newArrivals' ? 'bg-amber-500 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}
+            >
+              <Sparkles size={14} />
+              New Arrivals
+            </button>
+            <button
+              onClick={() => setStatusFilter('discounted')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1 ${statusFilter === 'discounted' ? 'bg-red-500 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}
+            >
+              <Percent size={14} />
+              Discounted
+            </button>
+          </div>
         </div>
 
         {/* Loading State */}
@@ -729,6 +826,20 @@ export default function AdminProductsPage() {
                       </span>
                     </div>
 
+                    {/* Status Badges */}
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {product.isNewArrival && (
+                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                          <Sparkles size={10} /> New Arrival
+                        </span>
+                      )}
+                      {product.isDiscounted && (
+                        <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                          <Percent size={10} /> Sale
+                        </span>
+                      )}
+                    </div>
+
                     {product.sku && (
                       <p className="text-xs text-gray-500 mb-2 font-mono">SKU: {product.sku}</p>
                     )}
@@ -767,6 +878,34 @@ export default function AdminProductsPage() {
                       <p className="text-xs text-gray-500">
                         {product.createdAt ? new Date(product.createdAt).toLocaleDateString() : ''}
                       </p>
+                    </div>
+
+                    {/* Quick Toggles */}
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        onClick={() => handleToggleNewArrival(product)}
+                        title={product.isNewArrival ? 'Remove from New Arrivals' : 'Add to New Arrivals'}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 ${
+                          product.isNewArrival
+                            ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                            : 'bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-700'
+                        }`}
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        {product.isNewArrival ? 'New Arrival' : 'Mark New'}
+                      </button>
+                      <button
+                        onClick={() => handleToggleDiscounted(product)}
+                        title={product.isDiscounted ? 'Remove from Discounted' : 'Add to Discounted'}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 ${
+                          product.isDiscounted
+                            ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                            : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-700'
+                        }`}
+                      >
+                        <Percent className="w-3.5 h-3.5" />
+                        {product.isDiscounted ? 'On Sale' : 'Mark Sale'}
+                      </button>
                     </div>
 
                     {/* Action Buttons */}

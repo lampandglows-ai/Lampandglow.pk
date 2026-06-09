@@ -138,8 +138,13 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
                     className="flex-shrink-0 w-[78vw] sm:w-[44vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+                      {product.isNewArrival && (
+                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                          New
+                        </span>
+                      )}
                       {hasDiscount ? (
-                        <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                        <span className={`absolute ${product.isNewArrival ? 'left-0 top-6' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white`}>
                           -{discountPercent}%
                         </span>
                       ) : null}

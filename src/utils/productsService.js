@@ -10,6 +10,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  orderBy,
 } from 'firebase/firestore';
 
 export const productsService = {
@@ -50,6 +51,100 @@ export const productsService = {
       return products;
     } catch (error) {
       console.error('Error getting featured products:', error);
+      throw error;
+    }
+  },
+
+  // Get new arrival products
+  getNewArrivals: async () => {
+    try {
+      const q = query(
+        collection(db, 'products'),
+        where('isNewArrival', '==', true),
+        where('status', '==', 'active'),
+        orderBy('createdAt', 'desc'),
+        limit(8)
+      );
+      const querySnapshot = await getDocs(q);
+      const products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return products;
+    } catch (error) {
+      console.error('Error getting new arrivals:', error);
+      // Fallback: return all active products if index not ready
+      try {
+        const all = await productsService.getAllProducts();
+        return all
+          .filter((p) => p.isNewArrival === true && p.status === 'active')
+          .slice(0, 8);
+      } catch {
+        throw error;
+      }
+    }
+  },
+
+  // Get discounted products
+  getDiscountedProducts: async () => {
+    try {
+      const q = query(
+        collection(db, 'products'),
+        where('isDiscounted', '==', true),
+        where('status', '==', 'active'),
+        orderBy('createdAt', 'desc'),
+        limit(8)
+      );
+      const querySnapshot = await getDocs(q);
+      const products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return products;
+    } catch (error) {
+      console.error('Error getting discounted products:', error);
+      // Fallback: return all active products if index not ready
+      try {
+        const all = await productsService.getAllProducts();
+        return all
+          .filter((p) => p.isDiscounted === true && p.status === 'active')
+          .slice(0, 8);
+      } catch {
+        throw error;
+      }
+    }
+  },
+
+  // Toggle new arrival status
+  toggleNewArrival: async (id, isNewArrival) => {
+    try {
+      await updateDoc(doc(db, 'products', id), {
+        isNewArrival,
+        updatedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (error) {
+      console.error('Error toggling new arrival status:', error);
+      throw error;
+    }
+  },
+
+  // Toggle discounted status
+  toggleDiscounted: async (id, isDiscounted) => {
+    try {
+      await updateDoc(doc(db, 'products', id), {
+        isDiscounted,
+        updatedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (error) {
+      console.error('Error toggling discounted status:', error);
       throw error;
     }
   },
