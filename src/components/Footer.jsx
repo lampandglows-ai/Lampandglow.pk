@@ -194,7 +194,7 @@ export default function Footer({ theme = 'light' }) {
               </p>
               <ul className={theme === 'dark' ? 'mt-4 space-y-2 text-sm text-stone-300 flex flex-col items-center sm:items-start' : 'mt-4 space-y-2 text-sm text-yellow-100/80 flex flex-col items-center sm:items-start'}>
                 <li>
-                  <a href="#" className="hover:underline">
+                  <a href="https://lampandglow.pk/privacy-policy" className="hover:underline">
                     Privacy Policy
                   </a>
                 </li>
