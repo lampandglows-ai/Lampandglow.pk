@@ -38,11 +38,11 @@ export default function ReelsPage() {
 
   if (loading) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14">
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center">
             <Loader2 size={40} className="animate-spin mx-auto text-[#FFDA03] mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Loading reels...</p>
+            <p className="text-white/70">Loading reels...</p>
           </div>
         </div>
       </section>
@@ -51,12 +51,12 @@ export default function ReelsPage() {
 
   if (error) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14">
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center max-w-md px-4">
             <AlertCircle size={48} className="mx-auto text-red-600 mb-4" />
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Something went wrong</h2>
-            <p className="text-gray-600 dark:text-gray-400">{error}</p>
+            <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
+            <p className="text-white/70">{error}</p>
           </div>
         </div>
       </section>
@@ -65,35 +65,35 @@ export default function ReelsPage() {
 
   if (reels.length === 0) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14">
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
+              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
                 Reels
               </h1>
-              <p className="mt-1 text-xs sm:text-sm text-stone-600 max-w-2xl">
+              <p className="mt-1 text-xs sm:text-sm text-white/70 max-w-2xl">
                 Short videos featuring warm-light setups, styling ideas, and product highlights.
               </p>
             </div>
           </div>
         </div>
         <div className="flex items-center justify-center min-h-[200px]">
-          <p className="text-gray-500 dark:text-gray-400">No reels available yet. Check back soon!</p>
+          <p className="text-white/60">No reels available yet. Check back soon!</p>
         </div>
       </section>
     )
   }
 
   return (
-    <section className="w-full px-0 py-10 sm:py-14">
+    <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
               Reels
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-stone-600 max-w-2xl">
+            <p className="mt-1 text-xs sm:text-sm text-white/70 max-w-2xl">
               Short videos featuring warm-light setups, styling ideas, and product highlights.
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function ReelsPage() {
           return (
             <article
               key={reel.id}
-              className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden"
+              className="rounded-2xl border border-[#FFDA03]/20 bg-[#5c3418] shadow-sm overflow-hidden"
             >
               <div className="relative bg-black">
                 <div className="aspect-[9/16]">
@@ -131,21 +131,21 @@ export default function ReelsPage() {
               <div className="p-3 flex items-center justify-between">
                 <button
                   onClick={() => toggleLike(reel.id)}
-                  className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-800 hover:bg-stone-50"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#FFDA03]/20 bg-[#5c3418] px-3 py-2 text-xs font-semibold text-white/90 hover:bg-[#5c3418]/80"
                 >
                   {isLiked ? (
                     <FaHeart className="text-rose-600" />
                   ) : (
-                    <FaRegHeart className="text-stone-700" />
+                    <FaRegHeart className="text-white/70" />
                   )}
                   {isLiked ? 'Liked' : 'Like'}
                 </button>
 
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-800 hover:bg-stone-50"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#FFDA03]/20 bg-[#5c3418] px-3 py-2 text-xs font-semibold text-white/90 hover:bg-[#5c3418]/80"
                 >
-                  <FaShare className="text-stone-700" />
+                  <FaShare className="text-white/70" />
                   Share
                 </button>
               </div>

@@ -27,12 +27,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#4C2600] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-xl p-8">
+        <div className="bg-[#5c3418] rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-orange-600">LampandGlow</h1>
-            <p className="text-gray-600 mt-2">Sign in to your account</p>
+            <h1 className="text-3xl font-bold text-[#FFDA03]">LampandGlow</h1>
+            <p className="text-white/70 mt-2">Sign in to your account</p>
           </div>
 
           {error && (
@@ -44,34 +44,34 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white/80 mb-1">
                 Email
               </label>
               <div className="relative">
-                <Mail size={18} className="absolute left-3 top-3 text-gray-400" />
+                <Mail size={18} className="absolute left-3 top-3 text-white/50" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full pl-10 pr-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white placeholder:text-white/40"
                   placeholder="your@email.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white/80 mb-1">
                 Password
               </label>
               <div className="relative">
-                <Lock size={18} className="absolute left-3 top-3 text-gray-400" />
+                <Lock size={18} className="absolute left-3 top-3 text-white/50" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full pl-10 pr-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white placeholder:text-white/40"
                   placeholder="••••••••"
                 />
               </div>
@@ -87,10 +87,10 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-center text-gray-600 text-sm">
+          <div className="mt-6 pt-6 border-t border-[#FFDA03]/20">
+            <p className="text-center text-white/70 text-sm">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-orange-600 hover:text-orange-700 font-semibold">
+              <Link to="/signup" className="text-[#FFDA03] hover:text-yellow-300 font-semibold">
                 Sign Up
               </Link>
             </p>

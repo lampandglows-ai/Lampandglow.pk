@@ -25,11 +25,11 @@ function ChevronDown({ open }) {
 function Accordion({ icon, title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border-b border-stone-200">
+    <div className="border-b border-[#FFDA03]/20">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 py-4 text-left text-sm font-semibold text-stone-800 transition-colors hover:text-stone-900"
+        className="flex w-full items-center justify-between gap-3 py-4 text-left text-sm font-semibold text-white/90 transition-colors hover:text-white"
       >
         <span className="flex items-center gap-2.5">
           {icon}
@@ -43,7 +43,7 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
           open ? 'max-h-[600px] pb-5 opacity-100' : 'max-h-0 opacity-0',
         )}
       >
-        <div className="text-[13px] leading-relaxed text-stone-600">{children}</div>
+        <div className="text-[13px] leading-relaxed text-white/70">{children}</div>
       </div>
     </div>
   )
@@ -70,16 +70,16 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   /* ── not found ── */
   if (!product) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14">
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
         <div className="px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 hover:text-amber-800"
+            className="inline-flex items-center gap-1 text-xs font-medium text-amber-300 hover:text-amber-200"
           >
             <span aria-hidden>←</span>
             Back
           </button>
-          <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 text-sm text-stone-700">
+          <div className="mt-6 rounded-2xl border border-[#FFDA03]/20 bg-[#5c3418] p-6 text-sm text-white/80">
             Product not found.
           </div>
         </div>
@@ -204,18 +204,18 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   const pd = product.productDetails || {}
 
   return (
-    <section className="w-full bg-white">
+    <section className="w-full bg-[#4C2600]">
       {/* ═══════════════ BREADCRUMBS ═══════════════ */}
-      <div className="border-b border-stone-100">
+      <div className="border-b border-[#FFDA03]/10">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-stone-500">
-            <button type="button" onClick={() => navigate('/')} className="hover:text-stone-800 transition-colors">
+          <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-white/60">
+            <button type="button" onClick={() => navigate('/')} className="hover:text-white/90 transition-colors">
               Home
             </button>
-            <span aria-hidden className="text-stone-300">/</span>
-            <span className="hover:text-stone-800 transition-colors cursor-pointer">{product.category}</span>
-            <span aria-hidden className="text-stone-300">/</span>
-            <span className="text-stone-800 font-medium">{product.name}</span>
+            <span aria-hidden className="text-white/30">/</span>
+            <span className="hover:text-white/90 transition-colors cursor-pointer">{product.category}</span>
+            <span aria-hidden className="text-white/30">/</span>
+            <span className="text-white/90 font-medium">{product.name}</span>
           </div>
         </div>
       </div>
@@ -227,7 +227,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
             {/* Main Image */}
-            <div className="relative overflow-hidden bg-stone-50 group">
+            <div className="relative overflow-hidden bg-[#4C2600] group">
               {product.isNewArrival && (
                 <span className="absolute left-0 top-0 z-10 bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
                   New Arrival
@@ -257,8 +257,8 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   className={classNames(
                     'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200',
                     idx === activeImageIndex
-                      ? 'border-stone-900 opacity-100'
-                      : 'border-transparent opacity-50 hover:opacity-80 hover:border-stone-300',
+                      ? 'border-white opacity-100'
+                      : 'border-transparent opacity-50 hover:opacity-80 hover:border-[#FFDA03]/30',
                   )}
                 >
                   <img
