@@ -6,8 +6,8 @@ import {
 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import blogsService from '../utils/blogsService.js'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import ReactQuill from 'react-quill-new'
+import 'react-quill-new/dist/quill.snow.css'
 
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-600' },
