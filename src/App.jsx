@@ -368,6 +368,7 @@ function AppContent() {
   }
 
   const isAdminRoute = location.pathname.startsWith('/admin')
+  const isDarkContentPage = ['/', '/blogs', '/blog', '/reels'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
   const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/product', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
 
   return (
@@ -399,7 +400,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[140px]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[140px]' : ''} ${isDarkContentPage ? 'bg-[#4C2600]' : ''}`}>
         <Routes>
           <Route
             path="/"
