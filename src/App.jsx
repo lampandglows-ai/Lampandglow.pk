@@ -34,6 +34,7 @@ import AdminHeroBannersPage from './pages/AdminHeroBannersPage.jsx'
 import AdminShippingPolicyPage from './pages/AdminShippingPolicyPage.jsx'
 import AdminPagesPage from './pages/AdminPagesPage.jsx'
 import AdminReelsPage from './pages/AdminReelsPage.jsx'
+import AdminBlogsPage from './pages/AdminBlogsPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -50,7 +51,6 @@ import useProducts from './hooks/useProducts.js'
 import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import heroBannersService from './utils/heroBannersService.js'
-import { BLOGS } from './data/blogs.js'
 import { TESTIMONIALS } from './data/testimonials.js'
 
 // Protected Admin Route Component
@@ -481,8 +481,8 @@ function AppContent() {
               </>
             )}
           />
-          <Route path="/blogs" element={<BlogsList blogs={BLOGS} />} />
-          <Route path="/blog/:id" element={<BlogDetail blogs={BLOGS} />} />
+          <Route path="/blogs" element={<BlogsList />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/reels" element={<ReelsPage />} />
           <Route path="/about" element={<AboutPage theme={theme} />} />
           <Route path="/login" element={<LoginPage />} />
@@ -644,6 +644,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminReelsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/blogs"
+            element={
+              <ProtectedAdminRoute>
+                <AdminBlogsPage />
               </ProtectedAdminRoute>
             }
           />

@@ -22,6 +22,7 @@ import {
   Truck,
   FileText,
   Clapperboard,
+  BookOpen,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -106,6 +107,11 @@ export default function AdminLayout({ children }) {
       label: 'Reels',
       icon: Clapperboard,
       path: '/admin/reels',
+    },
+    {
+      label: 'Blogs',
+      icon: BookOpen,
+      path: '/admin/blogs',
     },
   ]
 

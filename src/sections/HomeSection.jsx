@@ -5,6 +5,7 @@ import HomeFeaturedProducts from './HomeFeaturedProducts.jsx'
 import HomeNewArrivals from './HomeNewArrivals.jsx'
 import HomeDiscountedProducts from './HomeDiscountedProducts.jsx'
 import HomeTestimonials from './HomeTestimonials.jsx'
+import HomeBlogs from './HomeBlogs.jsx'
 
 export default function HomeSection({
   heroSlides,
@@ -35,6 +36,8 @@ export default function HomeSection({
       />
 
       <HomeFeaturedProducts products={products} onViewAll={onViewAllProducts} theme={theme} />
+
+      <HomeBlogs />
 
       <HomeTestimonials testimonials={testimonials} />
     </section>
