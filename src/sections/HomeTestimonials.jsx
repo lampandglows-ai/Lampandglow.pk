@@ -1,6 +1,6 @@
 export default function HomeTestimonials({ testimonials }) {
   return (
-    <section className="relative w-full px-0 py-14 sm:py-16 bg-[rgba(76,38,0,1)] overflow-hidden">
+    <section className="relative w-full px-0 py-14 sm:py-16 bg-transparent overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute left-1/2 top-24 -translate-x-1/2 text-[140px] sm:text-[180px] leading-none tracking-[0.2em] text-amber-200 select-none">
           ★ ★ ★ ★ ★

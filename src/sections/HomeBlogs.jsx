@@ -35,7 +35,7 @@ export default function HomeBlogs() {
   if (blogs.length === 0) return null
 
   return (
-    <section className="py-12 sm:py-16 bg-[#4C2600]">
+    <section className="py-12 sm:py-16 bg-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-4 mb-8">
           <div>

@@ -1,14 +1,12 @@
-export default function HomeCategoriesPreview({ categories, onViewAll, onPickCategory, theme = 'light' }) {
-  const isDark = theme === 'dark'
-
+export default function HomeCategoriesPreview({ categories, onViewAll, onPickCategory }) {
   return (
-    <section className={isDark ? 'w-full py-10 sm:py-14 bg-transparent' : 'w-full py-10 sm:py-14 bg-[#4C2600]/90'}>
+    <section className="w-full py-10 sm:py-14 bg-transparent">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className={isDark ? 'text-2xl sm:text-3xl font-semibold tracking-tight text-stone-100' : 'text-2xl sm:text-3xl font-semibold tracking-tight text-[#FFDA03]'}>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#FFDA03]">
             Featured Collections
           </h2>
-          <p className={isDark ? 'mt-2 text-xs sm:text-sm text-stone-300' : 'mt-2 text-xs sm:text-sm text-yellow-100/80'}>
+          <p className="mt-2 text-xs sm:text-sm text-yellow-100/80">
             Explore our carefully curated lighting collections, designed for every room and style.
           </p>
         </div>
@@ -67,9 +65,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
         <div className="mt-6 flex justify-center">
           <button
             onClick={onViewAll}
-            className={isDark
-              ? 'inline-flex text-xs font-semibold text-amber-300 hover:text-amber-200 transition-colors'
-              : 'inline-flex text-xs font-semibold text-[#FFDA03] hover:text-yellow-300 transition-colors'}
+            className="inline-flex text-xs font-semibold text-[#FFDA03] hover:text-yellow-300 transition-colors"
           >
             View all collections →
           </button>

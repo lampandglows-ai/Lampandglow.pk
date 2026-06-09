@@ -20,7 +20,7 @@ function shuffleArray(array) {
   return shuffled
 }
 
-export default function HomeFeaturedProducts({ products, onViewAll, theme = 'light' }) {
+export default function HomeFeaturedProducts({ products, onViewAll }) {
   // Randomly shuffle and pick 4 products
   const randomProducts = useMemo(() => {
     if (!products || products.length === 0) return []
@@ -29,37 +29,21 @@ export default function HomeFeaturedProducts({ products, onViewAll, theme = 'lig
   }, [products])
 
   return (
-    <section
-      className={
-        theme === 'dark'
-          ? 'bg-transparent border-y border-white/10'
-          : 'bg-[#3d1f00]/80 border-y border-[#FFDA03]/20'
-      }
-    >
+    <section className="bg-transparent">
       <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <h2
-                className={
-                  theme === 'dark'
-                    ? 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-100'
-                    : 'text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]'
-                }
-              >
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
                 Featured Pieces
               </h2>
-              <p className={theme === 'dark' ? 'mt-1 text-xs sm:text-sm text-stone-300' : 'mt-1 text-xs sm:text-sm text-yellow-100/80'}>
+              <p className="mt-1 text-xs sm:text-sm text-yellow-100/80">
                 Handpicked decor to start your Lamp &amp; Glow collection.
               </p>
             </div>
             <button
               onClick={onViewAll}
-              className={
-                theme === 'dark'
-                  ? 'hidden sm:inline-flex text-xs font-medium text-amber-300 hover:text-amber-200'
-                  : 'hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300'
-              }
+              className="hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300"
             >
               View all products
             </button>

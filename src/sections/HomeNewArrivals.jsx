@@ -11,7 +11,7 @@ const formatPricePKR = (value) => {
   }).format(value)
 }
 
-export default function HomeNewArrivals({ products, onViewAll, theme = 'light' }) {
+export default function HomeNewArrivals({ products, onViewAll }) {
   const newArrivals = useMemo(() => {
     if (!products || products.length === 0) return []
     return products
@@ -22,40 +22,24 @@ export default function HomeNewArrivals({ products, onViewAll, theme = 'light' }
   if (newArrivals.length === 0) return null
 
   return (
-    <section
-      className={
-        theme === 'dark'
-          ? 'bg-transparent border-y border-white/10'
-          : 'bg-white border-y border-stone-200'
-      }
-    >
+    <section className="bg-transparent">
       <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <h2
-                className={
-                  theme === 'dark'
-                    ? 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-100'
-                    : 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-900'
-                }
-              >
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
                 <span className="inline-flex items-center gap-2">
                   <Sparkles className="w-6 h-6 text-amber-500" />
                   New Arrivals
                 </span>
               </h2>
-              <p className={theme === 'dark' ? 'mt-1 text-xs sm:text-sm text-stone-300' : 'mt-1 text-xs sm:text-sm text-stone-500'}>
+              <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
                 The latest additions to our handcrafted collection.
               </p>
             </div>
             <button
               onClick={onViewAll}
-              className={
-                theme === 'dark'
-                  ? 'hidden sm:inline-flex text-xs font-medium text-amber-300 hover:text-amber-200'
-                  : 'hidden sm:inline-flex text-xs font-medium text-amber-600 hover:text-amber-700'
-              }
+              className="hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300"
             >
               View all products
             </button>

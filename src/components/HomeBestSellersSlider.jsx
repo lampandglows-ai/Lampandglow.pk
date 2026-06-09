@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 
-export default function HomeBestSellersSlider({ products = [], theme = 'light' }) {
+export default function HomeBestSellersSlider({ products = [] }) {
   const scrollContainerRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -61,31 +61,13 @@ export default function HomeBestSellersSlider({ products = [], theme = 'light' }
   }
 
   return (
-    <section
-      className={
-        theme === 'dark'
-          ? 'bg-transparent border-b border-white/10'
-          : 'bg-[#4C2600]/95 border-b border-[#FFDA03]/20'
-      }
-    >
+    <section className="bg-transparent">
       <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8 mb-8">
-          <h2
-            className={
-              theme === 'dark'
-                ? 'text-xl sm:text-2xl font-semibold tracking-tight text-stone-100'
-                : 'text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]'
-            }
-          >
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
             Explore our best sellers
           </h2>
-          <p
-            className={
-              theme === 'dark'
-                ? 'mt-1 text-xs sm:text-sm text-stone-300'
-                : 'mt-1 text-xs sm:text-sm text-yellow-100/85'
-            }
-          >
+          <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
             Handpicked decor to start your Lamp & Glow collection.
           </p>
         </div>
