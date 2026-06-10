@@ -428,7 +428,7 @@ const Header = forwardRef(function Header({
 
       {/* ── Mobile nav drawer ── */}
       {mobileNavOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden overflow-x-hidden">
+        <div className="fixed inset-0 z-[200] lg:hidden overflow-x-hidden">
           {/* Backdrop */}
           <button
             type="button"
