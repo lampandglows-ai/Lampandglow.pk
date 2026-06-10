@@ -44,7 +44,7 @@ export default function AnnouncementBar() {
   const itemHtml = announcement.message + separator
 
   return (
-    <div className="w-full z-[60] overflow-hidden" data-announcement-bar="true" style={{ backgroundColor: bg, color: tc }}>
+    <div className="w-full overflow-hidden relative" data-announcement-bar="true" style={{ backgroundColor: bg, color: tc }}>
       {/*
         Two identical halves side-by-side.
         We animate translateX from 0 to -50% — exactly one full half-width.

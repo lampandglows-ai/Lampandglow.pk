@@ -107,7 +107,7 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'fixed left-0 right-0 z-40 border-b transition-all duration-300 ease-in-out',
+        'fixed left-0 right-0 z-50 border-b transition-all duration-300 ease-in-out',
         isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
