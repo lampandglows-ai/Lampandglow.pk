@@ -16,28 +16,20 @@ export default function HomeBestSellersSlider({ products = [] }) {
     }).format(value)
   }
 
-  // Remove duplicate products, exclude new arrivals, prioritize discount offers, get first 12
+  // Remove duplicates, exclude new arrivals and discounted products, get first 12
   const uniqueProducts = useMemo(() => {
     const seen = new Set()
-    const activeUnique = products.filter((p) => {
+    return products.filter((p) => {
       if (seen.has(p.id)) return false
       seen.add(p.id)
-      return p.status === 'active' && p.isNewArrival !== true
-    })
-
-    const withDiscount = []
-    const withoutDiscount = []
-
-    activeUnique.forEach((p) => {
       const info = getDiscountInfo(p)
-      if (p.isDiscounted === true || info.hasDiscount) {
-        withDiscount.push(p)
-      } else {
-        withoutDiscount.push(p)
-      }
-    })
-
-    return [...withDiscount, ...withoutDiscount].slice(0, 12)
+      return (
+        p.status === 'active' &&
+        p.isNewArrival !== true &&
+        p.isDiscounted !== true &&
+        !info.hasDiscount
+      )
+    }).slice(0, 12)
   }, [products])
 
   const checkScroll = () => {
@@ -48,7 +40,6 @@ export default function HomeBestSellersSlider({ products = [] }) {
     }
   }
 
-  // Check scroll position on mount and when content changes
   useEffect(() => {
     checkScroll()
     window.addEventListener('resize', checkScroll)
@@ -62,8 +53,6 @@ export default function HomeBestSellersSlider({ products = [] }) {
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
       })
-
-      // Update button states after scroll
       setTimeout(checkScroll, 300)
     }
   }
@@ -80,7 +69,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
             Explore our best sellers
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
-            Handpicked decor to start your Lamp & Glow collection.
+            Illuminate Your Home with Timeless Craftsmanship
+Explore our most-loved wooden lamps, crafted to light up your moments.
           </p>
         </div>
 
@@ -123,7 +113,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
               onScroll={checkScroll}
             >
               {uniqueProducts.map((product) => {
-                const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
+                const { hasDiscount, originalPrice, discountedPrice } = getDiscountInfo(product)
 
                 return (
                   <Link
@@ -137,11 +127,6 @@ export default function HomeBestSellersSlider({ products = [] }) {
                           New
                         </span>
                       )}
-                      {hasDiscount ? (
-                        <span className={`absolute ${product.isNewArrival ? 'left-0 top-6' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white`}>
-                          -{discountPercent}%
-                        </span>
-                      ) : null}
                       <img
                         src={product.image || (product.images && product.images[0])}
                         alt={product.name}
@@ -155,11 +140,6 @@ export default function HomeBestSellersSlider({ products = [] }) {
                       </h3>
 
                       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                        {hasDiscount ? (
-                          <span className="text-stone-500 line-through text-xs">
-                            Rs.{formatPrice(originalPrice)}
-                          </span>
-                        ) : null}
                         <span className="font-bold text-orange-600">Rs.{formatPrice(discountedPrice)}</span>
                       </div>
 
