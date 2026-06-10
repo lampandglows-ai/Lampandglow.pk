@@ -123,7 +123,8 @@ const Header = forwardRef(function Header({
     <header
       ref={ref}
       className={classNames(
-        'fixed left-0 right-0 top-0 z-50 border-b transition-shadow duration-300',
+        // FIX: raised from z-50 to z-[150] so it always sits above sliders/carousels
+        'fixed left-0 right-0 top-0 z-[150] border-b transition-shadow duration-300',
         isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
@@ -278,7 +279,7 @@ const Header = forwardRef(function Header({
             <button
               onClick={() => navigate('/login')}
               className={classNames(
-                'inline-flex h-9 w-9 sm:h-10 sm:w-auto sm:px-4 items-center justify-center gap-1.5 rounded-full border text-xs sm:text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                'inline-flex h-9 w-9 sm:h-10 sm:auto sm:px-4 items-center justify-center gap-1.5 rounded-full border text-xs sm:text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
                   ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
                   : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
@@ -428,6 +429,7 @@ const Header = forwardRef(function Header({
 
       {/* ── Mobile nav drawer ── */}
       {mobileNavOpen && (
+        // FIX: raised from z-40 to z-[200] so the drawer always renders above sliders/carousels
         <div className="fixed inset-0 z-[200] lg:hidden overflow-x-hidden">
           {/* Backdrop */}
           <button
