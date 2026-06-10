@@ -16,7 +16,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
     if (!products || products.length === 0) return []
     return products
       .filter((p) => p.isNewArrival === true && p.status === 'active')
-      .slice(0, 4)
+      .slice(0, 5)
   }, [products])
 
   if (newArrivals.length === 0) return null
@@ -47,7 +47,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
         </div>
 
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             {newArrivals.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 

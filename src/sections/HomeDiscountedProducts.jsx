@@ -19,7 +19,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
         const info = getDiscountInfo(p)
         return (p.isDiscounted === true || info.hasDiscount) && p.status === 'active'
       })
-      .slice(0, 4)
+      .slice(0, 5)
   }, [products])
 
   if (discounted.length === 0) return null
@@ -50,7 +50,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
         </div>
 
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             {discounted.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 

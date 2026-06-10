@@ -400,7 +400,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[140px]' : ''} ${isDarkContentPage ? 'bg-[#4C2600]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[120px]' : ''} ${isDarkContentPage ? 'bg-[#4C2600]' : ''}`}>
         <Routes>
           <Route
             path="/"

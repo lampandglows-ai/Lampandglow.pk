@@ -52,7 +52,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         }
       `}</style>
 
-      <section className="hero-slider bg-[#4C2600] px-3 sm:px-5 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 lg:pb-8">
+      <section className="hero-slider bg-[#4C2600] px-3 sm:px-5 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-4 sm:pb-6 lg:pb-8">
         <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
           <Slider {...settings}>
             {slides.map((slide) => (
@@ -63,7 +63,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                     /* Exact image ratio 1366×768 = 16:9 — no maxHeight cap so it fills naturally */
                     aspectRatio: slide.fullScreen ? undefined : '3780 / 1890',
                     height: slide.fullScreen ? '100dvh' : undefined,
-                    maxHeight: slide.fullScreen ? undefined : '520px',
+                    maxHeight: slide.fullScreen ? undefined : '572px',
                   }}
                 >
                   <img

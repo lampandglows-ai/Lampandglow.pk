@@ -11,9 +11,9 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
           </p>
         </div>
 
-        {/* 2 cols mobile → 3 cols sm → 4 cols desktop */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-          {categories.slice(0, 8).map((category) => (
+        {/* 2 cols mobile → 3 cols sm → 5 cols desktop, 1 row only */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5">
+          {categories.slice(0, 5).map((category) => (
             <button
               key={category.id}
               onClick={() => onPickCategory(category.id)}

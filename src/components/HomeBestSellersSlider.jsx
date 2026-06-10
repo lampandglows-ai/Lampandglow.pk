@@ -16,16 +16,28 @@ export default function HomeBestSellersSlider({ products = [] }) {
     }).format(value)
   }
 
-  // Remove duplicate products and get first 12
+  // Remove duplicate products, exclude new arrivals, prioritize discount offers, get first 12
   const uniqueProducts = useMemo(() => {
     const seen = new Set()
-    return products
-      .filter((p) => {
-        if (seen.has(p.id)) return false
-        seen.add(p.id)
-        return true
-      })
-      .slice(0, 12)
+    const activeUnique = products.filter((p) => {
+      if (seen.has(p.id)) return false
+      seen.add(p.id)
+      return p.status === 'active' && p.isNewArrival !== true
+    })
+
+    const withDiscount = []
+    const withoutDiscount = []
+
+    activeUnique.forEach((p) => {
+      const info = getDiscountInfo(p)
+      if (p.isDiscounted === true || info.hasDiscount) {
+        withDiscount.push(p)
+      } else {
+        withoutDiscount.push(p)
+      }
+    })
+
+    return [...withDiscount, ...withoutDiscount].slice(0, 12)
   }, [products])
 
   const checkScroll = () => {

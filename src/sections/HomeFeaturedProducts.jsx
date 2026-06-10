@@ -25,7 +25,7 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
   const randomProducts = useMemo(() => {
     if (!products || products.length === 0) return []
     const shuffled = shuffleArray(products)
-    return shuffled.slice(0, 4)
+    return shuffled.slice(0, 5)
   }, [products])
 
   return (
@@ -51,7 +51,7 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
         </div>
 
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             {randomProducts.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
