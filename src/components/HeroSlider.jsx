@@ -53,7 +53,6 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         .hero-slider .slick-slide > div {
           line-height: 0;
         }
-        /* Ensure dots are above image */
         .hero-slider .slick-dots {
           bottom: 0;
           z-index: 10;
@@ -65,19 +64,10 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
           <Slider {...settings}>
             {slides.map((slide) => (
               <div key={slide.id}>
-                {/*
-                  Responsive aspect-ratio ladder:
-                  - default (< 400px phones): 3/2  — very compact, avoids huge blank space
-                  - sm (≥ 640px):             16/9 — standard mobile/tablet landscape
-                  - lg (≥ 1024px):            2/1  — wide desktop hero
-                  max-h clamps prevent the ratio from growing too tall on large screens.
-                */}
                 <div
                   className={[
                     'relative w-full',
-                    'aspect-[3/2]',
-                    'sm:aspect-[16/9]',
-                    'lg:aspect-[2/1]',
+                    'aspect-[2/1]',
                     'max-h-[240px]',
                     'sm:max-h-[400px]',
                     'lg:max-h-[572px]',
@@ -96,10 +86,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                     decoding="async"
                   />
 
-                  {/* Subtle gradient overlay so CTA button is always readable */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
 
-                  {/* CTA button — bottom-left, scales with breakpoint */}
                   {slide.primaryLabel && slide.primaryAction && (
                     <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 lg:bottom-7 lg:left-7">
                       <button
@@ -111,11 +99,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                           'hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5',
                           'active:translate-y-0 active:scale-[0.98]',
                           'motion-reduce:transform-none motion-reduce:transition-none',
-                          // xs: compact
                           'px-3 py-1.5 text-xs',
-                          // sm+: comfortable
                           'sm:px-5 sm:py-2 sm:text-sm',
-                          // lg+: generous
                           'lg:px-6 lg:py-2.5',
                         ].join(' ')}
                       >
