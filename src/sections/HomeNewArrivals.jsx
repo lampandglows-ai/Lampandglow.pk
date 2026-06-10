@@ -34,7 +34,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
                 </span>
               </h2>
               <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
-                The latest additions to our handcrafted collection.
+               Discover our newest handcrafted wooden lamps, where natural beauty meets timeless craftsmanship. ✨
               </p>
             </div>
             <button
