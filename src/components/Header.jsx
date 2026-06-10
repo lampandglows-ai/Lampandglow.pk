@@ -30,24 +30,35 @@ export default function Header({
   const [headerTop, setHeaderTop] = useState('0px')
 
   useEffect(() => {
-    const handleScroll = () => {
-      const announcementBar = document.querySelector('[data-announcement-bar="true"]')
+    const announcementBar = document.querySelector('[data-announcement-bar="true"]')
+
+    const updatePosition = () => {
       const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0
-      
       if (window.scrollY > announcementHeight) {
-        // Scrolled past announcement bar, move header to top
         setHeaderTop('0px')
         setIsScrolled(true)
       } else {
-        // Still at top, position header below announcement bar
         setHeaderTop(`${announcementHeight}px`)
         setIsScrolled(false)
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Initial call to set correct position
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', updatePosition)
+    updatePosition() // Initial call
+
+    // Watch for announcement bar height changes (it loads async from Firebase)
+    const resizeObserver = announcementBar ? new ResizeObserver(updatePosition) : null
+    if (resizeObserver) resizeObserver.observe(announcementBar)
+
+    // Also watch for the bar appearing/disappearing in the DOM
+    const mutationObserver = new MutationObserver(updatePosition)
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition)
+      if (resizeObserver) resizeObserver.disconnect()
+      mutationObserver.disconnect()
+    }
   }, [])
 
   useEffect(() => {
@@ -96,7 +107,7 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'fixed left-0 right-0 z-40 border-b transition-shadow duration-300',
+        'fixed left-0 right-0 z-40 border-b transition-all duration-300 ease-in-out',
         isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
