@@ -64,32 +64,54 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
           <Slider {...settings}>
             {slides.map((slide) => (
               <div key={slide.id}>
+                {/* 
+                  padding-bottom: 50% = strictly enforces 2:1 ratio (width / 2)
+                  This is immune to browser zoom because it's always
+                  calculated as a percentage of the element's own width.
+                */}
                 <div
-                  className={[
-                    'relative w-full',
-                    'aspect-[2/1]',
-                    'max-h-[240px]',
-                    'sm:max-h-[400px]',
-                    'lg:max-h-[572px]',
-                  ].join(' ')}
                   style={{
-                    height: slide.fullScreen ? '100dvh' : undefined,
+                    position: 'relative',
+                    width: '100%',
+                    paddingBottom: '50%', /* 2:1 ratio — 3780/1890 = 2, so 1/2 = 50% */
+                    height: 0,
+                    overflow: 'hidden',
                   }}
                 >
                   <img
                     src={slide.image}
                     alt={slide.alt}
-                    className={`absolute inset-0 h-full w-full ${
-                      slide.fitToScreen !== false ? 'object-cover' : 'object-contain bg-[#4C2600]'
-                    }`}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: slide.fitToScreen !== false ? 'cover' : 'contain',
+                      backgroundColor: slide.fitToScreen === false ? '#4C2600' : undefined,
+                    }}
                     loading="lazy"
                     decoding="async"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                  {/* Gradient overlay */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.30), transparent)',
+                      pointerEvents: 'none',
+                    }}
+                  />
 
+                  {/* CTA button */}
                   {slide.primaryLabel && slide.primaryAction && (
-                    <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 lg:bottom-7 lg:left-7">
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 'clamp(10px, 3%, 28px)',
+                        left: 'clamp(10px, 3%, 28px)',
+                      }}
+                    >
                       <button
                         onClick={() => onPrimaryAction(slide.primaryAction)}
                         className={[
