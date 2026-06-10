@@ -64,16 +64,16 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
           <Slider {...settings}>
             {slides.map((slide) => (
               <div key={slide.id}>
-                {/* 
-                  padding-bottom: 50% = strictly enforces 2:1 ratio (width / 2)
-                  This is immune to browser zoom because it's always
-                  calculated as a percentage of the element's own width.
+                {/*
+                  padding-bottom: 37.037% = strictly enforces 3780:1400 ratio
+                  Formula: (1400 / 3780) × 100 = 37.037%
+                  Immune to browser zoom — always % of element's own width.
                 */}
                 <div
                   style={{
                     position: 'relative',
                     width: '100%',
-                    paddingBottom: '50%', /* 2:1 ratio — 3780/1890 = 2, so 1/2 = 50% */
+                    paddingBottom: '37.037%',
                     height: 0,
                     overflow: 'hidden',
                   }}
