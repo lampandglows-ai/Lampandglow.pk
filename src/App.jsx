@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext'
@@ -317,6 +317,20 @@ function AppContent() {
   }
 
   const [heroSlides, setHeroSlides] = useState([])
+  const headerRef = useRef(null)
+  const [headerHeight, setHeaderHeight] = useState(120)
+
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+    const updateHeight = () => {
+      setHeaderHeight(header.offsetHeight)
+    }
+    updateHeight()
+    const ro = new ResizeObserver(updateHeight)
+    ro.observe(header)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     const loadBanners = async () => {
@@ -384,7 +398,7 @@ function AppContent() {
 
       {/* Header - hidden on admin routes */}
       {!isAdminRoute && (
-        <Header
+        <Header ref={headerRef}
           activeSection={activeSection}
           cartItemsCount={cartItemsCount}
           handleNavigate={handleNavigate}
@@ -400,7 +414,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[120px]' : ''} ${isDarkContentPage ? 'bg-[#4C2600]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? '' : ''} ${isDarkContentPage ? 'bg-[#4C2600]' : ''}`} style={{ paddingTop: !isAdminRoute ? `${headerHeight}px` : undefined }}>
         <Routes>
           <Route
             path="/"

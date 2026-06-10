@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, forwardRef } from 'react'
 import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
 import { Moon, Sun, LogIn } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +9,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header({
+const Header = forwardRef(function Header({
   activeSection,
   cartItemsCount,
   handleNavigate,
@@ -21,7 +21,7 @@ export default function Header({
   setSearchQuery,
   theme,
   toggleTheme,
-}) {
+}, ref) {
   const navigate = useNavigate()
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
@@ -118,6 +118,7 @@ export default function Header({
 
   return (
     <header
+      ref={ref}
       className={classNames(
         'fixed left-0 right-0 top-0 z-50 border-b transition-shadow duration-300',
         isScrolled && 'shadow-md',
@@ -178,8 +179,8 @@ export default function Header({
         </nav>
 
         <div className="hidden md:flex flex-1 relative" data-search-root="true">
-          <div className="w-full flex items-center gap-3 rounded-full border border-stone-200 bg-stone-50 px-4 py-2 shadow-sm">
-            <FaSearch className="text-stone-500" />
+          <div className={classNames('w-full flex items-center gap-3 rounded-full border shadow-sm px-4 py-2', theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-stone-200 bg-stone-50')}>
+            <FaSearch className={theme === 'dark' ? 'text-stone-400' : 'text-stone-500'} />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -203,9 +204,9 @@ export default function Header({
           </div>
 
           {searchOpen ? (
-            <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-stone-200 bg-white shadow-lg overflow-hidden z-30">
+            <div className={classNames('absolute left-0 right-0 top-full mt-2 rounded-2xl border shadow-lg overflow-hidden z-30', theme === 'dark' ? 'border-white/10 bg-[#2b1500]' : 'border-stone-200 bg-white')}>
               {searchSuggestions.length === 0 ? (
-                <div className="px-4 py-3 text-sm font-medium text-stone-600">No matching products.</div>
+                <div className={classNames('px-4 py-3 text-sm font-medium', theme === 'dark' ? 'text-stone-300' : 'text-stone-600')}>No matching products.</div>
               ) : (
                 <ul className="py-2">
                   {searchSuggestions.map((p) => (
@@ -214,10 +215,10 @@ export default function Header({
                         type="button"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => handlePickSuggestion(p)}
-                        className="w-full px-4 py-2.5 text-left hover:bg-stone-50"
+                        className={classNames('w-full px-4 py-2.5 text-left', theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-stone-50')}
                       >
-                        <div className="text-sm font-bold text-stone-900">{p.name}</div>
-                        <div className="mt-0.5 text-[11px] font-semibold text-stone-500">{p.category}</div>
+                        <div className={classNames('text-sm font-bold', theme === 'dark' ? 'text-stone-100' : 'text-stone-900')}>{p.name}</div>
+                        <div className={classNames('mt-0.5 text-[11px] font-semibold', theme === 'dark' ? 'text-stone-400' : 'text-stone-500')}>{p.category}</div>
                       </button>
                     </li>
                   ))}
@@ -262,7 +263,7 @@ export default function Header({
             <button
               onClick={() => navigate('/login')}
               className={classNames(
-                'inline-flex h-10 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                'inline-flex h-10 w-10 sm:w-auto sm:px-4 items-center justify-center gap-1.5 rounded-full border px-0 text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
                   ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
                   : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
@@ -338,11 +339,11 @@ export default function Header({
         </div>
       </div>
 
-      <div className="md:hidden border-t border-stone-200 bg-white">
+      <div className={classNames('md:hidden border-t', theme === 'dark' ? 'border-white/10 bg-[#1a0f00]' : 'border-stone-200 bg-white')}>
         <div className="w-full px-4 sm:px-6 lg:px-8 py-3">
           <div className="relative" data-search-root="true">
-            <div className="flex items-center gap-3 rounded-full border border-stone-200 bg-stone-50 px-4 py-2">
-              <FaSearch className="text-stone-500" />
+            <div className={classNames('flex items-center gap-3 rounded-full border px-4 py-2', theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-stone-200 bg-stone-50')}>
+              <FaSearch className={theme === 'dark' ? 'text-stone-400' : 'text-stone-500'} />
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -358,32 +359,35 @@ export default function Header({
                 }}
                 type="text"
                 placeholder="Search entire store here..."
-                className="w-full bg-transparent text-sm font-medium text-stone-800 placeholder:text-stone-400 focus:outline-none"
+                className={classNames('w-full bg-transparent text-sm font-medium placeholder:text-stone-400 focus:outline-none', theme === 'dark' ? 'text-stone-100' : 'text-stone-800')}
               />
             </div>
 
             {searchOpen ? (
-              <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-stone-200 bg-white shadow-lg overflow-hidden z-30">
-                {searchSuggestions.length === 0 ? (
-                  <div className="px-4 py-3 text-sm font-medium text-stone-600">No matching products.</div>
-                ) : (
-                  <ul className="py-2">
-                    {searchSuggestions.map((p) => (
-                      <li key={p.id}>
-                        <button
-                          type="button"
-                          onMouseDown={(e) => e.preventDefault()}
-                          onClick={() => handlePickSuggestion(p)}
-                          className="w-full px-4 py-2.5 text-left hover:bg-stone-50"
-                        >
-                          <div className="text-sm font-bold text-stone-900">{p.name}</div>
-                          <div className="mt-0.5 text-[11px] font-semibold text-stone-500">{p.category}</div>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <>
+                <div className="fixed inset-x-0 top-[136px] bottom-0 bg-black/20 backdrop-blur-sm z-40 md:hidden" onClick={() => setSearchOpen(false)} />
+                <div className={classNames('absolute left-0 right-0 top-full mt-2 rounded-2xl border shadow-2xl overflow-hidden z-50 max-h-[70vh] overflow-y-auto', theme === 'dark' ? 'border-white/10 bg-[#2b1500]' : 'border-stone-200 bg-white')}>
+                  {searchSuggestions.length === 0 ? (
+                    <div className={classNames('px-4 py-3 text-sm font-medium', theme === 'dark' ? 'text-stone-300' : 'text-stone-600')}>No matching products.</div>
+                  ) : (
+                    <ul className="py-2">
+                      {searchSuggestions.map((p) => (
+                        <li key={p.id}>
+                          <button
+                            type="button"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => handlePickSuggestion(p)}
+                            className={classNames('w-full px-4 py-2.5 text-left', theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-stone-50')}
+                          >
+                            <div className={classNames('text-sm font-bold', theme === 'dark' ? 'text-stone-100' : 'text-stone-900')}>{p.name}</div>
+                            <div className={classNames('mt-0.5 text-[11px] font-semibold', theme === 'dark' ? 'text-stone-400' : 'text-stone-500')}>{p.category}</div>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
             ) : null}
           </div>
         </div>
@@ -503,4 +507,6 @@ export default function Header({
       )}
     </header>
   )
-}
+})
+
+export default Header

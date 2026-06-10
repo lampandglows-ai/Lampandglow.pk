@@ -58,12 +58,9 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
             {slides.map((slide) => (
               <div key={slide.id}>
                 <div
-                  className="relative w-full"
+                  className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2/1] max-h-[280px] sm:max-h-[400px] lg:max-h-[572px]"
                   style={{
-                    /* Exact image ratio 1366×768 = 16:9 — no maxHeight cap so it fills naturally */
-                    aspectRatio: slide.fullScreen ? undefined : '3780 / 1890',
                     height: slide.fullScreen ? '100dvh' : undefined,
-                    maxHeight: slide.fullScreen ? undefined : '572px',
                   }}
                 >
                   <img
