@@ -30,10 +30,13 @@ export default function Header({
   const [headerTop, setHeaderTop] = useState('0px')
 
   useEffect(() => {
-    const announcementBar = document.querySelector('[data-announcement-bar="true"]')
+    let resizeObserver = null
+    let observedBar = null
 
     const updatePosition = () => {
-      const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0
+      const bar = document.querySelector('[data-announcement-bar="true"]')
+      const announcementHeight = bar ? bar.offsetHeight : 0
+
       if (window.scrollY > announcementHeight) {
         setHeaderTop('0px')
         setIsScrolled(true)
@@ -41,16 +44,27 @@ export default function Header({
         setHeaderTop(`${announcementHeight}px`)
         setIsScrolled(false)
       }
+
+      // Set up ResizeObserver on the bar if it just appeared
+      if (bar && bar !== observedBar) {
+        if (resizeObserver) resizeObserver.disconnect()
+        resizeObserver = new ResizeObserver(updatePosition)
+        resizeObserver.observe(bar)
+        observedBar = bar
+      }
+
+      // Clean up ResizeObserver if bar was removed
+      if (!bar && resizeObserver) {
+        resizeObserver.disconnect()
+        resizeObserver = null
+        observedBar = null
+      }
     }
 
     window.addEventListener('scroll', updatePosition)
     updatePosition() // Initial call
 
-    // Watch for announcement bar height changes (it loads async from Firebase)
-    const resizeObserver = announcementBar ? new ResizeObserver(updatePosition) : null
-    if (resizeObserver) resizeObserver.observe(announcementBar)
-
-    // Also watch for the bar appearing/disappearing in the DOM
+    // Watch for the bar appearing/disappearing in the DOM
     const mutationObserver = new MutationObserver(updatePosition)
     mutationObserver.observe(document.body, { childList: true, subtree: true })
 
