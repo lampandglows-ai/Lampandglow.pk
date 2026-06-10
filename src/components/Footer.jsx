@@ -54,7 +54,7 @@ export default function Footer({ theme = 'light' }) {
             : 'border-t border-[#FFDA03]/20 bg-[#2b1500]'
         }
       >
-        <div className="max-w-7xl mx-auto py-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-4">
             <div className="text-center sm:text-left">
               <p className={theme === 'dark' ? 'text-sm font-semibold text-[#FFDA03]' : 'text-sm font-semibold text-[#FFDA03]'}>
@@ -252,7 +252,7 @@ export default function Footer({ theme = 'light' }) {
       </div>
 
       <div className={theme === 'dark' ? 'bg-[#1a0f00] border-t border-white/10' : 'bg-[#1a0f00] border-t border-[#FFDA03]/20'}>
-        <div className={theme === 'dark' ? 'max-w-7xl mx-auto py-4 text-center text-xs text-stone-400' : 'max-w-7xl mx-auto py-4 text-center text-xs text-yellow-100/60'}>
+        <div className={theme === 'dark' ? 'w-full px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-stone-400' : 'w-full px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-yellow-100/60'}>
           © {new Date().getFullYear()} All rights reserved by Lampandglow.
         </div>
       </div>
