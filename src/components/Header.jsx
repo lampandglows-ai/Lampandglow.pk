@@ -27,7 +27,7 @@ export default function Header({
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [headerTop, setHeaderTop] = useState('0px')
+  const [headerTranslate, setHeaderTranslate] = useState(0)
 
   useEffect(() => {
     let resizeObserver = null
@@ -35,15 +35,13 @@ export default function Header({
 
     const updatePosition = () => {
       const bar = document.querySelector('[data-announcement-bar="true"]')
-      const announcementHeight = bar ? bar.offsetHeight : 0
+      const barHeight = bar ? bar.offsetHeight : 0
+      const scrollY = window.scrollY
 
-      if (window.scrollY > announcementHeight) {
-        setHeaderTop('0px')
-        setIsScrolled(true)
-      } else {
-        setHeaderTop(`${announcementHeight}px`)
-        setIsScrolled(false)
-      }
+      // Scroll together with the bar until it's out of view, then stick at top
+      const translateY = scrollY < barHeight ? barHeight - scrollY : 0
+      setHeaderTranslate(translateY)
+      setIsScrolled(scrollY > barHeight)
 
       // Set up ResizeObserver on the bar if it just appeared
       if (bar && bar !== observedBar) {
@@ -121,11 +119,11 @@ export default function Header({
   return (
     <header
       className={classNames(
-        'fixed left-0 right-0 z-50 border-b transition-all duration-300 ease-in-out',
+        'fixed left-0 right-0 top-0 z-50 border-b transition-shadow duration-300',
         isScrolled && 'shadow-md',
         theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
       )}
-      style={{ top: headerTop }}
+      style={{ transform: `translateY(${headerTranslate}px)` }}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center gap-4">
         <button onClick={() => handleNavigate('home')} className="flex items-center gap-2 flex-shrink-0">
