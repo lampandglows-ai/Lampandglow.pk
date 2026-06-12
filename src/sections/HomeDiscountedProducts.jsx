@@ -50,7 +50,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
         </div>
 
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5">
             {discounted.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
