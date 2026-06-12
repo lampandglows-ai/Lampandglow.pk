@@ -4,10 +4,10 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#FFDA03]">
-            Featured Collections
+            Explore Our Wooden Lamp Collections
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-yellow-100/80">
-            Explore our carefully curated lighting collections, designed for every room and style.
+           Discover unique handcrafted designs and find the perfect piece to light up your home.
           </p>
         </div>
 

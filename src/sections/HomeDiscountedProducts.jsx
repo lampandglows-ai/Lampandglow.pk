@@ -33,11 +33,11 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
               <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
                 <span className="inline-flex items-center gap-2">
                   <Percent className="w-6 h-6 text-red-500" />
-                  On Sale
+                  Glow More, Spend Less
                 </span>
               </h2>
               <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
-                Limited-time deals on our finest pieces.
+                Enjoy exclusive discounts on our most-loved wooden creations.
               </p>
             </div>
             <button

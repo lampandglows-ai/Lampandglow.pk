@@ -35,10 +35,10 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
               <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
-                Featured Pieces
+                Featured Glow Pieces
               </h2>
               <p className="mt-1 text-xs sm:text-sm text-yellow-100/80">
-                Handpicked decor to start your Lamp &amp; Glow collection.
+                Unique wooden lamps curated to start your perfect home collection.
               </p>
             </div>
             <button

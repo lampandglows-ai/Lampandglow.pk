@@ -66,11 +66,10 @@ export default function HomeBestSellersSlider({ products = [] }) {
       <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8 mb-8">
           <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
-            Explore our best sellers
+            Illuminate Your Home with Timeless Craftsmanship
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
-            Illuminate Your Home with Timeless Craftsmanship
-Explore our most-loved wooden lamps, crafted to light up your moments.
+          Explore our most-loved wooden lamps, crafted to light up your moments.
           </p>
         </div>
 
