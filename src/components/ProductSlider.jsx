@@ -51,14 +51,13 @@ export default function ProductSlider({ products, theme = 'light' }) {
           </div>
         </div>
 
-        {/* Mobile: horizontal swipeable carousel, 1 card per view */}
-        {/* Desktop (sm+): regular grid */}
+        {/* Mobile: horizontal swipeable carousel, exactly 1 card per view */}
         <div className="sm:px-4 sm:px-6 lg:px-8">
           <div
             className="
               flex sm:hidden
               overflow-x-auto snap-x snap-mandatory scroll-smooth
-              -mx-0 px-4 gap-4
+              px-4 gap-4
               [&::-webkit-scrollbar]:hidden
               [scrollbar-width:none]
             "
@@ -70,7 +69,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                 <Link
                   key={product.id}
                   to={`/product/${product.id}`}
-                  className="group block shrink-0 w-[85%] snap-center overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                  className="group block shrink-0 w-full snap-center overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     {hasDiscount ? (
