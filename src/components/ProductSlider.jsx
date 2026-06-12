@@ -51,8 +51,65 @@ export default function ProductSlider({ products, theme = 'light' }) {
           </div>
         </div>
 
+        {/* Mobile: horizontal swipeable carousel, 1 card per view */}
+        {/* Desktop (sm+): regular grid */}
+        <div className="sm:px-4 sm:px-6 lg:px-8">
+          <div
+            className="
+              flex sm:hidden
+              overflow-x-auto snap-x snap-mandatory scroll-smooth
+              -mx-0 px-4 gap-4
+              [&::-webkit-scrollbar]:hidden
+              [scrollbar-width:none]
+            "
+          >
+            {displayProducts.map((product) => {
+              const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
+
+              return (
+                <Link
+                  key={product.id}
+                  to={`/product/${product.id}`}
+                  className="group block shrink-0 w-[85%] snap-center overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+                    {hasDiscount ? (
+                      <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                        -{discountPercent}%
+                      </span>
+                    ) : null}
+                    <img
+                      src={product.image || (product.images && product.images[0])}
+                      alt={product.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="px-4 pt-4 pb-3">
+                    <h3 className="text-sm font-semibold text-stone-900 leading-snug">
+                      {product.name}
+                    </h3>
+
+                    <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                      {hasDiscount ? (
+                        <span className="text-stone-700 line-through">
+                          Rs.{formatPrice(originalPrice)}
+                        </span>
+                      ) : null}
+                      <span className="font-semibold text-red-600">
+                        Rs.{formatPrice(discountedPrice)}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Desktop grid (sm and up) */}
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {displayProducts.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
