@@ -1,4 +1,16 @@
+import { useState, useEffect } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
 export default function HomeCategoriesPreview({ categories, onViewAll, onPickCategory }) {
+  const [showArrows, setShowArrows] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowArrows(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <section className="w-full py-10 sm:py-14 bg-transparent">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -11,8 +23,23 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
           </p>
         </div>
 
-        {/* 2 cols mobile → 3 cols sm → 5 cols desktop, 1 row only */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5">
+        {/* Horizontal scroll on mobile, grid on desktop */}
+        <div className="relative">
+          {/* Left Arrow Hint */}
+          {showArrows && (
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10 sm:hidden animate-pulse">
+              <ChevronLeft className="w-8 h-8 text-[#FFDA03] drop-shadow-lg" />
+            </div>
+          )}
+
+          {/* Right Arrow Hint */}
+          {showArrows && (
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10 sm:hidden animate-pulse">
+              <ChevronRight className="w-8 h-8 text-[#FFDA03] drop-shadow-lg" />
+            </div>
+          )}
+
+          <div className="flex gap-3 overflow-x-auto scroll-smooth pb-2 scrollbar-hide sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:gap-4 lg:gap-5">
           {categories.slice(0, 5).map((category) => (
             <button
               key={category.id}
@@ -60,6 +87,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
               </div>
             </button>
           ))}
+        </div>
         </div>
 
         <div className="mt-6 flex justify-center">
