@@ -58,7 +58,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
                 <Link
                   key={product.id}
                   to={`/product/${product.id}`}
-                  className="flex-shrink-0 w-screen sm:w-auto group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
+                  className="flex-shrink-0 w-[50vw] sm:w-auto group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
