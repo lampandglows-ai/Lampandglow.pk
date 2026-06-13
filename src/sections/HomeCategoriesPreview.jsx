@@ -50,7 +50,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
                          active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
             >
               {/* Image — portrait ratio on mobile, slightly less tall on desktop */}
-              <div className="relative aspect-[4/3] sm:aspect-[2/3] overflow-hidden">
+              <div className="relative aspect-[5/6] sm:aspect-[5/12] overflow-hidden">
                 <img
                   src={category.image}
                   alt={category.title}
