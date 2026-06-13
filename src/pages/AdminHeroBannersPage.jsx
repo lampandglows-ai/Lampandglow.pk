@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   Plus, Edit, Trash2, Search, AlertCircle, CheckCircle, Loader2, Image,
-  X, Upload, ChevronUp, ChevronDown, Eye, EyeOff,
+  X, Upload, ChevronUp, ChevronDown, Eye, EyeOff, Smartphone,
 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import heroBannersService from '../utils/heroBannersService.js'
@@ -31,11 +31,14 @@ export default function AdminHeroBannersPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [saving, setSaving] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadingMobileImage, setUploadingMobileImage] = useState(false)
   const [imagePreview, setImagePreview] = useState('')
+  const [mobileImagePreview, setMobileImagePreview] = useState('')
   const fileInputRef = useRef(null)
+  const mobileFileInputRef = useRef(null)
 
   const [formData, setFormData] = useState({
-    title: '', subtitle: '', badge: '', image: '', alt: '',
+    title: '', subtitle: '', badge: '', image: '', imageMobile: '', alt: '',
     primaryLabel: '', primaryActionType: 'section', primaryActionValue: '',
     secondaryLabel: '', secondaryActionType: 'section', secondaryActionValue: '',
     displayOrder: 0, isActive: true, fitToScreen: true, fullScreen: false,
@@ -69,10 +72,27 @@ export default function AdminHeroBannersPage() {
     try {
       const url = await heroBannersService.uploadBannerImage(file)
       setFormData((prev) => ({ ...prev, image: url }))
-      setMessage({ type: 'success', text: 'Image uploaded!' })
+      setMessage({ type: 'success', text: 'Desktop image uploaded!' })
     } catch {
-      setMessage({ type: 'error', text: 'Image upload failed.' })
+      setMessage({ type: 'error', text: 'Desktop image upload failed.' })
     } finally { setUploadingImage(false) }
+    setTimeout(() => setMessage({ type: '', text: '' }), 3000)
+  }
+
+  const handleMobileImageUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onloadend = () => setMobileImagePreview(reader.result)
+    reader.readAsDataURL(file)
+    setUploadingMobileImage(true)
+    try {
+      const url = await heroBannersService.uploadBannerImage(file)
+      setFormData((prev) => ({ ...prev, imageMobile: url }))
+      setMessage({ type: 'success', text: 'Mobile image uploaded!' })
+    } catch {
+      setMessage({ type: 'error', text: 'Mobile image upload failed.' })
+    } finally { setUploadingMobileImage(false) }
     setTimeout(() => setMessage({ type: '', text: '' }), 3000)
   }
 
@@ -82,15 +102,21 @@ export default function AdminHeroBannersPage() {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  const handleRemoveMobileImage = () => {
+    setFormData((prev) => ({ ...prev, imageMobile: '' }))
+    setMobileImagePreview('')
+    if (mobileFileInputRef.current) mobileFileInputRef.current.value = ''
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.image) { setMessage({ type: 'error', text: 'Please upload a banner image' }); return }
+    if (!formData.image) { setMessage({ type: 'error', text: 'Please upload a desktop banner image' }); return }
 
     setSaving(true)
     try {
       const payload = {
         title: formData.title.trim(), subtitle: formData.subtitle.trim(), badge: formData.badge.trim(),
-        image: formData.image, alt: formData.alt.trim() || formData.title.trim(),
+        image: formData.image, imageMobile: formData.imageMobile || '', alt: formData.alt.trim() || formData.title.trim(),
         primaryLabel: formData.primaryLabel.trim(),
         primaryAction: formData.primaryLabel.trim()
           ? { type: formData.primaryActionType, value: formData.primaryActionValue }
@@ -119,13 +145,15 @@ export default function AdminHeroBannersPage() {
 
   const resetForm = () => {
     setFormData({
-      title: '', subtitle: '', badge: '', image: '', alt: '',
+      title: '', subtitle: '', badge: '', image: '', imageMobile: '', alt: '',
       primaryLabel: '', primaryActionType: 'section', primaryActionValue: '',
       secondaryLabel: '', secondaryActionType: 'section', secondaryActionValue: '',
       displayOrder: 0, isActive: true, fitToScreen: true, fullScreen: false,
     })
     setImagePreview('')
+    setMobileImagePreview('')
     if (fileInputRef.current) fileInputRef.current.value = ''
+    if (mobileFileInputRef.current) mobileFileInputRef.current.value = ''
     setShowForm(false)
     setEditingId(null)
   }
@@ -133,7 +161,7 @@ export default function AdminHeroBannersPage() {
   const handleEdit = (banner) => {
     setFormData({
       title: banner.title || '', subtitle: banner.subtitle || '', badge: banner.badge || '',
-      image: banner.image || '', alt: banner.alt || '',
+      image: banner.image || '', imageMobile: banner.imageMobile || '', alt: banner.alt || '',
       primaryLabel: banner.primaryLabel || '',
       primaryActionType: banner.primaryAction?.type || 'section',
       primaryActionValue: banner.primaryAction?.value || '',
@@ -145,6 +173,7 @@ export default function AdminHeroBannersPage() {
       displayOrder: banner.displayOrder || 0, isActive: banner.isActive !== false,
     })
     setImagePreview(banner.image || '')
+    setMobileImagePreview(banner.imageMobile || '')
     setEditingId(banner.id)
     setShowForm(true)
   }
@@ -243,11 +272,16 @@ export default function AdminHeroBannersPage() {
             filteredBanners.map((banner, index) => (
               <div key={banner.id} className={`bg-white rounded-xl shadow-md border overflow-hidden transition hover:shadow-lg ${banner.isActive !== false ? 'border-gray-200' : 'border-gray-200 opacity-60'}`}>
                 <div className="flex flex-col sm:flex-row">
-                  <div className="sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-gray-100 overflow-hidden">
+                  <div className="sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-gray-100 overflow-hidden relative">
                     {banner.image ? (
                       <img src={banner.image} alt={banner.alt} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300"><Image className="w-8 h-8" /></div>
+                    )}
+                    {banner.imageMobile && (
+                      <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+                        <Smartphone className="w-3 h-3" /> Mobile
+                      </div>
                     )}
                   </div>
                   <div className="flex-1 p-5 flex flex-col justify-between">
@@ -295,9 +329,9 @@ export default function AdminHeroBannersPage() {
               <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-lg transition"><X className="w-5 h-5 text-gray-500" /></button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              {/* Image Upload */}
+              {/* Desktop Image Upload */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Image *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Desktop Banner Image *</label>
                 <div className="border border-dashed border-gray-300 rounded-xl p-4 bg-gray-50/50">
                   {formData.image || imagePreview ? (
                     <div className="relative">
@@ -307,12 +341,33 @@ export default function AdminHeroBannersPage() {
                   ) : (
                     <div onClick={() => fileInputRef.current?.click()} className="flex flex-col items-center justify-center py-8 cursor-pointer">
                       <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                      <p className="text-sm text-gray-500 font-medium">Click to upload banner image</p>
-                      <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                      <p className="text-sm text-gray-500 font-medium">Click to upload desktop banner image</p>
+                      <p className="text-xs text-gray-400 mt-1">Recommended 3780 x 1400 (horizontal)</p>
                     </div>
                   )}
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                   {uploadingImage && <div className="flex items-center justify-center mt-3 text-sm text-gray-500"><Loader2 className="w-4 h-4 animate-spin mr-2" />Uploading...</div>}
+                </div>
+              </div>
+
+              {/* Mobile Image Upload */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Banner Image <span className="text-gray-400 font-normal">(Optional)</span></label>
+                <div className="border border-dashed border-gray-300 rounded-xl p-4 bg-gray-50/50">
+                  {formData.imageMobile || mobileImagePreview ? (
+                    <div className="relative">
+                      <img src={formData.imageMobile || mobileImagePreview} alt="Mobile Preview" className="w-full h-48 object-cover rounded-lg" />
+                      <button type="button" onClick={handleRemoveMobileImage} className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm text-red-500 transition"><X className="w-4 h-4" /></button>
+                    </div>
+                  ) : (
+                    <div onClick={() => mobileFileInputRef.current?.click()} className="flex flex-col items-center justify-center py-8 cursor-pointer">
+                      <Smartphone className="w-8 h-8 text-gray-400 mb-2" />
+                      <p className="text-sm text-gray-500 font-medium">Click to upload mobile banner image</p>
+                      <p className="text-xs text-gray-400 mt-1">Recommended 3:4 portrait ratio</p>
+                    </div>
+                  )}
+                  <input ref={mobileFileInputRef} type="file" accept="image/*" onChange={handleMobileImageUpload} className="hidden" />
+                  {uploadingMobileImage && <div className="flex items-center justify-center mt-3 text-sm text-gray-500"><Loader2 className="w-4 h-4 animate-spin mr-2" />Uploading...</div>}
                 </div>
               </div>
 
@@ -432,7 +487,7 @@ export default function AdminHeroBannersPage() {
               {/* Submit */}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">Cancel</button>
-                <button type="submit" disabled={saving || uploadingImage} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
+                <button type="submit" disabled={saving || uploadingImage || uploadingMobileImage} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : editingId ? 'Update Banner' : 'Create Banner'}
                 </button>

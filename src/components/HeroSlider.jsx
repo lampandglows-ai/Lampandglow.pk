@@ -1,11 +1,35 @@
+import { useState, useEffect, useMemo } from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
 export default function HeroSlider({ slides, onPrimaryAction }) {
-  if (!slides || slides.length === 0) return null
+  const [isMobile, setIsMobile] = useState(false)
 
-  const hasMultiple = slides.length > 1
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)')
+    const onChange = (e) => setIsMobile(e.matches)
+    setIsMobile(mql.matches)
+    if (mql.addEventListener) {
+      mql.addEventListener('change', onChange)
+      return () => mql.removeEventListener('change', onChange)
+    } else {
+      // Fallback for older browsers
+      mql.addListener(onChange)
+      return () => mql.removeListener(onChange)
+    }
+  }, [])
+
+  const visibleSlides = useMemo(() => {
+    if (isMobile) {
+      return (slides || []).filter((s) => s.imageMobile)
+    }
+    return slides || []
+  }, [slides, isMobile])
+
+  if (!visibleSlides || visibleSlides.length === 0) return null
+
+  const hasMultiple = visibleSlides.length > 1
 
   const settings = {
     dots: hasMultiple,
@@ -35,6 +59,11 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
     ),
   }
 
+  // Aspect ratios
+  // Desktop: 3780:1400 -> 37.037%
+  // Mobile: 3:4 -> 133.333%
+  const paddingBottom = isMobile ? '133.333%' : '37.037%'
+
   return (
     <>
       <style>{`
@@ -57,29 +86,29 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
           bottom: 0;
           z-index: 10;
         }
+        @media (max-width: 768px) {
+          .hero-slider .slick-dots {
+            bottom: 6px;
+          }
+        }
       `}</style>
 
       <section className="hero-slider bg-[#4C2600] px-2 xs:px-3 sm:px-5 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-5 lg:pb-8">
         <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
-          <Slider {...settings}>
-            {slides.map((slide) => (
+          <Slider key={isMobile ? 'mobile' : 'desktop'} {...settings}>
+            {visibleSlides.map((slide) => (
               <div key={slide.id}>
-                {/*
-                  padding-bottom: 37.037% = strictly enforces 3780:1400 ratio
-                  Formula: (1400 / 3780) × 100 = 37.037%
-                  Immune to browser zoom — always % of element's own width.
-                */}
                 <div
                   style={{
                     position: 'relative',
                     width: '100%',
-                    paddingBottom: '37.037%',
+                    paddingBottom,
                     height: 0,
                     overflow: 'hidden',
                   }}
                 >
                   <img
-                    src={slide.image}
+                    src={isMobile ? slide.imageMobile : slide.image}
                     alt={slide.alt}
                     style={{
                       position: 'absolute',

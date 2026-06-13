@@ -340,6 +340,7 @@ function AppContent() {
         const mapped = banners.map((b) => ({
           id: b.id,
           image: b.image,
+          imageMobile: b.imageMobile || '',
           alt: b.alt || b.title,
           badge: b.badge || '',
           title: b.title || '',
