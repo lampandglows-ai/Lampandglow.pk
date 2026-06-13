@@ -62,6 +62,11 @@ body {
   white-space: nowrap;
 }
 
+/* Global pointer cursor for all interactive buttons */
+button {
+  cursor: pointer;
+}
+
 /* Hide scrollbar utility */
 .scrollbar-hide {
   -ms-overflow-style: none;
