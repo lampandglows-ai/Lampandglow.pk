@@ -49,8 +49,13 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
                          hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70
                          active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
             >
-              {/* Image — portrait ratio on mobile, slightly less tall on desktop */}
-              <div className="relative aspect-[3/5] sm:aspect-[5/3] overflow-hidden">
+              {/*
+                Mobile  → portrait aspect-[3/5]  (unchanged)
+                Desktop → aspect-[10/17] ≈ 1.7× taller than wide
+                          (original sm:aspect-[5/3] height ratio was 3/5 = 0.6;
+                           0.6 × 1.7 = 1.02 → use 10/17 ≈ 0.588 width-to-height, i.e. taller portrait)
+              */}
+              <div className="relative aspect-[3/5] sm:aspect-[10/17] overflow-hidden">
                 <img
                   src={category.image}
                   alt={category.title}
