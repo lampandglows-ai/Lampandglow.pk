@@ -363,7 +363,7 @@ export default function AdminHeroBannersPage() {
                     <div onClick={() => mobileFileInputRef.current?.click()} className="flex flex-col items-center justify-center py-8 cursor-pointer">
                       <Smartphone className="w-8 h-8 text-gray-400 mb-2" />
                       <p className="text-sm text-gray-500 font-medium">Click to upload mobile banner image</p>
-                      <p className="text-xs text-gray-400 mt-1">Recommended 3:4 portrait ratio</p>
+                      <p className="text-xs text-gray-400 mt-1">Recommended 4:4 square ratio</p>
                     </div>
                   )}
                   <input ref={mobileFileInputRef} type="file" accept="image/*" onChange={handleMobileImageUpload} className="hidden" />

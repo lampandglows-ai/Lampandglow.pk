@@ -61,8 +61,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
 
   // Aspect ratios
   // Desktop: 3780:1400 -> 37.037%
-  // Mobile: 3:4 -> 133.333%
-  const paddingBottom = isMobile ? '133.333%' : '37.037%'
+  // Mobile: 4:4 (1:1 square) -> 100%
+  const paddingBottom = isMobile ? '100%' : '37.037%'
 
   return (
     <>
