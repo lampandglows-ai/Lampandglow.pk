@@ -7,9 +7,13 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowArrows(false)
-    }, 1000)
+    }, 5000)
     return () => clearTimeout(timer)
   }, [])
+
+  if (!categories || categories.length === 0) {
+    return null
+  }
 
   return (
     <section className="w-full py-10 sm:py-14 bg-transparent">
