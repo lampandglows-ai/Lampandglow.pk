@@ -35,6 +35,7 @@ import AdminShippingPolicyPage from './pages/AdminShippingPolicyPage.jsx'
 import AdminPagesPage from './pages/AdminPagesPage.jsx'
 import AdminReelsPage from './pages/AdminReelsPage.jsx'
 import AdminBlogsPage from './pages/AdminBlogsPage.jsx'
+import AdminFooterPage from './pages/AdminFooterPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -667,6 +668,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminBlogsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/footer"
+            element={
+              <ProtectedAdminRoute>
+                <AdminFooterPage />
               </ProtectedAdminRoute>
             }
           />

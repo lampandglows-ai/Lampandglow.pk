@@ -23,6 +23,7 @@ import {
   FileText,
   Clapperboard,
   BookOpen,
+  LayoutTemplate,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -72,6 +73,11 @@ export default function AdminLayout({ children }) {
       label: 'Social Links',
       icon: Share2,
       path: '/admin/social-links',
+    },
+    {
+      label: 'Footer',
+      icon: LayoutTemplate,
+      path: '/admin/footer',
     },
     {
       label: 'Onboarding',
