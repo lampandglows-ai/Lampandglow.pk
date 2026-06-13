@@ -24,6 +24,7 @@ import {
   Clapperboard,
   BookOpen,
   LayoutTemplate,
+  Mail,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -78,6 +79,11 @@ export default function AdminLayout({ children }) {
       label: 'Footer',
       icon: LayoutTemplate,
       path: '/admin/footer',
+    },
+    {
+      label: 'Contact Submissions',
+      icon: Mail,
+      path: '/admin/contact-submissions',
     },
     {
       label: 'Onboarding',

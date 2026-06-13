@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Clock,
 } from 'lucide-react'
+import contactSubmissionsService from '../utils/contactSubmissionsService.js'
 
 export default function ContactUsPage() {
   const navigate = useNavigate()
@@ -17,16 +18,29 @@ export default function ContactUsPage() {
     comment: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 4000)
+    setError('')
+    setSubmitting(true)
+    try {
+      await contactSubmissionsService.createSubmission(form)
+      setSubmitted(true)
+      setForm({ name: '', phone: '', email: '', comment: '' })
+      setTimeout(() => setSubmitted(false), 4000)
+    } catch (err) {
+      console.error('Error submitting contact form:', err)
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -123,11 +137,16 @@ export default function ContactUsPage() {
                 />
               </div>
 
+              {error && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+
               <button
                 type="submit"
-                className="inline-flex h-11 items-center justify-center rounded-lg bg-amber-400 px-8 text-sm font-bold text-stone-900 transition-all duration-200 hover:bg-amber-300 active:scale-[0.99] motion-reduce:transform-none"
+                disabled={submitting}
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-amber-400 px-8 text-sm font-bold text-stone-900 transition-all duration-200 hover:bg-amber-300 active:scale-[0.99] motion-reduce:transform-none disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitted ? 'Sent!' : 'Submit Comment!'}
+                {submitting ? 'Sending...' : submitted ? 'Sent!' : 'Submit Comment!'}
               </button>
             </form>
           </div>
