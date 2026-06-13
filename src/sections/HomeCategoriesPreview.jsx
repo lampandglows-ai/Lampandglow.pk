@@ -11,10 +11,6 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
     return () => clearTimeout(timer)
   }, [])
 
-  if (!categories || categories.length === 0) {
-    return null
-  }
-
   return (
     <section className="w-full py-10 sm:py-14 bg-transparent">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -48,7 +44,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             <button
               key={category.id}
               onClick={() => onPickCategory(category.id)}
-              className="group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left
+              className="flex-shrink-0 w-[50vw] sm:w-auto group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left
                          transition-all duration-300 ease-out
                          hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70
                          active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
