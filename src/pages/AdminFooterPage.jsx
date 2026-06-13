@@ -37,6 +37,7 @@ export default function AdminFooterPage() {
     phone: '',
     email: '',
     whatsapp: '',
+    showWhatsAppInFooter: true,
     address: '',
     city: '',
   })
@@ -68,6 +69,7 @@ export default function AdminFooterPage() {
             phone: configData.phone || '',
             email: configData.email || '',
             whatsapp: configData.whatsapp || '',
+            showWhatsAppInFooter: configData.showWhatsAppInFooter !== false,
             address: configData.address || '',
             city: configData.city || '',
           })
@@ -84,8 +86,8 @@ export default function AdminFooterPage() {
   }, [])
 
   const handleConfigChange = (e) => {
-    const { name, value } = e.target
-    setConfig((prev) => ({ ...prev, [name]: value }))
+    const { name, value, type, checked } = e.target
+    setConfig((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
   }
 
   const handleSaveConfig = async () => {
@@ -328,6 +330,22 @@ export default function AdminFooterPage() {
                     placeholder="e.g. 923134371467"
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   />
+                  <div className="flex items-center gap-3 mt-3">
+                    <input
+                      type="checkbox"
+                      id="showWhatsAppInFooter"
+                      name="showWhatsAppInFooter"
+                      checked={config.showWhatsAppInFooter}
+                      onChange={handleConfigChange}
+                      className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 border-gray-300"
+                    />
+                    <label htmlFor="showWhatsAppInFooter" className="text-sm font-medium text-gray-700">
+                      Show WhatsApp number in footer
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1 ml-8">
+                    When unchecked, the number stays hidden in the footer but the floating chat button remains active.
+                  </p>
                 </div>
                 {/* City */}
                 <div>

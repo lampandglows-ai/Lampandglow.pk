@@ -32,6 +32,7 @@ const DEFAULT_CONFIG = {
   phone: '',
   email: 'lampandglowofficial01@gmail.com',
   whatsapp: '923134371467',
+  showWhatsAppInFooter: true,
   address: '',
   city: 'Sahiwal',
 }
@@ -98,6 +99,7 @@ export default function Footer({ theme = 'light' }) {
             phone: configData.phone || DEFAULT_CONFIG.phone,
             email: configData.email || DEFAULT_CONFIG.email,
             whatsapp: configData.whatsapp || DEFAULT_CONFIG.whatsapp,
+            showWhatsAppInFooter: configData.showWhatsAppInFooter !== false,
             address: configData.address || DEFAULT_CONFIG.address,
             city: configData.city || DEFAULT_CONFIG.city,
           })
@@ -202,7 +204,7 @@ export default function Footer({ theme = 'light' }) {
                     <span>Phone: {footerConfig.phone}</span>
                   </div>
                 )}
-                {footerConfig.whatsapp && (
+                {footerConfig.whatsapp && footerConfig.showWhatsAppInFooter !== false && (
                   <div className="flex justify-center sm:justify-start gap-3">
                     <FaWhatsapp className={iconClass} />
                     <span>WhatsApp: {footerConfig.whatsapp}</span>
