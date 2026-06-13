@@ -1,8 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 
 export default function ProductSlider({ products, theme = 'light' }) {
+  const scrollContainerRef = useRef(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
+
   const formatPrice = (value) => {
     if (typeof value !== 'number' || Number.isNaN(value)) return ''
     return new Intl.NumberFormat('en-PK', {
@@ -22,6 +27,31 @@ export default function ProductSlider({ products, theme = 'light' }) {
   }, [products])
 
   const displayProducts = uniqueProducts.slice(0, 8)
+
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+    }
+  }
+
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [displayProducts])
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      })
+      setTimeout(checkScroll, 300)
+    }
+  }
 
   return (
     <section
@@ -103,50 +133,85 @@ export default function ProductSlider({ products, theme = 'light' }) {
           })}
         </div>
 
-        {/* Desktop grid (sm and up) */}
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {displayProducts.map((product) => {
-              const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
+        {/* Desktop slider with arrows */}
+        <div className="hidden sm:block px-4 sm:px-6 lg:px-8">
+          <div className="relative">
+            {/* Left Arrow — desktop only */}
+            <button
+              onClick={() => scroll('left')}
+              disabled={!canScrollLeft}
+              className={`hidden md:flex absolute -left-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+                canScrollLeft
+                  ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
+                  : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+              }`}
+              title="Scroll left"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
 
-              return (
-                <Link
-                  key={product.id}
-                  to={`/product/${product.id}`}
-                  className="group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
-                    {hasDiscount ? (
-                      <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-                        -{discountPercent}%
-                      </span>
-                    ) : null}
-                    <img
-                      src={product.image || (product.images && product.images[0])}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                    />
-                  </div>
+            {/* Right Arrow — desktop only */}
+            <button
+              onClick={() => scroll('right')}
+              disabled={!canScrollRight}
+              className={`hidden md:flex absolute -right-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+                canScrollRight
+                  ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
+                  : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+              }`}
+              title="Scroll right"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
 
-                  <div className="px-4 pt-4 pb-3">
-                    <h3 className="text-sm font-semibold text-stone-900 leading-snug">
-                      {product.name}
-                    </h3>
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+              onScroll={checkScroll}
+            >
+              {displayProducts.map((product) => {
+                const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
-                    <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                return (
+                  <Link
+                    key={product.id}
+                    to={`/product/${product.id}`}
+                    className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_5rem)/4)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                  >
+                    <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {hasDiscount ? (
-                        <span className="text-stone-700 line-through">
-                          Rs.{formatPrice(originalPrice)}
+                        <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                          -{discountPercent}%
                         </span>
                       ) : null}
-                      <span className="font-semibold text-red-600">
-                        Rs.{formatPrice(discountedPrice)}
-                      </span>
+                      <img
+                        src={product.image || (product.images && product.images[0])}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+                      />
                     </div>
-                  </div>
-                </Link>
-              )
-            })}
+
+                    <div className="px-4 pt-4 pb-3">
+                      <h3 className="text-sm font-semibold text-stone-900 leading-snug">
+                        {product.name}
+                      </h3>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                        {hasDiscount ? (
+                          <span className="text-stone-700 line-through">
+                            Rs.{formatPrice(originalPrice)}
+                          </span>
+                        ) : null}
+                        <span className="font-semibold text-red-600">
+                          Rs.{formatPrice(discountedPrice)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

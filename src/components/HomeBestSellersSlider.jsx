@@ -75,29 +75,29 @@ export default function HomeBestSellersSlider({ products = [] }) {
 
         {/* Slider Container */}
         <div className="relative group">
-          {/* Left Arrow */}
+          {/* Left Arrow — desktop only */}
           <button
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
-            className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            className={`hidden md:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
-            } opacity-0 group-hover:opacity-100 md:opacity-100`}
+            }`}
             title="Scroll left"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Right Arrow */}
+          {/* Right Arrow — desktop only */}
           <button
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
-            className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            className={`hidden md:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
-            } opacity-0 group-hover:opacity-100 md:opacity-100`}
+            }`}
             title="Scroll right"
           >
             <ChevronRight className="w-6 h-6" />
