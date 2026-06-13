@@ -11,6 +11,7 @@ import WishlistPage from './pages/WishlistPage.jsx'
 import ReelsPage from './pages/ReelsPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import ContactUsPage from './pages/ContactUsPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import OrdersPage from './pages/OrdersPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -521,6 +522,7 @@ function AppContent() {
             }
           />
           <Route path="/contact" element={<ContactPage theme={theme} />} />
+          <Route path="/contact-us" element={<ContactUsPage />} />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
