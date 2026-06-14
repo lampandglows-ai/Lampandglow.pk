@@ -539,6 +539,7 @@ function AppContent() {
           <Route path="/collections/:slug" element={<CollectionDetailPage />} />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/cart" element={<CartPage cart={cart} cartItemsCount={cartItemsCount} cartTotal={cartTotal} handleRemoveFromCart={handleRemoveFromCart} handleUpdateCartQuantity={handleUpdateCartQuantity} onCheckout={() => navigate('/checkout')} />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
           <Route
             path="/checkout"
