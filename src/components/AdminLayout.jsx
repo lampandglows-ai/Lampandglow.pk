@@ -92,6 +92,11 @@ export default function AdminLayout({ children }) {
       path: '/admin/contact-page',
     },
     {
+      label: 'Newsletter',
+      icon: Mail,
+      path: '/admin/newsletter',
+    },
+    {
       label: 'Onboarding',
       icon: Lightbulb,
       path: '/admin/onboarding',

@@ -42,6 +42,7 @@ import AdminBlogsPage from './pages/AdminBlogsPage.jsx'
 import AdminFooterPage from './pages/AdminFooterPage.jsx'
 import AdminContactSubmissionsPage from './pages/AdminContactSubmissionsPage.jsx'
 import AdminContactPage from './pages/AdminContactPage.jsx'
+import AdminNewsletterPage from './pages/AdminNewsletterPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -719,6 +720,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminContactPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/newsletter"
+            element={
+              <ProtectedAdminRoute>
+                <AdminNewsletterPage />
               </ProtectedAdminRoute>
             }
           />

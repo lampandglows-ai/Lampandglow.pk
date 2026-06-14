@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa6'
 import socialLinksService from '../utils/socialLinksService.js'
 import footerService from '../utils/footerService.js'
+import newsletterService from '../utils/newsletterService.js'
 
 const PLATFORM_ICONS = {
   facebook: FaFacebook,
@@ -72,6 +73,9 @@ export default function Footer({ theme = 'light' }) {
   const [footerConfig, setFooterConfig] = useState(DEFAULT_CONFIG)
   const [footerLinks, setFooterLinks] = useState([])
   const [loadingFooter, setLoadingFooter] = useState(true)
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterStatus, setNewsletterStatus] = useState('idle') // idle | submitting | success | error
+  const [newsletterMsg, setNewsletterMsg] = useState('')
 
   useEffect(() => {
     const loadSocial = async () => {
@@ -118,6 +122,33 @@ export default function Footer({ theme = 'light' }) {
     }
     loadFooterData()
   }, [])
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+    const email = newsletterEmail.trim()
+    if (!email) return
+
+    setNewsletterStatus('submitting')
+    setNewsletterMsg('')
+    try {
+      await newsletterService.subscribe(email)
+      setNewsletterStatus('success')
+      setNewsletterMsg('Thank you for subscribing!')
+      setNewsletterEmail('')
+      setTimeout(() => {
+        setNewsletterStatus('idle')
+        setNewsletterMsg('')
+      }, 4000)
+    } catch (err) {
+      console.error('Newsletter subscription error:', err)
+      setNewsletterStatus('error')
+      setNewsletterMsg('Something went wrong. Please try again.')
+      setTimeout(() => {
+        setNewsletterStatus('idle')
+        setNewsletterMsg('')
+      }, 4000)
+    }
+  }
 
   const activeLinks = footerLinks.filter((l) => l.isActive !== false)
 
@@ -264,26 +295,37 @@ export default function Footer({ theme = 'light' }) {
                 Newsletter Sign Up
               </p>
               <p className={`mt-4 text-sm ${textClass}`}>
-                Receive our latest updates about our products &amp; promotions.
+                Receive our latest updates about our products & promotions.
               </p>
 
-              <div className="mt-4 max-w-sm mx-auto sm:mx-0">
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className={
-                    theme === 'dark'
-                      ? 'w-full rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
-                      : 'w-full rounded-lg border border-[#FFDA03]/30 bg-[#4C2600]/50 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
-                  }
-                />
-                <button
-                  type="button"
-                  className="mt-4 w-full rounded-lg bg-[#FFDA03] px-4 py-3 text-sm font-semibold text-[#4C2600] hover:bg-yellow-300 transition-colors"
-                >
-                  Subscribe
-                </button>
-              </div>
+              <form onSubmit={handleNewsletterSubmit} className="mt-4 max-w-sm mx-auto sm:mx-0">
+                <div className="flex flex-col gap-3">
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Email address"
+                    required
+                    className={
+                      theme === 'dark'
+                        ? 'w-full rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
+                        : 'w-full rounded-lg border border-[#FFDA03]/30 bg-[#4C2600]/50 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFDA03]'
+                    }
+                  />
+                  <button
+                    type="submit"
+                    disabled={newsletterStatus === 'submitting'}
+                    className="w-full rounded-lg bg-[#FFDA03] px-4 py-3 text-sm font-semibold text-[#4C2600] hover:bg-yellow-300 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {newsletterStatus === 'submitting' ? 'Subscribing...' : 'Subscribe'}
+                  </button>
+                  {newsletterMsg && (
+                    <p className={`text-xs ${newsletterStatus === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                      {newsletterMsg}
+                    </p>
+                  )}
+                </div>
+              </form>
             </div>
           </div>
         </div>
