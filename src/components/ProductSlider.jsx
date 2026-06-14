@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 
 export default function ProductSlider({ products, theme = 'light' }) {
   const scrollContainerRef = useRef(null)
@@ -96,7 +97,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
             return (
               <Link
                 key={product.id}
-                to={`/product/${product.id}`}
+                to={`/products/${slugify(product.name)}`}
                 className="group block shrink-0 w-screen snap-center overflow-hidden bg-stone-50 transition-all duration-300 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
@@ -176,7 +177,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                 return (
                   <Link
                     key={product.id}
-                    to={`/product/${product.id}`}
+                    to={`/products/${slugify(product.name)}`}
                     className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_5rem)/4)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">

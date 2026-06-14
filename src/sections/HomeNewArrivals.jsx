@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useMemo } from 'react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 import { Sparkles } from 'lucide-react'
 
 const formatPricePKR = (value) => {
@@ -54,7 +55,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
               return (
                 <Link
                   key={product.id}
-                  to={`/product/${product.id}`}
+                  to={`/products/${slugify(product.name)}`}
                   className="flex-shrink-0 w-[50vw] sm:w-auto group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">

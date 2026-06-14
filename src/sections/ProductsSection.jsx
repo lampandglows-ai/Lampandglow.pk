@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import classNames from '../utils/classNames.js'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 
 const formatPricePKR = (value) => {
   if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -75,7 +76,7 @@ export default function ProductsSection({
               key={product.id}
               className="group flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
             >
-              <Link to={`/product/${product.id}`} className="group block">
+              <Link to={`/products/${slugify(product.name)}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                   {product.isNewArrival && (
                     <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">

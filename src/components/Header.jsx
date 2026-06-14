@@ -4,6 +4,7 @@ import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
 import { Moon, Sun, LogIn } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { slugify } from '../utils/slugify.js'
 import logoPng from '../assets/logo.png'
 
 function classNames(...classes) {
@@ -109,7 +110,7 @@ const Header = forwardRef(function Header({
     if (!product) return
     setSearchQuery(product.name ?? '')
     setSearchOpen(false)
-    navigate(`/product/${product.id}`)
+    navigate(`/products/${slugify(product.name)}`)
   }
 
   const navLinks = [

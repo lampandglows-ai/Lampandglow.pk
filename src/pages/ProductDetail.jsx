@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import classNames from '../utils/classNames.js'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 
 /* ────────── helper: accordion chevron icon ────────── */
 function ChevronDown({ open }) {
@@ -50,10 +51,10 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
 }
 
 export default function ProductDetail({ products, onAddToCart, reviews }) {
-  const { id } = useParams()
+  const { slug } = useParams()
   const navigate = useNavigate()
-  const productId = id
-  const product = products.find((p) => String(p.id) === String(productId))
+  const product = products.find((p) => slugify(p.name) === slug)
+  const productId = product?.id
   const [selectedBulbOption, setSelectedBulbOption] = useState('')
   const [selectedColorIndex, setSelectedColorIndex] = useState(0)
   const [isCompareOpen, setIsCompareOpen] = useState(false)
@@ -915,7 +916,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                 return (
                   <Link
                     key={rp.id}
-                    to={`/product/${rp.id}`}
+                    to={`/products/${slugify(rp.name)}`}
                     className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-stone-300"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
@@ -973,7 +974,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               {relatedProducts.slice(0, 5).map((rp) => {
                 const rpInfo = getDiscountInfo(rp)
                 return (
-                  <Link key={`rv-${rp.id}`} to={`/product/${rp.id}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                  <Link key={`rv-${rp.id}`} to={`/products/${slugify(rp.name)}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                     <div className="relative aspect-square overflow-hidden bg-stone-100">
                       {rp.isNewArrival && (
                         <span className="absolute left-0 top-0 z-10 bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">

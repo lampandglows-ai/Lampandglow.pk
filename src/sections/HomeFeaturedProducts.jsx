@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useMemo } from 'react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 
 const formatPricePKR = (value) => {
   if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -58,7 +59,7 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
               return (
                 <Link
                   key={product.id}
-                  to={`/product/${product.id}`}
+                  to={`/products/${slugify(product.name)}`}
                   className="group block overflow-hidden rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/30 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]/60 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">

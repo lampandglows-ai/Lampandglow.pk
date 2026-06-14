@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
+import { slugify } from '../utils/slugify.js'
 
 export default function HomeBestSellersSlider({ products = [] }) {
   const scrollContainerRef = useRef(null)
@@ -117,7 +117,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
                 return (
                   <Link
                     key={product.id}
-                    to={`/product/${product.id}`}
+                    to={`/products/${slugify(product.name)}`}
                     className="flex-shrink-0 w-[50vw] sm:w-[33vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">

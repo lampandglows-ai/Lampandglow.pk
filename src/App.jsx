@@ -406,7 +406,7 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin')
   const isDarkContentPage = ['/', '/blogs', '/blog', '/reels'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
-  const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/product', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
+  const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/products', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
 
   return (
     <div
@@ -561,7 +561,7 @@ function AppContent() {
             )}
           />
           <Route
-            path="/product/:id"
+            path="/products/:slug"
             element={(
               <ProductDetail products={products} onAddToCart={handleAddToCart} reviews={reviews} />
             )}
