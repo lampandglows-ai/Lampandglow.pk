@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 import { slugify } from '../utils/slugify.js'
 
