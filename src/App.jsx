@@ -317,6 +317,13 @@ function AppContent() {
       return
     }
 
+    if (section === 'cart') {
+      navigate('/cart')
+      setActiveSection('cart')
+      setMobileNavOpen(false)
+      return
+    }
+
     if (section === 'categories') {
       navigate('/collections')
       setActiveSection('categories')
