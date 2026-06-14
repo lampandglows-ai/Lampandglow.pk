@@ -406,7 +406,7 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin')
   const isDarkContentPage = ['/', '/blogs', '/blog', '/reels'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
-  const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/products', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
+  const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/about-us', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/products', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
 
   return (
     <div
@@ -523,6 +523,7 @@ function AppContent() {
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/reels" element={<ReelsPage />} />
           <Route path="/about" element={<AboutPage theme={theme} />} />
+          <Route path="/about-us" element={<AboutPage theme={theme} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signin" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
