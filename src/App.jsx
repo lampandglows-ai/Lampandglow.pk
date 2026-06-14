@@ -12,6 +12,8 @@ import ReelsPage from './pages/ReelsPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import ContactUsPage from './pages/ContactUsPage.jsx'
+import CollectionsPage from './pages/CollectionsPage.jsx'
+import CollectionDetailPage from './pages/CollectionDetailPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import OrdersPage from './pages/OrdersPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -38,6 +40,7 @@ import AdminReelsPage from './pages/AdminReelsPage.jsx'
 import AdminBlogsPage from './pages/AdminBlogsPage.jsx'
 import AdminFooterPage from './pages/AdminFooterPage.jsx'
 import AdminContactSubmissionsPage from './pages/AdminContactSubmissionsPage.jsx'
+import AdminContactPage from './pages/AdminContactPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -55,6 +58,7 @@ import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import heroBannersService from './utils/heroBannersService.js'
 import { TESTIMONIALS } from './data/testimonials.js'
+import { slugify } from './utils/slugify.js'
 
 // Protected Admin Route Component
 function ProtectedAdminRoute({ children }) {
@@ -312,6 +316,13 @@ function AppContent() {
       return
     }
 
+    if (section === 'categories') {
+      navigate('/collections')
+      setActiveSection('categories')
+      setMobileNavOpen(false)
+      return
+    }
+
     if (location.pathname !== '/') {
       navigate('/')
     }
@@ -435,7 +446,7 @@ function AppContent() {
                     onViewAllCategories={() => handleNavigate('categories')}
                     onPickCategory={(categoryId) => {
                       setSelectedCategory(categoryId)
-                      handleNavigate('products')
+                      navigate(`/collections/${slugify(categoryId)}`)
                     }}
                     onViewAllProducts={() => handleNavigate('products')}
                   />
@@ -447,7 +458,7 @@ function AppContent() {
                     onGoToProducts={() => handleNavigate('products')}
                     onCategorySelect={(categoryId) => {
                       setSelectedCategory(categoryId)
-                      handleNavigate('products')
+                      navigate(`/collections/${slugify(categoryId)}`)
                     }}
                   />
                 )}
@@ -524,6 +535,8 @@ function AppContent() {
           />
           <Route path="/contact" element={<ContactPage theme={theme} />} />
           <Route path="/contact-us" element={<ContactUsPage />} />
+          <Route path="/collections" element={<CollectionsPage />} />
+          <Route path="/collections/:slug" element={<CollectionDetailPage />} />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
@@ -688,6 +701,14 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminContactSubmissionsPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/contact-page"
+            element={
+              <ProtectedAdminRoute>
+                <AdminContactPage />
               </ProtectedAdminRoute>
             }
           />

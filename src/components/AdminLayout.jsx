@@ -25,6 +25,7 @@ import {
   BookOpen,
   LayoutTemplate,
   Mail,
+  Contact,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -84,6 +85,11 @@ export default function AdminLayout({ children }) {
       label: 'Contact Submissions',
       icon: Mail,
       path: '/admin/contact-submissions',
+    },
+    {
+      label: 'Contact Page',
+      icon: Contact,
+      path: '/admin/contact-page',
     },
     {
       label: 'Onboarding',
