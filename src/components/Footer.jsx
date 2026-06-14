@@ -154,7 +154,7 @@ export default function Footer({ theme = 'light' }) {
     }
     if (isExternal) {
       return (
-        <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+        <a href={link.url}  className="hover:underline">
           {link.label}
         </a>
       )
@@ -230,8 +230,7 @@ export default function Footer({ theme = 'light' }) {
                       <a
                         key={link.id}
                         href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        
                         aria-label={link.platform}
                         className={hoverClass}
                       >
