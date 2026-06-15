@@ -1,9 +1,18 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Search, Eye, MapPin, Phone, Mail, CheckCircle, Clock, Truck, Loader2 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
+import ordersService from '../utils/ordersService.js'
+
+function getOrderDate(order) {
+  if (!order?.createdAt) return null
+  if (typeof order.createdAt.toDate === 'function') return order.createdAt.toDate()
+  if (order.createdAt.seconds) return new Date(order.createdAt.seconds * 1000)
+  return new Date(order.createdAt)
+}
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [filterStatus, setFilterStatus] = useState('all')
@@ -15,106 +24,80 @@ export default function AdminOrdersPage() {
   })
   const [saving, setSaving] = useState(false)
 
-  // Load orders from localStorage
   useEffect(() => {
     const loadAllOrders = async () => {
       try {
-        const allOrders = []
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i)
-          if (key && key.includes('user-orders-')) {
-            try {
-              const data = JSON.parse(localStorage.getItem(key))
-              if (Array.isArray(data)) {
-                allOrders.push(...data)
-              }
-            } catch {
-              // Skip invalid data
-            }
-          }
-        }
-        // Sort by creation date (newest first)
-        allOrders.sort(
-          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-        )
+        setLoading(true)
+        const allOrders = await ordersService.getAllOrders()
+        allOrders.sort((a, b) => {
+          const dateA = getOrderDate(a)?.getTime() || 0
+          const dateB = getOrderDate(b)?.getTime() || 0
+          return dateB - dateA
+        })
         setOrders(allOrders)
       } catch (error) {
         console.error('Error loading orders:', error)
+      } finally {
+        setLoading(false)
       }
     }
 
     loadAllOrders()
   }, [])
 
-  // Save orders to localStorage
-  const saveOrders = (newOrders) => {
-    // Group orders by user and save
-    const groupedByUser = {}
-    newOrders.forEach((order) => {
-      if (!groupedByUser[order.userId]) {
-        groupedByUser[order.userId] = []
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      setSaving(true)
+      await ordersService.updateOrderStatus(orderId, newStatus)
+      const updatedAt = new Date().toISOString()
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus, updatedAt } : order
+        )
+      )
+      setSelectedOrder((prev) =>
+        prev ? { ...prev, status: newStatus, updatedAt } : null
+      )
+    } catch (error) {
+      console.error('Error updating order status:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const addTrackingDetails = async (orderId, tracking) => {
+    try {
+      setSaving(true)
+      await ordersService.updateOrderTracking(orderId, tracking)
+      const trackingWithDate = {
+        ...tracking,
+        addedAt: new Date().toISOString(),
       }
-      groupedByUser[order.userId].push(order)
-    })
-
-    // Save each user's orders
-    Object.keys(groupedByUser).forEach((userId) => {
-      localStorage.setItem(`user-orders-${userId}`, JSON.stringify(groupedByUser[userId]))
-    })
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === orderId
+            ? { ...order, tracking: trackingWithDate, updatedAt: new Date().toISOString() }
+            : order
+        )
+      )
+      setSelectedOrder((prev) =>
+        prev ? { ...prev, tracking: trackingWithDate, updatedAt: new Date().toISOString() } : null
+      )
+    } catch (error) {
+      console.error('Error saving tracking details:', error)
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    const newOrders = orders.map((order) =>
-      order.id === orderId ? { ...order, status: newStatus, updatedAt: new Date().toISOString() } : order
-    )
-    setOrders(newOrders)
-    saveOrders(newOrders)
-    setSelectedOrder((prev) =>
-      prev ? { ...prev, status: newStatus, updatedAt: new Date().toISOString() } : null
-    )
-  }
-
-  const addTrackingDetails = (orderId, tracking) => {
-    const newOrders = orders.map((order) =>
-      order.id === orderId
-        ? {
-            ...order,
-            tracking: {
-              trackingNumber: tracking.trackingNumber,
-              carrier: tracking.carrier,
-              estimatedDelivery: tracking.estimatedDelivery,
-              addedAt: new Date().toISOString(),
-            },
-            updatedAt: new Date().toISOString(),
-          }
-        : order
-    )
-    setOrders(newOrders)
-    saveOrders(newOrders)
-    setSelectedOrder((prev) =>
-      prev
-        ? {
-            ...prev,
-            tracking: {
-              trackingNumber: tracking.trackingNumber,
-              carrier: tracking.carrier,
-              estimatedDelivery: tracking.estimatedDelivery,
-              addedAt: new Date().toISOString(),
-            },
-            updatedAt: new Date().toISOString(),
-          }
-        : null
-    )
-  }
-
-  const handleSaveTracking = () => {
+  const handleSaveTracking = async () => {
     if (!trackingData.trackingNumber.trim() || !trackingData.carrier.trim()) {
       return
     }
 
     setSaving(true)
     try {
-      addTrackingDetails(selectedOrder.id, trackingData)
+      await addTrackingDetails(selectedOrder.id, trackingData)
       setShowTrackingForm(false)
       setTrackingData({ trackingNumber: '', carrier: '', estimatedDelivery: '' })
     } finally {
@@ -208,7 +191,12 @@ export default function AdminOrdersPage() {
 
         {/* Orders Table */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          {filteredOrders.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-orange-500 mx-auto" />
+              <p className="text-gray-500 text-sm mt-3">Loading orders...</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">No orders found</p>
               <p className="text-gray-400 text-sm mt-1">
@@ -252,8 +240,8 @@ export default function AdminOrdersPage() {
                         </span>
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-600">
-                        {order.createdAt
-                          ? new Date(order.createdAt).toLocaleDateString()
+                        {getOrderDate(order)
+                          ? getOrderDate(order).toLocaleDateString()
                           : 'N/A'}
                       </td>
                       <td className="py-4 px-6">
@@ -299,8 +287,8 @@ export default function AdminOrdersPage() {
                   <div className="text-right">
                     <p className="text-sm text-gray-600">Order Date</p>
                     <p className="text-lg font-semibold text-gray-900">
-                      {selectedOrder.createdAt
-                        ? new Date(selectedOrder.createdAt).toLocaleDateString()
+                      {getOrderDate(selectedOrder)
+                        ? getOrderDate(selectedOrder).toLocaleDateString()
                         : 'N/A'}
                     </p>
                   </div>
@@ -518,7 +506,8 @@ export default function AdminOrdersPage() {
                       <button
                         key={status}
                         onClick={() => updateOrderStatus(selectedOrder.id, status)}
-                        className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 ${
+                        disabled={saving}
+                        className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 disabled:opacity-60 ${
                           selectedOrder.status === status
                             ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'

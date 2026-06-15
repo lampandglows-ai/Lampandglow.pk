@@ -108,6 +108,24 @@ export const ordersService = {
     }
   },
 
+  // Update order tracking details
+  updateOrderTracking: async (orderId, tracking) => {
+    try {
+      const docRef = doc(db, 'orders', orderId);
+      await updateDoc(docRef, {
+        tracking: {
+          ...tracking,
+          addedAt: new Date().toISOString(),
+        },
+        updatedAt: serverTimestamp(),
+      });
+      return { id: orderId, tracking };
+    } catch (error) {
+      console.error('Error updating order tracking:', error);
+      throw error;
+    }
+  },
+
   // Cancel order
   cancelOrder: async (orderId) => {
     try {
