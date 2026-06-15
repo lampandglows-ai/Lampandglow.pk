@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import classNames from '../utils/classNames.js'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
-import { slugify } from '../utils/slugify.js'
+import { slugify, resolveCategoryName } from '../utils/slugify.js'
+import useCategories from '../hooks/useCategories.js'
 
 /* ────────── helper: accordion chevron icon ────────── */
 function ChevronDown({ open }) {
@@ -53,6 +54,7 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
 export default function ProductDetail({ products, onAddToCart, reviews }) {
   const { slug } = useParams()
   const navigate = useNavigate()
+  const { categories } = useCategories()
   const product = products.find((p) => slugify(p.name) === slug)
   const productId = product?.id
   const [selectedBulbOption, setSelectedBulbOption] = useState('')
@@ -167,6 +169,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
     })}`
 
   const productType = product.productType || (product.category === 'Lamps' ? 'Floor lamp' : 'Wood decor')
+  const categoryName = resolveCategoryName(categories, product.category)
 
   const renderStars = (rating) => {
     const value = Math.round(rating)
@@ -214,7 +217,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               Home
             </button>
             <span aria-hidden className="text-white/30">/</span>
-            <span className="hover:text-white/90 transition-colors cursor-pointer">{product.category}</span>
+            <button
+              type="button"
+              onClick={() => navigate(`/collections/${slugify(categoryName)}`)}
+              className="hover:text-white/90 transition-colors"
+            >
+              {categoryName}
+            </button>
             <span aria-hidden className="text-white/30">/</span>
             <span className="text-white/90 font-medium">{product.name}</span>
           </div>

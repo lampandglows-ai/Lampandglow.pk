@@ -17,6 +17,7 @@ export const useCategories = () => {
         // Map to the shape expected by website components
         const mapped = activeCategories.map((c) => ({
           id: c.name,
+          firestoreId: c.id,
           title: c.name,
           description: c.description || '',
           image: c.image || '',
