@@ -70,6 +70,33 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
       ? null
       : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
 
+  const baseColors = Array.isArray(product?.productDetails?.baseColors)
+    ? product.productDetails.baseColors
+    : []
+
+  useEffect(() => {
+    if (isCompareOpen) {
+      setCompareVisibleIndices(baseColors.map((_, i) => i))
+    }
+  }, [isCompareOpen, baseColors])
+
+  useEffect(() => {
+    if (!isCompareOpen) return
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setIsCompareOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isCompareOpen])
+
+  const images = useMemo(() => {
+    if (!product) return []
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images
+    }
+    return [product.image, product.image, product.image]
+  }, [product])
+
   /* ── not found ── */
   if (!product) {
     return (
@@ -95,14 +122,6 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   const inStock = stock > 0
   const bulbOptions = Array.isArray(product.bulbOptions) ? product.bulbOptions : []
   const sku = product.sku || `LG-${String(product.id).padStart(4, '0')}`
-  const baseColors = Array.isArray(product?.productDetails?.baseColors) ? product.productDetails.baseColors : []
-
-  // Initialize compare visible indices when modal opens
-  useEffect(() => {
-    if (isCompareOpen) {
-      setCompareVisibleIndices(baseColors.map((_, i) => i))
-    }
-  }, [isCompareOpen, baseColors])
 
   const safeColorIndex = Math.min(Math.max(selectedColorIndex, 0), Math.max(baseColors.length - 1, 0))
   const selectedColor = baseColors[safeColorIndex] || ''
@@ -119,22 +138,6 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
     if (key.includes('cream')) return '#f3ead7'
     return '#d6d3d1'
   }
-
-  useEffect(() => {
-    if (!isCompareOpen) return
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') setIsCompareOpen(false)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [isCompareOpen])
-
-  const images = useMemo(() => {
-    if (Array.isArray(product.images) && product.images.length > 0) {
-      return product.images
-    }
-    return [product.image, product.image, product.image]
-  }, [product.image, product.images])
 
   const selectedImage = images[Math.min(activeImageIndex, images.length - 1)]
 
