@@ -49,7 +49,6 @@ import WebsitePopup from './components/WebsitePopup.jsx'
 import AnnouncementBar from './components/AnnouncementBar.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
-import CategoriesSection from './sections/CategoriesSection.jsx'
 import ProductsSection from './sections/ProductsSection.jsx'
 import CartSection from './sections/CartSection.jsx'
 import ProfileSection from './sections/ProfileSection.jsx'
@@ -210,6 +209,12 @@ function AppContent() {
   }, [activeSection, location.pathname])
 
   useEffect(() => {
+    if (location.pathname === '/' && activeSection === 'categories') {
+      setActiveSection('home')
+    }
+  }, [location.pathname, activeSection])
+
+  useEffect(() => {
     window.localStorage.setItem('lg-theme', theme)
   }, [theme])
 
@@ -327,7 +332,6 @@ function AppContent() {
 
     if (section === 'categories') {
       navigate('/collections')
-      setActiveSection('categories')
       setMobileNavOpen(false)
       return
     }
@@ -458,17 +462,6 @@ function AppContent() {
                       navigate(`/collections/${slugify(categoryId)}`)
                     }}
                     onViewAllProducts={() => handleNavigate('products')}
-                  />
-                )}
-
-                {activeSection === 'categories' && (
-                  <CategoriesSection
-                    categories={dynamicCategories}
-                    onGoToProducts={() => handleNavigate('products')}
-                    onCategorySelect={(categoryId) => {
-                      setSelectedCategory(categoryId)
-                      navigate(`/collections/${slugify(categoryId)}`)
-                    }}
                   />
                 )}
 

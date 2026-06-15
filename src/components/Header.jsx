@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect, forwardRef } from 'react'
 import { createPortal } from 'react-dom'
 import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
 import { Moon, Sun, LogIn } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { slugify } from '../utils/slugify.js'
 import logoPng from '../assets/logo.png'
@@ -25,6 +25,7 @@ const Header = forwardRef(function Header({
   toggleTheme,
 }, ref) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -120,6 +121,22 @@ const Header = forwardRef(function Header({
     { key: 'reels',      label: 'REELS',       mobileLabel: 'Reels'      },
   ]
 
+  const isNavActive = (key) => {
+    if (key === 'categories') {
+      return location.pathname.startsWith('/collections')
+    }
+    if (key === 'blogs') {
+      return location.pathname === '/blogs' || location.pathname.startsWith('/blog/')
+    }
+    if (key === 'reels') {
+      return location.pathname === '/reels'
+    }
+    if (key === 'products') {
+      return location.pathname === '/' && activeSection === 'products'
+    }
+    return activeSection === key
+  }
+
   // ── Mobile drawer rendered via portal so it escapes the header stacking context ──
   const mobileDrawer = mobileNavOpen
     ? createPortal(
@@ -187,7 +204,7 @@ const Header = forwardRef(function Header({
                   onClick={() => handleNavigate(key)}
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
-                    activeSection === key
+                    isNavActive(key)
                       ? theme === 'dark'
                         ? 'bg-amber-900/40 text-amber-300'
                         : 'bg-amber-50 text-amber-800'
