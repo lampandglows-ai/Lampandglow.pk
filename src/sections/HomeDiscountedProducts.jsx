@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Percent } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 import { slugify } from '../utils/slugify.js'
+import { useHorizontalSlider } from '../hooks/useHorizontalSlider.js'
 
 const formatPricePKR = (value) => {
   if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -13,10 +14,6 @@ const formatPricePKR = (value) => {
 }
 
 export default function HomeDiscountedProducts({ products, onViewAll }) {
-  const scrollContainerRef = useRef(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
-
   const discounted = useMemo(() => {
     if (!products || products.length === 0) return []
     return products
@@ -27,30 +24,8 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
       .slice(0, 5)
   }, [products])
 
-  const checkScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-      setCanScrollLeft(scrollLeft > 0)
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-    }
-  }
-
-  useEffect(() => {
-    checkScroll()
-    window.addEventListener('resize', checkScroll)
-    return () => window.removeEventListener('resize', checkScroll)
-  }, [discounted])
-
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      })
-      setTimeout(checkScroll, 300)
-    }
-  }
+  const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
+    useHorizontalSlider(discounted.length)
 
   if (discounted.length === 0) return null
 
@@ -79,12 +54,14 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
           </div>
         </div>
 
-        <div className="relative group">
+        <div className="relative group min-w-0">
           {/* Left Arrow — desktop only */}
           <button
+            type="button"
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
-            className={`hidden md:flex absolute -left-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll left"
+            className={`hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -96,9 +73,11 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
 
           {/* Right Arrow — desktop only */}
           <button
+            type="button"
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
-            className={`hidden md:flex absolute -right-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll right"
+            className={`hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -111,7 +90,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
           <div className="px-4 sm:px-6 lg:px-8">
             <div
               ref={scrollContainerRef}
-              className="flex gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
@@ -122,7 +101,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[50vw] sm:w-[33vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">

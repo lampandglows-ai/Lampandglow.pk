@@ -1,35 +1,9 @@
-import { useRef, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useHorizontalSlider } from '../hooks/useHorizontalSlider.js'
 
 export default function HomeCategoriesPreview({ categories, onViewAll, onPickCategory }) {
-  const scrollContainerRef = useRef(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
-
-  const checkScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-      setCanScrollLeft(scrollLeft > 0)
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-    }
-  }
-
-  useEffect(() => {
-    checkScroll()
-    window.addEventListener('resize', checkScroll)
-    return () => window.removeEventListener('resize', checkScroll)
-  }, [categories])
-
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      })
-      setTimeout(checkScroll, 300)
-    }
-  }
+  const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
+    useHorizontalSlider(categories.length)
 
   return (
     <section className="w-full py-10 sm:py-14 bg-transparent">
@@ -44,12 +18,14 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
         </div>
 
         {/* Horizontal scroll with desktop arrows */}
-        <div className="relative">
+        <div className="relative min-w-0">
           {/* Desktop Left Arrow */}
           <button
+            type="button"
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
-            className={`hidden md:flex absolute -left-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll left"
+            className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -61,9 +37,11 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
 
           {/* Desktop Right Arrow */}
           <button
+            type="button"
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
-            className={`hidden md:flex absolute -right-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll right"
+            className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -75,7 +53,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
 
           <div
             ref={scrollContainerRef}
-            className="flex gap-3 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+            className="flex w-full min-w-0 gap-3 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
             style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
             onScroll={checkScroll}
           >
@@ -83,7 +61,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
               <button
                 key={category.id}
                 onClick={() => onPickCategory(category.id)}
-                className="flex-shrink-0 w-[50vw] sm:w-[33vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <div className="relative aspect-[3/5] sm:aspect-[10/17] overflow-hidden">
                   <img

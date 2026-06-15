@@ -1,13 +1,11 @@
-import { useRef, useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 import { slugify } from '../utils/slugify.js'
+import { useHorizontalSlider } from '../hooks/useHorizontalSlider.js'
 
 export default function HomeBestSellersSlider({ products = [] }) {
-  const scrollContainerRef = useRef(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
 
   const formatPrice = (value) => {
     if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -33,30 +31,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
     }).slice(0, 12)
   }, [products])
 
-  const checkScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-      setCanScrollLeft(scrollLeft > 0)
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-    }
-  }
-
-  useEffect(() => {
-    checkScroll()
-    window.addEventListener('resize', checkScroll)
-    return () => window.removeEventListener('resize', checkScroll)
-  }, [uniqueProducts])
-
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      })
-      setTimeout(checkScroll, 300)
-    }
-  }
+  const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
+    useHorizontalSlider(uniqueProducts.length)
 
   if (uniqueProducts.length === 0) {
     return null
@@ -75,12 +51,14 @@ export default function HomeBestSellersSlider({ products = [] }) {
         </div>
 
         {/* Slider Container */}
-        <div className="relative group">
+        <div className="relative group min-w-0">
           {/* Left Arrow — desktop only */}
           <button
+            type="button"
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
-            className={`hidden md:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll left"
+            className={`hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -92,9 +70,11 @@ export default function HomeBestSellersSlider({ products = [] }) {
 
           {/* Right Arrow — desktop only */}
           <button
+            type="button"
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
-            className={`hidden md:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+            aria-label="Scroll right"
+            className={`hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
                 ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                 : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -108,7 +88,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
           <div className="px-4 sm:px-6 lg:px-8">
             <div
               ref={scrollContainerRef}
-              className="flex gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
@@ -119,7 +99,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[50vw] sm:w-[33vw] md:w-[30vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {product.isNewArrival && (

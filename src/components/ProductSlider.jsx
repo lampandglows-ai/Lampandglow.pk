@@ -1,13 +1,11 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 import { slugify } from '../utils/slugify.js'
+import { useHorizontalSlider } from '../hooks/useHorizontalSlider.js'
 
 export default function ProductSlider({ products, theme = 'light' }) {
-  const scrollContainerRef = useRef(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
 
   const formatPrice = (value) => {
     if (typeof value !== 'number' || Number.isNaN(value)) return ''
@@ -29,30 +27,8 @@ export default function ProductSlider({ products, theme = 'light' }) {
 
   const displayProducts = uniqueProducts.slice(0, 8)
 
-  const checkScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-      setCanScrollLeft(scrollLeft > 0)
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-    }
-  }
-
-  useEffect(() => {
-    checkScroll()
-    window.addEventListener('resize', checkScroll)
-    return () => window.removeEventListener('resize', checkScroll)
-  }, [displayProducts])
-
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      })
-      setTimeout(checkScroll, 300)
-    }
-  }
+  const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
+    useHorizontalSlider(displayProducts.length)
 
   return (
     <section
@@ -136,12 +112,14 @@ export default function ProductSlider({ products, theme = 'light' }) {
 
         {/* Desktop slider with arrows */}
         <div className="hidden sm:block px-4 sm:px-6 lg:px-8">
-          <div className="relative">
+          <div className="relative min-w-0">
             {/* Left Arrow — desktop only */}
             <button
+              type="button"
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              className={`hidden md:flex absolute -left-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+              aria-label="Scroll left"
+              className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
                 canScrollLeft
                   ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                   : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -153,9 +131,11 @@ export default function ProductSlider({ products, theme = 'light' }) {
 
             {/* Right Arrow — desktop only */}
             <button
+              type="button"
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              className={`hidden md:flex absolute -right-3 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
+              aria-label="Scroll right"
+              className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
                 canScrollRight
                   ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
                   : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
@@ -167,7 +147,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
 
             <div
               ref={scrollContainerRef}
-              className="flex gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
