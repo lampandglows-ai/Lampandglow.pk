@@ -21,7 +21,7 @@ export default function ProductsPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#4C2600] bg-[radial-gradient(circle_at_top_left,rgba(255,218,3,0.18),transparent_34%),linear-gradient(180deg,#4C2600_0%,#2b1500_52%,#4C2600_100%)]">
+    <div className="min-h-screen bg-[#fff7e6]">
       <ProductsSection
         categories={categories}
         filteredProducts={filteredProducts}

@@ -8,27 +8,27 @@ export default function CollectionsPage() {
   const { categories, loading } = useCategories()
 
   return (
-    <section className="w-full min-h-screen bg-[#4C2600] bg-[radial-gradient(circle_at_top_left,rgba(255,218,3,0.18),transparent_34%),linear-gradient(180deg,#4C2600_0%,#2b1500_52%,#4C2600_100%)]">
+    <section className="w-full min-h-screen bg-[#fff7e6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <button
           type="button"
           onClick={() => navigate('/')}
-          className="inline-flex items-center gap-1 text-xs font-medium text-yellow-100/80 hover:text-[#FFDA03] transition"
+          className="inline-flex items-center gap-1 text-xs font-medium text-stone-500 hover:text-stone-800 transition"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back
         </button>
 
         <div className="mt-8 text-center">
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#FFDA03]">Collections</h1>
-          <p className="mt-3 text-xs sm:text-sm text-yellow-100/80 max-w-xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">Collections</h1>
+          <p className="mt-3 text-xs sm:text-sm text-stone-500 max-w-xl mx-auto">
             Explore our curated collections of handcrafted wooden lamps and decor pieces.
           </p>
         </div>
 
         {loading ? (
           <div className="mt-12 flex items-center justify-center">
-            <div className="w-8 h-8 border-2 border-[#FFDA03] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
