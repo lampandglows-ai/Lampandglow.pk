@@ -125,16 +125,16 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   ───────────────────────────────────────────────────────────── */
   if (!product) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
+      <section className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs font-medium text-amber-300 hover:text-amber-200"
+            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
           >
             <span aria-hidden>←</span>
             Back
           </button>
-          <div className="mt-6 rounded-2xl border border-[#FFDA03]/20 bg-[#5c3418] p-6 text-sm text-white/80">
+          <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 text-sm text-stone-600">
             Product not found.
           </div>
         </div>
@@ -226,28 +226,28 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
   const pd = product.productDetails || {}
 
   return (
-    <section className="w-full bg-[#4C2600]">
+    <section className="w-full">
       {/* ═══════════════ BREADCRUMBS ═══════════════ */}
-      <div className="border-b border-[#FFDA03]/10">
+      <div className="border-b border-stone-200">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-white/60">
+          <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-stone-500">
             <button
               type="button"
               onClick={() => navigate('/')}
-              className="hover:text-white/90 transition-colors"
+              className="hover:text-stone-800 transition-colors"
             >
               Home
             </button>
-            <span aria-hidden className="text-white/30">/</span>
+            <span aria-hidden className="text-stone-300">/</span>
             <button
               type="button"
               onClick={() => navigate(`/collections/${slugify(categoryName)}`)}
-              className="hover:text-white/90 transition-colors"
+              className="hover:text-stone-800 transition-colors"
             >
               {categoryName}
             </button>
-            <span aria-hidden className="text-white/30">/</span>
-            <span className="text-white/90 font-medium">{product.name}</span>
+            <span aria-hidden className="text-stone-300">/</span>
+            <span className="text-stone-900 font-medium">{product.name}</span>
           </div>
         </div>
       </div>

@@ -77,14 +77,14 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#4C2600]">
-        <p className="text-white/70">Please log in to view your profile</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-stone-500">Please log in to view your profile</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#4C2600] py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {message && (
           <div className="bg-green-900/30 border border-green-700/50 rounded-lg p-4 mb-6 flex items-start gap-3">

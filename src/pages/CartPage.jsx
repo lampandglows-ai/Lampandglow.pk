@@ -19,16 +19,16 @@ export default function CartPage({
   }
 
   return (
-    <section className="min-h-screen bg-[#4C2600] bg-[radial-gradient(circle_at_top_left,rgba(255,218,3,0.18),transparent_34%),linear-gradient(180deg,#4C2600_0%,#2b1500_52%,#4C2600_100%)] px-4 py-10 sm:px-6 sm:py-14">
+    <section className="min-h-screen px-4 py-10 sm:px-6 sm:py-14">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
           <div>
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">Your Cart</h1>
-            <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">Your Cart</h1>
+            <p className="mt-1 text-xs sm:text-sm text-stone-500">
               Review your selected items, adjust quantities, and proceed to checkout.
             </p>
           </div>
-          <p className="text-xs sm:text-sm text-yellow-100/85">
+          <p className="text-xs sm:text-sm text-stone-500">
             {cartItemsCount === 0
               ? 'Your cart is empty.'
               : `${cartItemsCount} item${cartItemsCount > 1 ? 's' : ''} in cart`}
@@ -36,18 +36,18 @@ export default function CartPage({
         </div>
 
         {cart.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#FFDA03]/30 bg-[#4C2600]/50 p-6 text-center text-sm text-yellow-100/85">
+          <div className="rounded-2xl border border-dashed border-stone-300 bg-white p-6 text-center text-sm text-stone-500">
             <p>Your cart is empty. Start by adding a lamp, table, or decor piece.</p>
             <div className="mt-4 flex justify-center gap-3 text-xs">
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center rounded-full bg-[#FFDA03] px-4 py-2 text-xs font-semibold text-[#4C2600] hover:bg-yellow-300"
+                className="inline-flex items-center rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-700"
               >
                 Browse Products
               </button>
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center rounded-full border border-[#FFDA03]/30 bg-[#FFDA03]/10 px-4 py-2 text-xs font-medium text-[#FFDA03] hover:bg-[#FFDA03]/20"
+                className="inline-flex items-center rounded-full border border-stone-300 bg-white px-4 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50"
               >
                 View Categories
               </button>
@@ -59,7 +59,7 @@ export default function CartPage({
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-3 rounded-2xl border border-[#FFDA03]/30 bg-[#4C2600]/50 p-3 sm:p-4"
+                  className="flex gap-3 rounded-2xl border border-stone-200 bg-white p-3 sm:p-4"
                 >
                   <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-stone-100">
                     <img
@@ -71,24 +71,24 @@ export default function CartPage({
                   <div className="flex-1 flex flex-col gap-1 text-xs sm:text-sm">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-[#FFDA03]">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700">
                           {item.product.category}
                         </p>
-                        <h2 className="text-sm font-semibold text-white">{item.product.name}</h2>
+                        <h2 className="text-sm font-semibold text-stone-900">{item.product.name}</h2>
                         {item.bulbOption && (
-                          <p className="text-[11px] text-yellow-100/85">{item.bulbOption}</p>
+                          <p className="text-[11px] text-stone-500">{item.bulbOption}</p>
                         )}
                       </div>
                       <button
                         onClick={() => handleRemoveFromCart(item.id)}
-                        className="text-[11px] text-yellow-100/85 hover:text-white"
+                        className="text-[11px] text-stone-500 hover:text-stone-800"
                       >
                         Remove
                       </button>
                     </div>
-                    <p className="text-xs text-yellow-100/85">Rs.{formatPrice(item.unitPrice ?? item.product.price)} each</p>
+                    <p className="text-xs text-stone-500">Rs.{formatPrice(item.unitPrice ?? item.product.price)} each</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <label className="text-[11px] text-yellow-100/85" htmlFor={`qty-${item.product.id}`}>
+                      <label className="text-[11px] text-stone-500" htmlFor={`qty-${item.product.id}`}>
                         Qty
                       </label>
                       <input
@@ -99,7 +99,7 @@ export default function CartPage({
                         onChange={(e) =>
                           handleUpdateCartQuantity(item.id, Number(e.target.value) || 1)
                         }
-                        className="w-16 rounded-full border border-[#FFDA03]/30 bg-[#FFDA03]/10 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#FFDA03]"
+                        className="w-16 rounded-full border border-stone-300 bg-white px-2 py-1 text-xs text-stone-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
                       />
                     </div>
                   </div>
@@ -107,9 +107,9 @@ export default function CartPage({
               ))}
             </div>
 
-            <aside className="rounded-2xl border border-[#FFDA03]/30 bg-[#FFDA03]/10 p-4 flex flex-col gap-3 text-sm">
-              <h2 className="text-sm font-semibold text-[#FFDA03]">Order Summary</h2>
-              <div className="space-y-1 text-xs text-yellow-100/85">
+            <aside className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 flex flex-col gap-3 text-sm">
+              <h2 className="text-sm font-semibold text-stone-900">Order Summary</h2>
+              <div className="space-y-1 text-xs text-stone-700">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span>Rs.{formatPrice(cartTotal)}</span>
@@ -118,7 +118,7 @@ export default function CartPage({
                   <span>Estimated shipping</span>
                   <span>{cartTotal >= 5000 ? 'Free' : 'Rs.200'}</span>
                 </div>
-                <div className="flex justify-between font-semibold pt-1 border-t border-[#FFDA03]/30 mt-1 text-[#FFDA03]">
+                <div className="flex justify-between font-semibold pt-1 border-t border-amber-200 mt-1 text-amber-800">
                   <span>Total</span>
                   <span>
                     Rs.{formatPrice(cartTotal + (cartTotal >= 5000 || cartTotal === 0 ? 0 : 200))}
@@ -128,13 +128,13 @@ export default function CartPage({
               <button
                 type="button"
                 onClick={() => onCheckout?.()}
-                className="mt-2 inline-flex items-center justify-center rounded-full bg-[#FFDA03] px-4 py-2 text-xs font-semibold text-[#4C2600] hover:bg-yellow-300"
+                className="mt-2 inline-flex items-center justify-center rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-700"
               >
                 Checkout
               </button>
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center rounded-full border border-[#FFDA03]/30 bg-[#FFDA03]/10 px-4 py-2 text-xs font-medium text-[#FFDA03] hover:bg-[#FFDA03]/20"
+                className="inline-flex items-center justify-center rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-800 hover:bg-amber-100"
               >
                 Continue Shopping
               </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { Loader2, AlertCircle } from 'lucide-react'
 import pagesService from '../utils/pagesService'
 
@@ -34,10 +34,10 @@ export default function PublicPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#4C2600]">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 size={40} className="animate-spin mx-auto text-[#FFDA03] mb-4" />
-          <p className="text-white/70">Loading page...</p>
+          <Loader2 size={40} className="animate-spin mx-auto text-amber-500 mb-4" />
+          <p className="text-stone-500">Loading page...</p>
         </div>
       </div>
     )
@@ -45,30 +45,30 @@ export default function PublicPage() {
 
   if (error || !page) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-[#4C2600]">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <AlertCircle size={48} className="mx-auto text-red-600 mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Page Not Found</h1>
-          <p className="text-white/70 mb-6">{error || 'The page you are looking for does not exist.'}</p>
-          <a
-            href="/"
-            className="inline-block bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] font-semibold py-2 px-6 rounded-full transition-colors"
+          <h1 className="text-2xl font-bold text-stone-900 mb-2">Page Not Found</h1>
+          <p className="text-stone-600 mb-6">{error || 'The page you are looking for does not exist.'}</p>
+          <Link
+            to="/"
+            className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-full transition-colors"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#4C2600]">
+    <div className="min-h-screen">
       {/* Page Header */}
-      <div className="bg-[#4C2600] text-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="border-b border-stone-200 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">{page.title}</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold text-stone-900 mb-4">{page.title}</h1>
           {page.description && (
-            <p className="text-lg text-yellow-100">{page.description}</p>
+            <p className="text-lg text-stone-600">{page.description}</p>
           )}
         </div>
       </div>
@@ -76,18 +76,18 @@ export default function PublicPage() {
       {/* Page Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div
-          className="page-content text-white/90 leading-relaxed"
+          className="page-content text-stone-700 leading-relaxed"
           dangerouslySetInnerHTML={{ __html: page.content }}
         />
 
         {/* Back to Home */}
-        <div className="mt-12 pt-8 border-t border-[#FFDA03]/20">
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 text-[#FFDA03] hover:text-yellow-300 font-semibold transition-colors"
+        <div className="mt-12 pt-8 border-t border-stone-200">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-800 font-semibold transition-colors"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

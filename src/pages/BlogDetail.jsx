@@ -27,9 +27,9 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#4C2600] min-h-[50vh] flex items-center justify-center">
-        <div className="flex items-center gap-3 text-white/70">
-          <Loader2 className="w-6 h-6 animate-spin" />
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh] flex items-center justify-center">
+        <div className="flex items-center gap-3 text-stone-500">
+          <Loader2 className="w-6 h-6 animate-spin text-amber-600" />
           <span>Loading blog...</span>
         </div>
       </section>
@@ -38,16 +38,16 @@ export default function BlogDetail() {
 
   if (error || !blog) {
     return (
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#4C2600] min-h-[50vh]">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh]">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-300 hover:text-amber-200"
+          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
         >
           <span aria-hidden>←</span>
           Back
         </button>
-        <div className="mt-6 rounded-2xl border border-[#FFDA03]/20 bg-[#5c3418] p-6 text-sm text-white/80 text-center">
-          <FileText className="w-10 h-10 text-white/20 mx-auto mb-3" />
+        <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 text-sm text-stone-600 text-center">
+          <FileText className="w-10 h-10 text-stone-300 mx-auto mb-3" />
           {error || 'Blog not found.'}
         </div>
       </section>
@@ -55,26 +55,26 @@ export default function BlogDetail() {
   }
 
   return (
-    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#4C2600] min-h-screen">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-screen">
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-300 hover:text-amber-200"
+          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
         >
           <span aria-hidden>←</span>
           Back
         </button>
         <Link
           to="/blogs"
-          className="text-xs font-medium text-white/70 hover:text-amber-300"
+          className="text-xs font-medium text-stone-500 hover:text-stone-800"
         >
           All blogs
         </Link>
       </div>
 
-      <article className="mt-6 rounded-3xl border border-[#FFDA03]/20 bg-[#5c3418] overflow-hidden shadow-sm">
+      <article className="mt-6 rounded-3xl border border-stone-200 bg-white overflow-hidden shadow-sm">
         {blog.featuredImage && (
-          <div className="aspect-[16/9] overflow-hidden bg-[#4C2600]">
+          <div className="aspect-[16/9] overflow-hidden bg-stone-100">
             <img
               src={blog.featuredImage}
               alt={blog.imageAltText || blog.title}
@@ -85,24 +85,24 @@ export default function BlogDetail() {
         <div className="p-5 sm:p-7">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {blog.category && (
-              <span className="text-xs font-medium text-amber-300 bg-amber-900/30 px-2.5 py-1 rounded-full">
+              <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full">
                 {blog.category}
               </span>
             )}
             {blog.tags?.map((tag) => (
               <span
                 key={tag}
-                className="text-xs text-white/50 bg-white/5 px-2 py-1 rounded-full"
+                className="text-xs text-stone-500 bg-stone-100 px-2 py-1 rounded-full"
               >
                 {tag}
               </span>
             ))}
           </div>
-          <h1 className="text-xl sm:text-3xl font-semibold tracking-tight text-white">
+          <h1 className="text-xl sm:text-3xl font-semibold tracking-tight text-stone-900">
             {blog.title}
           </h1>
           {blog.publishedAt && (
-            <p className="mt-2 text-xs text-white/40">
+            <p className="mt-2 text-xs text-stone-400">
               Published on {new Date(blog.publishedAt).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -111,7 +111,7 @@ export default function BlogDetail() {
             </p>
           )}
           <div
-            className="mt-6 text-sm text-white/80 leading-relaxed page-content"
+            className="mt-6 text-sm text-stone-700 leading-relaxed page-content"
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
         </div>

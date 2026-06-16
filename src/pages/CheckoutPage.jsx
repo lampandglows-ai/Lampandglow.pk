@@ -109,7 +109,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
 
   if (placedOrderId || (placedOrderId === '' && cart.length === 0)) {
     return (
-      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
+      <section className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-[#FFDA03]/20 p-6 sm:p-8 bg-[#5c3418]">
             <p className="text-xs font-semibold text-white/80">
@@ -193,7 +193,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const codAmount = grandTotal - advanceAmount
 
   return (
-    <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
+    <section className="w-full px-0 py-10 sm:py-14">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-3">
           <div>
