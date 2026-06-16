@@ -51,26 +51,21 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
   )
 }
 
-export default function ProductDetail({ products, onAddToCart, reviews }) {
+export default function ProductDetail({ products, productsLoading = false, onAddToCart, reviews }) {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const { categories } = useCategories()
   const product = products.find((p) => slugify(p.name) === slug)
-  const productId = product?.id
-  const [selectedBulbOption, setSelectedBulbOption] = useState('')
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
-  const [isCompareOpen, setIsCompareOpen] = useState(false)
-  const [compareVisibleIndices, setCompareVisibleIndices] = useState([])
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState('description')
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
-  const productReviews = reviews.filter((r) => r.productId === productId)
-  const avgRating =
-    productReviews.length === 0
-      ? null
-      : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
 
-  /* ── not found ── */
+  if (productsLoading) {
+    return (
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
+        <div className="px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[40vh]">
+          <div className="w-8 h-8 border-2 border-[#FFDA03] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </section>
+    )
+  }
+
   if (!product) {
     return (
       <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
@@ -90,26 +85,46 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
     )
   }
 
-  /* ── derived data ── */
-  const stock = typeof product.stock === 'number' ? product.stock : 0
-  const inStock = stock > 0
-  const bulbOptions = Array.isArray(product.bulbOptions) ? product.bulbOptions : []
-  const sku = product.sku || `LG-${String(product.id).padStart(4, '0')}`
-  const baseColors = Array.isArray(product?.productDetails?.baseColors)
-    ? product.productDetails.baseColors
-    : []
+  return (
+    <ProductDetailContent
+      product={product}
+      products={products}
+      onAddToCart={onAddToCart}
+      reviews={reviews}
+    />
+  )
+}
+
+function ProductDetailContent({ product, products, onAddToCart, reviews }) {
+  const navigate = useNavigate()
+  const { categories } = useCategories()
+  const productId = product.id
+  const [selectedBulbOption, setSelectedBulbOption] = useState('')
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
+  const [isCompareOpen, setIsCompareOpen] = useState(false)
+  const [compareVisibleIndices, setCompareVisibleIndices] = useState([]) // indices of visible images in compare modal
+  const [quantity, setQuantity] = useState(1)
+  const [activeTab, setActiveTab] = useState('description')
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const productReviews = reviews.filter((r) => r.productId === productId)
+  const avgRating =
+    productReviews.length === 0
+      ? null
+      : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
+
+  const baseColors = useMemo(
+    () =>
+      Array.isArray(product.productDetails?.baseColors)
+        ? product.productDetails.baseColors
+        : [],
+    [product.productDetails?.baseColors],
+  )
 
   useEffect(() => {
     if (isCompareOpen) {
       setCompareVisibleIndices(baseColors.map((_, i) => i))
     }
   }, [isCompareOpen, baseColors])
-
-  const safeColorIndex = Math.min(
-    Math.max(selectedColorIndex, 0),
-    Math.max(baseColors.length - 1, 0),
-  )
-  const selectedColor = baseColors[safeColorIndex] || ''
 
   useEffect(() => {
     if (!isCompareOpen) return
@@ -127,35 +142,52 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
     return [product.image, product.image, product.image]
   }, [product.image, product.images])
 
+  /* ── derived data ── */
+  const stock = typeof product.stock === 'number' ? product.stock : 0
+  const inStock = stock > 0
+  const bulbOptions = Array.isArray(product.bulbOptions) ? product.bulbOptions : []
+  const sku = product.sku || `LG-${String(product.id).padStart(4, '0')}`
+
+  const safeColorIndex = Math.min(Math.max(selectedColorIndex, 0), Math.max(baseColors.length - 1, 0))
+  const selectedColor = baseColors[safeColorIndex] || ''
+
+  const getSwatchHex = (value) => {
+    const key = String(value || '').toLowerCase()
+    if (key.includes('espresso')) return '#3b2a22'
+    if (key.includes('walnut')) return '#6b4f2d'
+    if (key.includes('brown')) return '#5c3b2e'
+    if (key.includes('black')) return '#111827'
+    if (key.includes('white')) return '#f8fafc'
+    if (key.includes('natural')) return '#c8a97b'
+    if (key.includes('beige')) return '#e7d8c5'
+    if (key.includes('cream')) return '#f3ead7'
+    return '#d6d3d1'
+  }
+
   const selectedImage = images[Math.min(activeImageIndex, images.length - 1)]
 
-  /* ── Price Calculation ── */
+  // ── Price Calculation ──
   const discountInfo = getDiscountInfo(product)
   const basePrice = discountInfo.discountedPrice
   const baseOriginalPrice = discountInfo.originalPrice
 
+  // Option 1: Bulb Add-on (+500 if "With Bulb" is explicitly selected)
+  // Fix: Ensure we don't match "Without Bulb" which contains "with" substring.
   const selectedBulb = selectedBulbOption || (bulbOptions[0] ?? '')
-  const isWithBulb =
-    selectedBulb &&
-    String(selectedBulb).toLowerCase().includes('with') &&
-    !String(selectedBulb).toLowerCase().includes('without')
+  const isWithBulb = selectedBulb && String(selectedBulb).toLowerCase().includes('with') && !String(selectedBulb).toLowerCase().includes('without')
   const bulbAddon = isWithBulb ? 500 : 0
 
-  const colorAddon =
-    selectedColor &&
-      (selectedColor.toLowerCase().includes('black') ||
-        selectedColor.toLowerCase().includes('blue'))
-      ? 250
-      : 0
+  // Option 2: Color Add-on (Specific for 'Black'/'Blue' premium color as requested)
+  // User requested: "only when we click on the blue color it increase the price 250"
+  // Data has "Black", so we check for Black or Blue.
+  const colorAddon = (selectedColor && (selectedColor.toLowerCase().includes('black') || selectedColor.toLowerCase().includes('blue'))) ? 250 : 0
 
   const effectivePrice = basePrice + bulbAddon + colorAddon
   const effectiveOriginalPrice = baseOriginalPrice + bulbAddon + colorAddon
 
   const hasDiscount = discountInfo.hasDiscount
   const discountPercent = hasDiscount
-    ? Math.round(
-      ((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100,
-    )
+    ? Math.round(((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100)
     : 0
 
   const formatPKR = (amount) =>
@@ -164,18 +196,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
       maximumFractionDigits: 2,
     })}`
 
-  const productType =
-    product.productType ||
-    (product.category === 'Lamps' ? 'Floor lamp' : 'Wood decor')
+  const productType = product.productType || (product.category === 'Lamps' ? 'Floor lamp' : 'Wood decor')
   const categoryName = resolveCategoryName(categories, product.category)
 
   const renderStars = (rating) => {
     const value = Math.round(rating)
     return (
-      <div
-        className="flex items-center gap-0.5 text-amber-500"
-        aria-label={`${value} out of 5 stars`}
-      >
+      <div className="flex items-center gap-0.5 text-amber-500" aria-label={`${value} out of 5 stars`}>
         {Array.from({ length: 5 }).map((_, idx) => (
           <svg
             key={idx}
@@ -214,11 +241,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
       <div className="border-b border-[#FFDA03]/10">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
           <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-white/60">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="hover:text-white/90 transition-colors"
-            >
+            <button type="button" onClick={() => navigate('/')} className="hover:text-white/90 transition-colors">
               Home
             </button>
             <span aria-hidden className="text-white/30">/</span>
@@ -241,155 +264,39 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
 
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
-            <div className="flex gap-3">
-
-              {/* ── Vertical Thumbnail Strip ── */}
-              <div
-                className="hidden sm:flex flex-col gap-2.5 overflow-y-auto"
-                style={{ maxHeight: '600px' }}
-              >
-                {images.map((src, idx) => (
-                  <button
-                    key={`thumb-${idx}`}
-                    type="button"
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={classNames(
-                      'relative shrink-0 overflow-hidden transition-all duration-200 rounded-sm',
-                      'w-[70px] h-[86px]',
-                      idx === activeImageIndex
-                        ? 'border-2 border-stone-800 opacity-100 shadow-md scale-[1.03]'
-                        : 'border-2 border-transparent opacity-50 hover:opacity-80 hover:border-stone-300 hover:scale-[1.01]',
-                    )}
-                    aria-label={`View image ${idx + 1}`}
-                  >
-                    <img
-                      src={src}
-                      alt={`${product.name} thumbnail ${idx + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                    {/* Active indicator line */}
-                    {idx === activeImageIndex && (
-                      <span className="absolute left-0 top-0 h-full w-0.5 bg-stone-800" />
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* ── Main Image ── */}
-              <div className="relative flex-1 overflow-hidden bg-stone-100 group rounded-sm">
-                {/* Badges */}
-                {product.isNewArrival && (
-                  <span className="absolute left-0 top-0 z-10 bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
-                    New Arrival
-                  </span>
-                )}
-                {hasDiscount && (
-                  <span
-                    className={classNames(
-                      'absolute z-10 bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase',
-                      product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0',
-                    )}
-                  >
-                    Sale
-                  </span>
-                )}
-
-                {/* Main photo */}
-                <div className="aspect-[3/4] sm:aspect-[4/5]">
-                  <img
-                    src={selectedImage}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                {/* ── Arrow nav (desktop hover) ── */}
-                {images.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setActiveImageIndex((prev) =>
-                          prev === 0 ? images.length - 1 : prev - 1,
-                        )
-                      }
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center bg-white/85 hover:bg-white text-stone-700 rounded-full shadow transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                      aria-label="Previous image"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <path d="M15 18l-6-6 6-6" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setActiveImageIndex((prev) =>
-                          prev === images.length - 1 ? 0 : prev + 1,
-                        )
-                      }
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center bg-white/85 hover:bg-white text-stone-700 rounded-full shadow transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                      aria-label="Next image"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                    </button>
-                  </>
-                )}
-
-                {/* ── Image counter badge (top-right) ── */}
-                {images.length > 1 && (
-                  <div className="absolute top-3 right-3 z-10 bg-black/40 backdrop-blur-sm text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
-                    {activeImageIndex + 1} / {images.length}
-                  </div>
-                )}
-
-                {/* ── Dot indicators (mobile only) ── */}
-                {images.length > 1 && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden z-10">
-                    {images.map((_, idx) => (
-                      <button
-                        key={`dot-${idx}`}
-                        type="button"
-                        onClick={() => setActiveImageIndex(idx)}
-                        className={classNames(
-                          'h-1.5 rounded-full transition-all duration-200',
-                          idx === activeImageIndex
-                            ? 'w-5 bg-stone-900'
-                            : 'w-1.5 bg-stone-400/60',
-                        )}
-                        aria-label={`Go to image ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
+            {/* Main Image */}
+            <div className="relative overflow-hidden bg-[#4C2600] group">
+              {product.isNewArrival && (
+                <span className="absolute left-0 top-0 z-10 bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
+                  New Arrival
+                </span>
+              )}
+              {hasDiscount && (
+                <span className={`absolute ${product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0'} z-10 bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase`}>
+                  Sale
+                </span>
+              )}
+              <div className="aspect-[3/4] sm:aspect-[4/5]">
+                <img
+                  src={selectedImage}
+                  alt={product.name}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
               </div>
             </div>
 
-            {/* ── Mobile horizontal thumbnail strip (sm and below) ── */}
-            <div className="flex sm:hidden gap-2 overflow-x-auto pb-1">
+            {/* Horizontal Thumbnails */}
+            <div className="flex gap-2.5 overflow-x-auto pb-2">
               {images.map((src, idx) => (
                 <button
-                  key={`mobile-thumb-${idx}`}
+                  key={`${src}-${idx}`}
                   type="button"
                   onClick={() => setActiveImageIndex(idx)}
                   className={classNames(
-                    'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200 rounded-sm',
+                    'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200',
                     idx === activeImageIndex
-                      ? 'border-stone-800 opacity-100 scale-[1.04] shadow'
-                      : 'border-transparent opacity-50 hover:opacity-80',
+                      ? 'border-white opacity-100'
+                      : 'border-transparent opacity-50 hover:opacity-80 hover:border-[#FFDA03]/30',
                   )}
                 >
                   <img
@@ -415,13 +322,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                 className="mt-1 shrink-0 text-stone-400 hover:text-red-500 transition-colors"
                 aria-label="Add to wishlist"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path d="M12 21s-7-4.35-9.5-8.5C.5 9.5 2.5 6.5 6 6.5c2 0 3.5 1.2 4 2 0.5-0.8 2-2 4-2 3.5 0 5.5 3 3.5 6-2.5 4.15-9.5 8.5-9.5 8.5z" />
                 </svg>
               </button>
@@ -437,28 +338,21 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
 
             {/* Short Description */}
             <p className="mt-4 text-[13px] text-stone-600 leading-relaxed">
-              {product.description?.split('\n')[0] ||
-                `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations.`}
+              {product.description?.split('\n')[0] || `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations.`}
             </p>
 
             {/* Price */}
             <div className="mt-5 flex items-end gap-3">
               {hasDiscount ? (
                 <>
-                  <p className="text-base text-stone-400 line-through">
-                    {formatPKR(effectiveOriginalPrice)}
-                  </p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {formatPKR(effectivePrice)}
-                  </p>
+                  <p className="text-base text-stone-400 line-through">{formatPKR(effectiveOriginalPrice)}</p>
+                  <p className="text-2xl font-bold text-red-600">{formatPKR(effectivePrice)}</p>
                   <span className="inline-flex items-center bg-red-100 text-red-700 px-2 py-0.5 text-[11px] font-semibold rounded-sm">
                     Save {discountPercent}%
                   </span>
                 </>
               ) : (
-                <p className="text-2xl font-bold text-stone-900">
-                  {formatPKR(effectivePrice)}
-                </p>
+                <p className="text-2xl font-bold text-stone-900">{formatPKR(effectivePrice)}</p>
               )}
             </div>
 
@@ -483,27 +377,17 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             {/* Metadata: SKU, Availability, Type */}
             <div className="mt-5 border-t border-stone-200 pt-5 space-y-2 text-[13px] text-stone-700">
               <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">
-                  SKU:
-                </span>
+                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">SKU:</span>
                 <span className="font-medium">{sku}</span>
               </div>
               <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">
-                  Availability:
-                </span>
-                <span
-                  className={
-                    inStock ? 'text-emerald-600 font-semibold' : 'text-red-600 font-semibold'
-                  }
-                >
+                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">Availability:</span>
+                <span className={inStock ? 'text-emerald-600 font-semibold' : 'text-red-600 font-semibold'}>
                   {inStock ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
               <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">
-                  Product Type:
-                </span>
+                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">Product Type:</span>
                 <span className="font-medium">{productType}</span>
               </div>
             </div>
@@ -513,14 +397,15 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               <div className="mt-5 border-t border-stone-200 pt-5">
                 <div className="flex items-center justify-between">
                   <p className="text-[13px] font-semibold text-stone-800">
-                    Color:{' '}
-                    <span className="font-normal text-stone-500">{selectedColor}</span>
+                    Color: <span className="font-normal text-stone-500">{selectedColor}</span>
                   </p>
                 </div>
                 <div className="mt-3 flex items-center gap-3">
                   {baseColors.map((color, idx) => {
                     const active = idx === safeColorIndex
+                    // Pattern image for swatch (mocking pattern by using product image)
                     const patternImg = images[Math.min(idx, Math.max(images.length - 1, 0))]
+
                     return (
                       <button
                         key={`${color}-${idx}`}
@@ -531,54 +416,29 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                         }}
                         className={classNames(
                           'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
-                          active
-                            ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
-                            : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
+                          active ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white' : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
                         )}
                         aria-label={`Select color ${color}`}
                       >
                         <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200 relative">
-                          <img
-                            src={patternImg}
-                            alt={color}
-                            className="h-full w-full object-cover"
-                          />
+                          {/* Use image pattern if available, else standard color */}
+                          <img src={patternImg} alt={color} className="h-full w-full object-cover" />
                         </div>
                       </button>
                     )
                   })}
                 </div>
 
-                {/* Compare Color Button */}
+                {/* Compare Color Button with Multi-color Wheel Icon */}
                 <button
                   type="button"
                   onClick={() => setIsCompareOpen(true)}
                   className="mt-4 flex items-center gap-2 text-[13px] font-medium text-stone-700 hover:text-stone-900 hover:underline transition-all"
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="shrink-0"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="url(#color-wheel-gradient)"
-                      strokeWidth="3"
-                    />
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                    <circle cx="12" cy="12" r="10" stroke="url(#color-wheel-gradient)" strokeWidth="3" />
                     <defs>
-                      <linearGradient
-                        id="color-wheel-gradient"
-                        x1="2"
-                        y1="2"
-                        x2="22"
-                        y2="22"
-                        gradientUnits="userSpaceOnUse"
-                      >
+                      <linearGradient id="color-wheel-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stopColor="#f87171" />
                         <stop offset="20%" stopColor="#fbbf24" />
                         <stop offset="40%" stopColor="#34d399" />
@@ -597,16 +457,11 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             {bulbOptions.length > 0 && (
               <div className="mt-5 border-t border-stone-200 pt-5">
                 <p className="text-[13px] font-semibold text-stone-800">
-                  Bulb:{' '}
-                  <span className="font-normal text-stone-500">
-                    {selectedBulbOption || bulbOptions[0]}
-                  </span>
+                  Bulb: <span className="font-normal text-stone-500">{selectedBulbOption || bulbOptions[0]}</span>
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   {bulbOptions.map((opt) => {
-                    const active = selectedBulbOption
-                      ? selectedBulbOption === opt
-                      : opt === bulbOptions[0]
+                    const active = selectedBulbOption ? selectedBulbOption === opt : opt === bulbOptions[0]
                     return (
                       <button
                         key={opt}
@@ -630,10 +485,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             {/* ── Quantity + Add to Cart row ── */}
             <div className="mt-6 border-t border-stone-200 pt-5">
               <p className="text-[13px] text-stone-600">
-                Subtotal:{' '}
-                <span className="font-bold text-stone-900">
-                  {formatPKR(effectivePrice * Math.max(1, quantity))}
-                </span>
+                Subtotal: <span className="font-bold text-stone-900">{formatPKR(effectivePrice * Math.max(1, quantity))}</span>
               </p>
 
               <p className="mt-4 text-[13px] font-semibold text-stone-800">Quantity:</p>
@@ -654,9 +506,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() =>
-                      setQuantity((prev) => Math.min(Math.max(stock, 99), prev + 1))
-                    }
+                    onClick={() => setQuantity((prev) => Math.min(Math.max(stock, 99), prev + 1))}
                     className="h-12 w-12 grid place-items-center text-stone-600 text-lg transition-colors hover:bg-stone-50"
                     aria-label="Increase quantity"
                   >
@@ -697,52 +547,23 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
 
               {/* Share row */}
               <div className="mt-4 flex items-center gap-4">
-                <span className="text-[12px] text-stone-500 uppercase tracking-wide font-semibold">
-                  Share
-                </span>
+                <span className="text-[12px] text-stone-500 uppercase tracking-wide font-semibold">Share</span>
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-blue-600 transition-colors"
-                    aria-label="Share on Facebook"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                    </svg>
+                  {/* Facebook */}
+                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-blue-600 transition-colors" aria-label="Share on Facebook">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
                   </button>
-                  <button
-                    type="button"
-                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-900 transition-colors"
-                    aria-label="Share on Twitter"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
+                  {/* Twitter / X */}
+                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-900 transition-colors" aria-label="Share on Twitter">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                   </button>
-                  <button
-                    type="button"
-                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-red-600 transition-colors"
-                    aria-label="Share on Pinterest"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-                      <path d="M12 0a12 12 0 0 0-4.37 23.17c-.02-.94-.004-2.07.24-3.09l1.73-7.33s-.43-.86-.43-2.13c0-2 1.16-3.5 2.6-3.5 1.23 0 1.82.92 1.82 2.02 0 1.23-.78 3.07-1.18 4.78-.34 1.42.71 2.58 2.1 2.58 2.52 0 4.21-3.24 4.21-7.07 0-2.92-1.97-5.1-5.55-5.1a6.4 6.4 0 0 0-6.63 6.45c0 1.17.35 2 .89 2.63.25.3.28.41.19.75l-.27 1.07c-.09.35-.36.47-.66.34-1.84-.75-2.7-2.77-2.7-5.04 0-3.75 3.16-8.24 9.42-8.24 5.04 0 8.34 3.64 8.34 7.55 0 5.17-2.88 9.04-7.12 9.04-1.42 0-2.76-.77-3.22-1.64l-.92 3.58c-.3 1.1-.89 2.2-1.43 3.07A12 12 0 1 0 12 0z" />
-                    </svg>
+                  {/* Pinterest */}
+                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-red-600 transition-colors" aria-label="Share on Pinterest">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M12 0a12 12 0 0 0-4.37 23.17c-.02-.94-.004-2.07.24-3.09l1.73-7.33s-.43-.86-.43-2.13c0-2 1.16-3.5 2.6-3.5 1.23 0 1.82.92 1.82 2.02 0 1.23-.78 3.07-1.18 4.78-.34 1.42.71 2.58 2.1 2.58 2.52 0 4.21-3.24 4.21-7.07 0-2.92-1.97-5.1-5.55-5.1a6.4 6.4 0 0 0-6.63 6.45c0 1.17.35 2 .89 2.63.25.3.28.41.19.75l-.27 1.07c-.09.35-.36.47-.66.34-1.84-.75-2.7-2.77-2.7-5.04 0-3.75 3.16-8.24 9.42-8.24 5.04 0 8.34 3.64 8.34 7.55 0 5.17-2.88 9.04-7.12 9.04-1.42 0-2.76-.77-3.22-1.64l-.92 3.58c-.3 1.1-.89 2.2-1.43 3.07A12 12 0 1 0 12 0z" /></svg>
                   </button>
-                  <button
-                    type="button"
-                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-700 transition-colors"
-                    aria-label="Share via email"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
+                  {/* Email */}
+                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-700 transition-colors" aria-label="Share via email">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
                   </button>
                 </div>
               </div>
@@ -750,19 +571,11 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
 
             {/* ── Viewers badge ── */}
             <div className="mt-5 flex items-center gap-2 text-[12px] text-stone-500">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-4 w-4 text-stone-400"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
+              <svg viewBox="0 0 24 24" className="h-4 w-4 text-stone-400" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span>
-                {Math.floor(Math.random() * 20) + 10} customers are viewing this product
-              </span>
+              <span>{Math.floor(Math.random() * 20) + 10} customers are viewing this product</span>
             </div>
 
             {/* ═══ Accordion: Free Shipping / Free Returns / Our Promise ═══ */}
@@ -770,79 +583,41 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               <Accordion
                 defaultOpen={false}
                 icon={
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5 text-stone-600"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <rect x="1" y="6" width="15" height="12" rx="1" />
-                    <path d="M16 10h4l3 4v4h-7V10z" />
-                    <circle cx="5.5" cy="18" r="2" />
-                    <circle cx="19.5" cy="18" r="2" />
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-stone-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="1" y="6" width="15" height="12" rx="1" /><path d="M16 10h4l3 4v4h-7V10z" /><circle cx="5.5" cy="18" r="2" /><circle cx="19.5" cy="18" r="2" />
                   </svg>
                 }
                 title="Free Shipping"
               >
                 <p>Free standard shipping on orders over 10,000 PKR</p>
-                <p className="mt-2">
-                  All in-stock products will be delivered within{' '}
-                  <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to
-                  complete and ship.
-                </p>
+                <p className="mt-2">All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.</p>
               </Accordion>
 
               <Accordion
                 defaultOpen={false}
                 icon={
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5 text-stone-600"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M9 14l-4-4 4-4" />
-                    <path d="M5 10h11a4 4 0 0 1 0 8h-1" />
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-stone-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M9 14l-4-4 4-4" /><path d="M5 10h11a4 4 0 0 1 0 8h-1" />
                   </svg>
                 }
                 title="Free Returns"
               >
-                <p>
-                  At Lamp&amp;Glow, we stand by the quality of our handcrafted wooden lamps
-                  and want you to be completely satisfied with your purchase.
-                </p>
-                <p className="mt-2">
-                  You may return most new, unopened items within <strong>7 days</strong> of
-                  delivery for a full refund. If the return is due to our error, we will cover
-                  the return shipping costs.
-                </p>
+                <p>At Lamp&amp;Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.</p>
+                <p className="mt-2">You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.</p>
                 <h4 className="mt-3 font-semibold text-stone-700">How to Initiate a Return</h4>
                 <ol className="mt-1 list-decimal pl-5 space-y-1">
                   <li>Log in to your account.</li>
                   <li>Navigate to the "Complete Orders" section under My Account.</li>
-                  <li>
-                    Click the "Return Item(s)" button and follow the instructions.
-                  </li>
-                  <li>
-                    You will receive an email notification once your return has been processed.
-                  </li>
+                  <li>Click the "Return Item(s)" button and follow the instructions.</li>
+                  <li>You will receive an email notification once your return has been processed.</li>
                 </ol>
               </Accordion>
 
               <Accordion
                 defaultOpen={false}
                 icon={
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5 text-stone-600"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    <path d="m9 12 2 2 4-4" />
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-stone-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" />
                   </svg>
                 }
                 title="Our Promise"
@@ -859,7 +634,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
         </div>
       </div>
 
-      {/* ═══════════════ COMPARE COLOR MODAL ═══════════════ */}
+      {/* ═══════════════ COMPARE COLOR MODAL (Pixel Match) ═══════════════ */}
       {isCompareOpen && baseColors.length > 0 && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm transition-opacity"
@@ -873,100 +648,79 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
             aria-modal="true"
             aria-label="Compare Color"
           >
-            {/* Close Button */}
+            {/* Close Button (Black Square Top-Right) */}
             <button
               type="button"
               onClick={() => setIsCompareOpen(false)}
               className="absolute right-0 top-0 z-10 flex h-10 w-10 items-center justify-center bg-black text-white hover:bg-stone-800 transition-colors"
               aria-label="Close compare"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M1 13L13 1M1 1l12 12" />
               </svg>
             </button>
 
             <div className="p-8 sm:p-12">
+              {/* Header Title */}
               <h3 className="mb-6 text-base font-bold text-stone-900">Compare Color</h3>
 
               {/* Swatches Row */}
               <div className="mb-10 flex items-center gap-4">
                 {baseColors.map((color, idx) => {
+                  const active = idx === safeColorIndex
                   const patternImg = images[Math.min(idx, Math.max(images.length - 1, 0))]
+
                   return (
                     <button
                       key={`compare-swatch-${color}-${idx}`}
                       type="button"
                       onClick={() => {
-                        setCompareVisibleIndices((prev) =>
-                          prev.includes(idx)
-                            ? prev.filter((i) => i !== idx)
-                            : [...prev, idx],
-                        )
+                         // Toggle visibility
+                         setCompareVisibleIndices(prev => 
+                           prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+                         )
                       }}
                       className={classNames(
                         'rounded-full p-[3px] transition-all duration-200',
-                        compareVisibleIndices.includes(idx)
-                          ? 'ring-1 ring-black opacity-100'
-                          : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
+                        compareVisibleIndices.includes(idx) ? 'ring-1 ring-black opacity-100' : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
                       )}
                       aria-label={`Toggle visibility for ${color}`}
                     >
                       <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200 relative">
-                        <img
-                          src={patternImg}
-                          alt={color}
-                          className="h-full w-full object-cover"
-                        />
+                         <img src={patternImg} alt={color} className="h-full w-full object-cover" />
                       </div>
                     </button>
                   )
                 })}
               </div>
 
-              {/* Images Grid */}
+              {/* Images Grid (Portrait) - Only show visible */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {baseColors
-                  .map((color, idx) => ({ color, idx }))
+                  .map((color, idx) => ({ color, idx })) // retain original index for image access
                   .filter(({ idx }) => compareVisibleIndices.includes(idx))
                   .map(({ color, idx }) => {
-                    const imageSrc =
-                      images[Math.min(idx, Math.max(images.length - 1, 0))] || selectedImage
-                    return (
-                      <div
-                        key={`compare-card-${color}-${idx}`}
-                        className="group cursor-pointer flex flex-col items-center animate-fadeIn"
-                        onClick={() => {
-                          setSelectedColorIndex(idx)
-                          setIsCompareOpen(false)
-                        }}
-                      >
-                        <div className="aspect-[3/4] w-full overflow-hidden bg-stone-50 mb-4 transition-opacity group-hover:opacity-90">
-                          <img
-                            src={imageSrc}
-                            alt={color}
-                            className="h-full w-full object-cover object-center"
-                          />
-                        </div>
-                        <p className="text-sm font-medium text-stone-600 group-hover:text-stone-900 transition-colors">
-                          {color}
-                        </p>
+                  const imageSrc = images[Math.min(idx, Math.max(images.length - 1, 0))] || selectedImage
+                  return (
+                    <div 
+                      key={`compare-card-${color}-${idx}`} 
+                      className="group cursor-pointer flex flex-col items-center animate-fadeIn"
+                      onClick={() => { setSelectedColorIndex(idx); setIsCompareOpen(false); }}
+                    >
+                      <div className="aspect-[3/4] w-full overflow-hidden bg-stone-50 mb-4 transition-opacity group-hover:opacity-90">
+                        <img src={imageSrc} alt={color} className="h-full w-full object-cover object-center" />
                       </div>
-                    )
-                  })}
+                      <p className="text-sm font-medium text-stone-600 group-hover:text-stone-900 transition-colors">{color}</p>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ═══════════════ TABS ═══════════════ */}
+      {/* ═══════════════ TABS: Description / Shipping & Return / Reviews ═══════════════ */}
       <div className="border-t border-stone-200 bg-stone-50/60">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
           {/* Tab headers */}
@@ -983,11 +737,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                     : 'text-stone-400 hover:text-stone-600',
                 )}
               >
-                {tab === 'description'
-                  ? 'Description'
-                  : tab === 'shipping'
-                    ? 'Shipping & Return'
-                    : `Reviews (${productReviews.length})`}
+                {tab === 'description' ? 'Description' : tab === 'shipping' ? 'Shipping & Return' : `Reviews (${productReviews.length})`}
               </button>
             ))}
           </div>
@@ -998,33 +748,34 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">{product.name}</h3>
-                  <p className="mt-1 text-stone-500 italic">
-                    {product.description?.split('\n')[1] ||
-                      'A grounded silhouette with elevated simplicity.'}
-                  </p>
+                  <p className="mt-1 text-stone-500 italic">{product.description?.split('\n')[1] || 'A grounded silhouette with elevated simplicity.'}</p>
                 </div>
 
                 <p>
-                  {product.description ||
-                    `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}
+                  {product.description || `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}
                 </p>
 
+                {/* Product Details table */}
                 {Object.keys(pd).length > 0 && (
                   <div>
-                    <h4 className="text-base font-bold text-stone-900 mt-2">
-                      Product Details
-                    </h4>
+                    <h4 className="text-base font-bold text-stone-900 mt-2">Product Details</h4>
                     <div className="mt-3 space-y-0">
-                      {Object.entries(pd).map(([key, value]) => (
-                        <div key={key} className="flex border-b border-stone-100 py-2.5">
-                          <span className="w-48 text-stone-500 capitalize text-[13px]">
-                            {key.replace(/([A-Z])/g, ' $1').trim()}
-                          </span>
-                          <span className="text-[13px] font-medium text-stone-800">
-                            {Array.isArray(value) ? value.join(', ') : value}
-                          </span>
-                        </div>
-                      ))}
+                      {Object.entries(pd).map(([key, value]) => {
+                        if (Array.isArray(value)) {
+                          return (
+                            <div key={key} className="flex border-b border-stone-100 py-2.5">
+                              <span className="w-48 text-stone-500 capitalize text-[13px]">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                              <span className="text-[13px] font-medium text-stone-800">{value.join(', ')}</span>
+                            </div>
+                          )
+                        }
+                        return (
+                          <div key={key} className="flex border-b border-stone-100 py-2.5">
+                            <span className="w-48 text-stone-500 capitalize text-[13px]">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                            <span className="text-[13px] font-medium text-stone-800">{value}</span>
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -1034,31 +785,19 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   <ul className="mt-3 space-y-2">
                     <li className="flex gap-2">
                       <span className="text-amber-600 mt-0.5">✦</span>
-                      <span>
-                        <strong>Sculptural Simplicity</strong> – Smooth, rounded wood base in
-                        rich tones that ground your space
-                      </span>
+                      <span><strong>Sculptural Simplicity</strong> – Smooth, rounded wood base in rich tones that ground your space</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="text-amber-600 mt-0.5">✦</span>
-                      <span>
-                        <strong>Soft Diffused Light</strong> – Wide shade offers an elegant
-                        glow, ideal for evening ambience
-                      </span>
+                      <span><strong>Soft Diffused Light</strong> – Wide shade offers an elegant glow, ideal for evening ambience</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="text-amber-600 mt-0.5">✦</span>
-                      <span>
-                        <strong>Handcrafted Quality</strong> – Each piece is individually made
-                        with care and attention to detail
-                      </span>
+                      <span><strong>Handcrafted Quality</strong> – Each piece is individually made with care and attention to detail</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="text-amber-600 mt-0.5">✦</span>
-                      <span>
-                        <strong>Versatile Placement</strong> – Perfect for living rooms,
-                        bedrooms, reading corners, and offices
-                      </span>
+                      <span><strong>Versatile Placement</strong> – Perfect for living rooms, bedrooms, reading corners, and offices</span>
                     </li>
                   </ul>
                 </div>
@@ -1073,8 +812,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                 </div>
 
                 <p className="text-[12px] text-stone-400 italic mt-4">
-                  Note: Each base is handcrafted and may display subtle variations in wood
-                  grain and tone — part of its natural charm.
+                  Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.
                 </p>
               </div>
             ) : activeTab === 'shipping' ? (
@@ -1082,81 +820,52 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                 <div>
                   <h3 className="text-base font-bold text-stone-900">Returns Policy</h3>
                   <p className="mt-2">
-                    You may return most new, unopened items within <strong>7 days</strong> of
-                    delivery for a full refund. We'll also pay the return shipping costs if the
-                    return is a result of our error (you received an incorrect or defective
-                    item, etc.).
+                    You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund.
+                    We'll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).
                   </p>
                   <p className="mt-2">
-                    You should expect to receive your refund within four weeks of giving your
-                    package to the return shipper. This time period includes the transit time
-                    for us to receive your return from the shipper (5 to 10 business days), the
-                    time it takes us to process your return once we receive it (3 to 5 business
-                    days), and the time it takes your bank to process our refund request (5 to
-                    10 business days).
+                    You should expect to receive your refund within four weeks of giving your package to the return shipper.
+                    This time period includes the transit time for us to receive your return from the shipper (5 to 10 business days),
+                    the time it takes us to process your return once we receive it (3 to 5 business days),
+                    and the time it takes your bank to process our refund request (5 to 10 business days).
                   </p>
                   <p className="mt-2">
-                    If you need to return an item, simply login to your account, view the order
-                    using the "Complete Orders" link under the My Account menu and click the
-                    Return Item(s) button. We'll notify you via e-mail of your refund once
-                    we've received and processed the returned item.
+                    If you need to return an item, simply login to your account, view the order using the "Complete Orders" link under the My Account menu and click the Return Item(s) button. We'll notify you via e-mail of your refund once we've received and processed the returned item.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-stone-900">Shipping</h3>
                   <p className="mt-2">
-                    We can ship to virtually any address in Pakistan. Free standard shipping on
-                    orders over 10,000 PKR. Orders are typically dispatched within 1-2 business
-                    days.
+                    We can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.
                   </p>
                   <p className="mt-2">
-                    When you place an order, we will estimate shipping and delivery dates for
-                    you based on the availability of your items and the shipping options you
-                    choose.
+                    When you place an order, we will estimate shipping and delivery dates for you based on the availability of your items and the shipping options you choose.
                   </p>
                   <p className="mt-2">
-                    All in-stock products will be delivered within <strong>3 to 5 days</strong>
-                    . Custom designs will take 8 to 12 days to complete and ship.
+                    All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.
                   </p>
                 </div>
               </div>
             ) : (
               /* ── Reviews Tab ── */
               <div className="max-w-3xl space-y-8">
+                {/* Review Summary */}
                 <div className="flex items-center gap-6">
                   <div className="text-center">
-                    <p className="text-5xl font-bold text-stone-900">
-                      {avgRating ? avgRating.toFixed(1) : '0.0'}
-                    </p>
+                    <p className="text-5xl font-bold text-stone-900">{avgRating ? avgRating.toFixed(1) : '0.0'}</p>
                     <div className="mt-1">{renderStars(avgRating || 0)}</div>
-                    <p className="mt-1 text-xs text-stone-500">
-                      Based on {productReviews.length} review
-                      {productReviews.length === 1 ? '' : 's'}
-                    </p>
+                    <p className="mt-1 text-xs text-stone-500">Based on {productReviews.length} review{productReviews.length === 1 ? '' : 's'}</p>
                   </div>
                   <div className="flex-1 space-y-1.5">
                     {[5, 4, 3, 2, 1].map((star) => {
-                      const count = productReviews.filter(
-                        (r) => Math.round(r.rating) === star,
-                      ).length
-                      const pct =
-                        productReviews.length > 0
-                          ? (count / productReviews.length) * 100
-                          : 0
+                      const count = productReviews.filter((r) => Math.round(r.rating) === star).length
+                      const pct = productReviews.length > 0 ? (count / productReviews.length) * 100 : 0
                       return (
                         <div key={star} className="flex items-center gap-2 text-xs">
                           <span className="w-4 text-stone-500 text-right">{star}</span>
-                          <svg
-                            viewBox="0 0 24 24"
-                            className="h-3.5 w-3.5 text-amber-500 fill-current"
-                          >
-                            <path d="M12 17.27l-5.18 3.04 1.4-5.81-4.52-3.92 5.95-.5L12 4.5l2.35 5.58 5.95.5-4.52 3.92 1.4 5.81z" />
-                          </svg>
+                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-amber-500 fill-current"><path d="M12 17.27l-5.18 3.04 1.4-5.81-4.52-3.92 5.95-.5L12 4.5l2.35 5.58 5.95.5-4.52 3.92 1.4 5.81z" /></svg>
                           <div className="flex-1 h-2 bg-stone-200 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-amber-500 rounded-full transition-all"
-                              style={{ width: `${pct}%` }}
-                            />
+                            <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
                           </div>
                           <span className="w-6 text-stone-400">{count}</span>
                         </div>
@@ -1165,12 +874,11 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   </div>
                 </div>
 
+                {/* Review List */}
                 {productReviews.length === 0 ? (
                   <div className="text-center py-10">
                     <p className="text-stone-400 text-sm">No reviews yet for this product.</p>
-                    <p className="text-stone-400 text-xs mt-1">
-                      Be the first to write a review!
-                    </p>
+                    <p className="text-stone-400 text-xs mt-1">Be the first to write a review!</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-stone-100">
@@ -1182,23 +890,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                               {review.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
                             <div>
-                              <p className="text-sm font-semibold text-stone-900">
-                                {review.name}
-                              </p>
-                              <p className="text-[11px] text-stone-400">
-                                {new Date(review.createdAt).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                })}
-                              </p>
+                              <p className="text-sm font-semibold text-stone-900">{review.name}</p>
+                              <p className="text-[11px] text-stone-400">{new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                             </div>
                           </div>
                           {renderStars(review.rating)}
                         </div>
-                        <p className="mt-3 text-[13px] text-stone-600 leading-relaxed">
-                          {review.comment}
-                        </p>
+                        <p className="mt-3 text-[13px] text-stone-600 leading-relaxed">{review.comment}</p>
                       </div>
                     ))}
                   </div>
@@ -1214,65 +912,28 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center gap-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-stone-700"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              >
-                <path d="M3 3h7l2 3h9v13H3z" />
-                <path d="M3 8h18" />
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <path d="M3 3h7l2 3h9v13H3z" /><path d="M3 8h18" />
               </svg>
-              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">
-                Dedicated Support
-              </p>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Dedicated Support</p>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-stone-700"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              >
-                <path d="M9 14l-4-4 4-4" />
-                <path d="M5 10h11a4 4 0 0 1 0 8h-1" />
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <path d="M9 14l-4-4 4-4" /><path d="M5 10h11a4 4 0 0 1 0 8h-1" />
               </svg>
-              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">
-                7 Days Free Returns
-              </p>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">7 Days Free Returns</p>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-stone-700"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              >
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <path d="m9 12 2 2 4-4" />
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" />
               </svg>
-              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">
-                Safe Payment
-              </p>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Safe Payment</p>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-8 w-8 text-stone-700"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
               </svg>
-              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">
-                Online Discounts
-              </p>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Online Discounts</p>
             </div>
           </div>
         </div>
@@ -1282,14 +943,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
       {relatedProducts.length > 0 && (
         <div className="border-t border-stone-200 bg-white">
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
-              Related Products
-            </h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Related Products</h2>
             <p className="mt-1 text-sm text-stone-500">You may also like</p>
 
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {relatedProducts.slice(0, 4).map((rp) => {
                 const rpInfo = getDiscountInfo(rp)
+
                 return (
                   <Link
                     key={rp.id}
@@ -1303,12 +963,7 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                         </span>
                       )}
                       {rpInfo.hasDiscount && (
-                        <span
-                          className={classNames(
-                            'absolute z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide',
-                            rp.isNewArrival ? 'left-0 top-6' : 'left-0 top-0',
-                          )}
-                        >
+                        <span className={`absolute ${rp.isNewArrival ? 'left-0 top-6' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide`}>
                           -{rpInfo.discountPercent}%
                         </span>
                       )}
@@ -1326,22 +981,15 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                         {rpInfo.hasDiscount ? (
                           <>
                             <span className="text-stone-400 line-through text-[12px]">
-                              Rs.
-                              {rpInfo.originalPrice.toLocaleString('en-PK', {
-                                minimumFractionDigits: 2,
-                              })}
+                              Rs.{rpInfo.originalPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
                             </span>
                             <span className="font-bold text-red-600 text-[13px]">
-                              Rs.
-                              {rpInfo.discountedPrice.toLocaleString('en-PK', {
-                                minimumFractionDigits: 2,
-                              })}
+                              Rs.{rpInfo.discountedPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
                             </span>
                           </>
                         ) : (
                           <span className="font-bold text-stone-900 text-[13px]">
-                            Rs.
-                            {rp.price.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
+                            Rs.{rp.price.toLocaleString('en-PK', { minimumFractionDigits: 2 })}
                           </span>
                         )}
                       </div>
@@ -1354,53 +1002,29 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
         </div>
       )}
 
-      {/* ═══════════════ RECENTLY VIEWED ═══════════════ */}
+      {/* ═══════════════ RECENTLY VIEWED (mock with other products) ═══════════════ */}
       {relatedProducts.length > 2 && (
         <div className="border-t border-stone-200 bg-stone-50/40">
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
-              Recently Viewed Products
-            </h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Recently Viewed Products</h2>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {relatedProducts.slice(0, 5).map((rp) => {
                 const rpInfo = getDiscountInfo(rp)
                 return (
-                  <Link
-                    key={`rv-${rp.id}`}
-                    to={`/products/${slugify(rp.name)}`}
-                    className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-                  >
+                  <Link key={`rv-${rp.id}`} to={`/products/${slugify(rp.name)}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                     <div className="relative aspect-square overflow-hidden bg-stone-100">
                       {rp.isNewArrival && (
                         <span className="absolute left-0 top-0 z-10 bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">
                           New
                         </span>
                       )}
-                      <img
-                        src={rp.image}
-                        alt={rp.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <img src={rp.image} alt={rp.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
                     <div className="p-3">
-                      <h3 className="text-[12px] font-semibold text-stone-900 leading-snug line-clamp-2">
-                        {rp.name}
-                      </h3>
+                      <h3 className="text-[12px] font-semibold text-stone-900 leading-snug line-clamp-2">{rp.name}</h3>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-[12px]">
-                        {rpInfo.hasDiscount && (
-                          <span className="text-stone-400 line-through">
-                            Rs.{rpInfo.originalPrice.toLocaleString('en-PK')}
-                          </span>
-                        )}
-                        <span
-                          className={
-                            rpInfo.hasDiscount
-                              ? 'font-bold text-red-600'
-                              : 'font-bold text-stone-900'
-                          }
-                        >
-                          Rs.{rpInfo.discountedPrice.toLocaleString('en-PK')}
-                        </span>
+                        {rpInfo.hasDiscount && <span className="text-stone-400 line-through">Rs.{rpInfo.originalPrice.toLocaleString('en-PK')}</span>}
+                        <span className={rpInfo.hasDiscount ? 'font-bold text-red-600' : 'font-bold text-stone-900'}>Rs.{rpInfo.discountedPrice.toLocaleString('en-PK')}</span>
                       </div>
                     </div>
                   </Link>
