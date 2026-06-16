@@ -558,7 +558,12 @@ function AppContent() {
           <Route
             path="/products/:slug"
             element={(
-              <ProductDetail products={products} onAddToCart={handleAddToCart} reviews={reviews} />
+              <ProductDetail
+                products={products}
+                productsLoading={productsLoading}
+                onAddToCart={handleAddToCart}
+                reviews={reviews}
+              />
             )}
           />
 

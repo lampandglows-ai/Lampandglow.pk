@@ -51,53 +51,21 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
   )
 }
 
-export default function ProductDetail({ products, onAddToCart, reviews }) {
+export default function ProductDetail({ products, productsLoading = false, onAddToCart, reviews }) {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const { categories } = useCategories()
   const product = products.find((p) => slugify(p.name) === slug)
-  const productId = product?.id
-  const [selectedBulbOption, setSelectedBulbOption] = useState('')
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
-  const [isCompareOpen, setIsCompareOpen] = useState(false)
-  const [compareVisibleIndices, setCompareVisibleIndices] = useState([]) // indices of visible images in compare modal
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState('description')
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
-  const productReviews = reviews.filter((r) => r.productId === productId)
-  const avgRating =
-    productReviews.length === 0
-      ? null
-      : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
 
-  const baseColors = Array.isArray(product?.productDetails?.baseColors)
-    ? product.productDetails.baseColors
-    : []
+  if (productsLoading) {
+    return (
+      <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
+        <div className="px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[40vh]">
+          <div className="w-8 h-8 border-2 border-[#FFDA03] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </section>
+    )
+  }
 
-  useEffect(() => {
-    if (isCompareOpen) {
-      setCompareVisibleIndices(baseColors.map((_, i) => i))
-    }
-  }, [isCompareOpen, baseColors])
-
-  useEffect(() => {
-    if (!isCompareOpen) return
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') setIsCompareOpen(false)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [isCompareOpen])
-
-  const images = useMemo(() => {
-    if (!product) return []
-    if (Array.isArray(product.images) && product.images.length > 0) {
-      return product.images
-    }
-    return [product.image, product.image, product.image]
-  }, [product])
-
-  /* ── not found ── */
   if (!product) {
     return (
       <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
@@ -116,6 +84,63 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
       </section>
     )
   }
+
+  return (
+    <ProductDetailContent
+      product={product}
+      products={products}
+      onAddToCart={onAddToCart}
+      reviews={reviews}
+    />
+  )
+}
+
+function ProductDetailContent({ product, products, onAddToCart, reviews }) {
+  const navigate = useNavigate()
+  const { categories } = useCategories()
+  const productId = product.id
+  const [selectedBulbOption, setSelectedBulbOption] = useState('')
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
+  const [isCompareOpen, setIsCompareOpen] = useState(false)
+  const [compareVisibleIndices, setCompareVisibleIndices] = useState([]) // indices of visible images in compare modal
+  const [quantity, setQuantity] = useState(1)
+  const [activeTab, setActiveTab] = useState('description')
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const productReviews = reviews.filter((r) => r.productId === productId)
+  const avgRating =
+    productReviews.length === 0
+      ? null
+      : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
+
+  const baseColors = useMemo(
+    () =>
+      Array.isArray(product.productDetails?.baseColors)
+        ? product.productDetails.baseColors
+        : [],
+    [product.productDetails?.baseColors],
+  )
+
+  useEffect(() => {
+    if (isCompareOpen) {
+      setCompareVisibleIndices(baseColors.map((_, i) => i))
+    }
+  }, [isCompareOpen, baseColors])
+
+  useEffect(() => {
+    if (!isCompareOpen) return
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setIsCompareOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isCompareOpen])
+
+  const images = useMemo(() => {
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images
+    }
+    return [product.image, product.image, product.image]
+  }, [product.image, product.images])
 
   /* ── derived data ── */
   const stock = typeof product.stock === 'number' ? product.stock : 0
