@@ -132,7 +132,7 @@ const Header = forwardRef(function Header({
       return location.pathname === '/reels'
     }
     if (key === 'products') {
-      return location.pathname === '/' && activeSection === 'products'
+      return location.pathname === '/products'
     }
     return activeSection === key
   }
@@ -350,7 +350,7 @@ const Header = forwardRef(function Header({
             {navLinks.map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => handleNavigate(key)}
+                onClick={() => key === 'products' ? navigate('/products') : handleNavigate(key)}
                 className="transition-all duration-200 hover:text-amber-700 hover:-translate-y-0.5 motion-reduce:transform-none"
               >
                 {label}
@@ -374,7 +374,7 @@ const Header = forwardRef(function Header({
                 onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleNavigate('products')
+                    navigate('/products')
                     setSearchOpen(false)
                   }
                 }}
@@ -550,7 +550,7 @@ const Header = forwardRef(function Header({
                   onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      handleNavigate('products')
+                      navigate('/products')
                       setSearchOpen(false)
                     }
                   }}
