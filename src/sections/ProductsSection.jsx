@@ -220,8 +220,8 @@ export default function ProductsSection({
       <div className="px-4 sm:px-6 lg:px-8">
 
         {/* ── Page header ── */}
-        <div className="mb-6 flex items-end justify-between">
-          <div>
+        <div className="mb-6 flex items-end justify-center relative">
+          <div className="text-center">
             <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
               Products
             </h1>
