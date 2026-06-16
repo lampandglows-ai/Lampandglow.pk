@@ -231,7 +231,7 @@ export default function AdminOrdersPage() {
                         </div>
                       </td>
                       <td className="py-4 px-6 font-bold text-lg text-orange-500">
-                        ₹{order.total?.toLocaleString()}
+                        Rs.{order.total?.toLocaleString()}
                       </td>
                       <td className="py-4 px-6">
                         <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(order.status)}`}>
@@ -354,11 +354,11 @@ export default function AdminOrdersPage() {
                               {item.product?.name || item.name}
                             </p>
                             <p className="text-sm text-gray-600">
-                              Qty: {item.quantity} × ₹{(item.product?.price || item.unitPrice)?.toLocaleString()}
+                              Qty: {item.quantity} x Rs.{(item.product?.price || item.unitPrice)?.toLocaleString()}
                             </p>
                           </div>
                           <p className="font-bold text-orange-500">
-                            ₹{((item.product?.price || item.unitPrice) * item.quantity)?.toLocaleString()}
+                            Rs.{((item.product?.price || item.unitPrice) * item.quantity)?.toLocaleString()}
                           </p>
                         </div>
                       ))
@@ -374,19 +374,19 @@ export default function AdminOrdersPage() {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">Subtotal</span>
                       <span className="font-semibold text-gray-900">
-                        ₹{selectedOrder.subtotal?.toLocaleString()}
+                        Rs.{selectedOrder.subtotal?.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">Shipping</span>
                       <span className="font-semibold text-gray-900">
-                        ₹{selectedOrder.shipping?.toLocaleString()}
+                        Rs.{selectedOrder.shipping?.toLocaleString()}
                       </span>
                     </div>
                     <div className="border-t border-orange-200 pt-3 flex justify-between items-center">
                       <span className="font-bold text-gray-900">Total</span>
                       <span className="text-2xl font-bold text-orange-600">
-                        ₹{selectedOrder.total?.toLocaleString()}
+                        Rs.{selectedOrder.total?.toLocaleString()}
                       </span>
                     </div>
                   </div>

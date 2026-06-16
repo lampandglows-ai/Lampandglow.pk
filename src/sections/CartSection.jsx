@@ -74,7 +74,7 @@ export default function CartSection({
                       Remove
                     </button>
                   </div>
-                  <p className="text-xs text-stone-600">${(item.unitPrice ?? item.product.price).toFixed(2)} each</p>
+                  <p className="text-xs text-stone-600">Rs.{(item.unitPrice ?? item.product.price).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} each</p>
                   <div className="mt-2 flex items-center gap-2">
                     <label className="text-[11px] text-stone-600" htmlFor={`qty-${item.product.id}`}>
                       Qty
@@ -100,16 +100,16 @@ export default function CartSection({
             <div className="space-y-1 text-xs text-stone-700">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                  <span>Rs.{cartTotal.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between">
                 <span>Estimated shipping</span>
-                <span>{cartTotal >= 150 ? 'Free' : '$12.00'}</span>
+                  <span>{cartTotal >= 150 ? 'Free' : 'Rs.12'}</span>
               </div>
               <div className="flex justify-between font-semibold pt-1 border-t border-amber-100 mt-1">
                 <span>Total</span>
                 <span>
-                  $ {(cartTotal + (cartTotal >= 150 || cartTotal === 0 ? 0 : 12)).toFixed(2)}
+                  Rs.{(cartTotal + (cartTotal >= 150 || cartTotal === 0 ? 0 : 12)).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>

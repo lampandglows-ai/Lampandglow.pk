@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import classNames from '../utils/classNames.js'
+import bankDetailsService from '../utils/bankDetailsService'
 
 export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const navigate = useNavigate()
@@ -19,9 +20,32 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const [placedOrderId, setPlacedOrderId] = useState('')
   const [loading, setLoading] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('cod')
+  const [bankDetails, setBankDetails] = useState(null)
 
-  const shipping = cartTotal >= 150 || cartTotal === 0 ? 0 : 12
-  const grandTotal = cartTotal + shipping
+  useEffect(() => {
+    const loadBankDetails = async () => {
+      const data = await bankDetailsService.getBankDetails()
+      setBankDetails(data)
+    }
+    loadBankDetails()
+  }, [])
+
+  const formatPKR = (value) => {
+    if (typeof value !== 'number' || Number.isNaN(value)) return '0'
+    return value.toLocaleString('en-PK', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+  }
+
+  const parseNumericTotal = (val) => {
+    if (typeof val !== 'number' || Number.isNaN(val)) return 0
+    return val
+  }
+
+  const numericTotal = parseNumericTotal(cartTotal)
+  const shipping = numericTotal >= 150 || numericTotal === 0 ? 0 : 12
+  const grandTotal = numericTotal + shipping
 
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
@@ -64,7 +88,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
         unitPrice: item.unitPrice ?? item.product?.price,
         bulbOption: item.bulbOption,
       })),
-      subtotal: cartTotal,
+      subtotal: numericTotal,
       shipping,
       total: grandTotal,
     }
@@ -108,7 +132,9 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                     <>
                       <p className="font-semibold">Cash on Delivery (COD)</p>
                       <p>Your order will arrive at your address. Please have the exact payment amount ready.</p>
-                      <p className="text-xs mt-1 text-amber-400">Note: 50% advance payment required via Bank Deposit. Remaining 50% will be paid on delivery.</p>
+                      {bankDetails && (
+                        <p className="text-xs mt-1 text-amber-400">Note: {bankDetails.codAdvancePercent || 50}% advance payment required via Bank Deposit. Remaining balance paid on delivery.</p>
+                      )}
                     </>
                   ) : (
                     <>
@@ -126,15 +152,15 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <div className="mt-3 space-y-1 text-xs text-white/70">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${cartTotal.toFixed(2)}</span>
+                    <span>Rs.{formatPKR(numericTotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                    <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
                   </div>
                   <div className="flex justify-between font-semibold pt-1 border-t border-[#FFDA03]/20 mt-1">
                     <span>Total</span>
-                    <span>${grandTotal.toFixed(2)}</span>
+                    <span>Rs.{formatPKR(grandTotal)}</span>
                   </div>
                 </div>
               </div>
@@ -161,6 +187,10 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
       </section>
     )
   }
+
+  const advancePercent = bankDetails?.codAdvancePercent ?? 50
+  const advanceAmount = Math.round(grandTotal * (advancePercent / 100))
+  const codAmount = grandTotal - advanceAmount
 
   return (
     <section className="w-full px-0 py-10 sm:py-14 bg-[#4C2600]">
@@ -354,28 +384,33 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             </div>
 
             {/* Conditional Bank Details */}
-            <div className="mt-4 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
-              <p className="text-xs font-semibold text-white/80">
-                Bank Account Details
-              </p>
-              <div className="mt-2 space-y-1 text-xs text-white/70">
-                <p><span className="font-semibold">Bank Name:</span> Bank Alfalah</p>
-                <p><span className="font-semibold">Account Title:</span> Lamp & Glow</p>
-                <p><span className="font-semibold">Account Number:</span> 0051-1006789012</p>
-                <p><span className="font-semibold">IBAN:</span> PK95ALFH000511006789012</p>
-              </div>
-              {paymentMethod === 'cod' && (
-                <div className="mt-3 rounded-lg border p-3 text-xs border-amber-700/50 bg-amber-900/20 text-amber-200">
-                  <p className="font-semibold">Advance Payment Required (50%)</p>
-                  <p className="mt-1">Please deposit <span className="font-bold">50% ({'Rs.'}{Math.round((cartTotal + shipping) * 0.5).toLocaleString()})</span> of the order total to the above bank account. The remaining <span className="font-bold">50% ({'Rs.'}{Math.round((cartTotal + shipping) * 0.5).toLocaleString()})</span> will be collected as Cash on Delivery when your order arrives.</p>
-                </div>
-              )}
-              {paymentMethod === 'bank' && (
-                <p className="mt-3 text-xs text-white/60">
-                  Please transfer the full amount <span className="font-semibold">({'Rs.'}{(cartTotal + shipping).toLocaleString()})</span> and share the payment receipt via WhatsApp for faster processing.
+            {bankDetails && (
+              <div className="mt-4 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
+                <p className="text-xs font-semibold text-white/80">
+                  Bank Account Details
                 </p>
-              )}
-            </div>
+                <div className="mt-2 space-y-1 text-xs text-white/70">
+                  <p><span className="font-semibold">Bank Name:</span> {bankDetails.bankName}</p>
+                  <p><span className="font-semibold">Account Title:</span> {bankDetails.accountTitle}</p>
+                  <p><span className="font-semibold">Account Number:</span> {bankDetails.accountNumber}</p>
+                  <p><span className="font-semibold">IBAN:</span> {bankDetails.iban}</p>
+                  {bankDetails.branchCode && (
+                    <p><span className="font-semibold">Branch Code:</span> {bankDetails.branchCode}</p>
+                  )}
+                </div>
+                {paymentMethod === 'cod' && advanceAmount > 0 && (
+                  <div className="mt-3 rounded-lg border p-3 text-xs border-amber-700/50 bg-amber-900/20 text-amber-200">
+                    <p className="font-semibold">Advance Payment Required ({advancePercent}%)</p>
+                    <p className="mt-1">Please deposit <span className="font-bold">{advancePercent}% (Rs.{formatPKR(advanceAmount)})</span> of the order total to the above bank account. The remaining <span className="font-bold">{100 - advancePercent}% (Rs.{formatPKR(codAmount)})</span> will be collected as Cash on Delivery when your order arrives.</p>
+                  </div>
+                )}
+                {paymentMethod === 'bank' && (
+                  <p className="mt-3 text-xs text-white/60">
+                    Please transfer the full amount <span className="font-semibold">(Rs.{formatPKR(grandTotal)})</span> and share the payment receipt via WhatsApp for faster processing.
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="mt-5 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
               <p className="text-xs font-semibold text-white/80">
@@ -384,15 +419,15 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               <div className="mt-3 space-y-1 text-xs text-white/70">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>Rs.{formatPKR(numericTotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
                 </div>
                 <div className="flex justify-between font-semibold pt-1 border-t border-[#FFDA03]/20 mt-1">
                   <span>Total</span>
-                  <span>${grandTotal.toFixed(2)}</span>
+                  <span>Rs.{formatPKR(grandTotal)}</span>
                 </div>
               </div>
             </div>

@@ -26,6 +26,7 @@ import {
   LayoutTemplate,
   Mail,
   Contact,
+  Building2,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -135,6 +136,11 @@ export default function AdminLayout({ children }) {
       label: 'Blogs',
       icon: BookOpen,
       path: '/admin/blogs',
+    },
+    {
+      label: 'Bank Details',
+      icon: Building2,
+      path: '/admin/bank-details',
     },
   ]
 

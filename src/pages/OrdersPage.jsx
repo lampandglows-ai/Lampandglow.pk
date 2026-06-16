@@ -44,7 +44,7 @@ export default function OrdersPage({ orders }) {
 
                   <div className="sm:text-right">
                     <p className="text-sm font-semibold text-[#FFDA03]">
-                      ${Number(order.total ?? 0).toFixed(2)}
+                      Rs.{Number(order.total ?? 0).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     {order.status ? (
                       <span className="mt-2 inline-flex rounded-full bg-[#FFDA03]/20 px-2 py-1 text-[11px] font-semibold text-[#FFDA03]">
