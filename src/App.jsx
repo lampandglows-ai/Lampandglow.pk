@@ -14,6 +14,7 @@ import ContactPage from './pages/ContactPage.jsx'
 import ContactUsPage from './pages/ContactUsPage.jsx'
 import CollectionsPage from './pages/CollectionsPage.jsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.jsx'
+import ProductsPage from './pages/ProductsPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import OrdersPage from './pages/OrdersPage.jsx'
 import CartPage from './pages/CartPage.jsx'
@@ -542,6 +543,7 @@ function AppContent() {
           <Route path="/collections/:slug" element={<CollectionDetailPage />} />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/products" element={<ProductsPage categories={dynamicCategories} filteredProducts={filteredProducts} productAverageRating={productAverageRating} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleAddToCart={handleAddToCart} setReviewForm={setReviewForm} />} />
           <Route path="/cart" element={<CartPage cart={cart} cartItemsCount={cartItemsCount} cartTotal={cartTotal} handleRemoveFromCart={handleRemoveFromCart} handleUpdateCartQuantity={handleUpdateCartQuantity} onCheckout={() => navigate('/checkout')} />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
           <Route
