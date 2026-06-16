@@ -35,16 +35,16 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
                 Featured Glow Pieces
               </h2>
-              <p className="mt-1 text-xs sm:text-sm text-yellow-100/80">
+              <p className="mt-1 text-xs sm:text-sm text-stone-500">
                 Unique wooden lamps curated to start your perfect home collection.
               </p>
             </div>
             <button
               onClick={onViewAll}
-              className="hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300"
+              className="hidden sm:inline-flex text-xs font-medium text-amber-600 hover:text-amber-800"
             >
               View all products
             </button>
@@ -60,7 +60,7 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
                 <Link
                   key={product.id}
                   to={`/products/${slugify(product.name)}`}
-                  className="group block overflow-hidden rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/30 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]/60 motion-reduce:transform-none motion-reduce:transition-none"
+                   className="group block overflow-hidden rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     {hasDiscount ? (

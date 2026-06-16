@@ -32,19 +32,19 @@ export default function HomeNewArrivals({ products, onViewAll }) {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
                 <span className="inline-flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-amber-500" />
+                  <Sparkles className="w-6 h-6 text-amber-600" />
                   New Arrivals
                 </span>
               </h2>
-              <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
+              <p className="mt-1 text-xs sm:text-sm text-stone-500">
               Discover our newest handcrafted wooden lamps, where natural beauty meets timeless craftsmanship. ✨
               </p>
             </div>
             <button
               onClick={onViewAll}
-              className="hidden sm:inline-flex text-xs font-medium text-[#FFDA03] hover:text-yellow-300"
+              className="hidden sm:inline-flex text-xs font-medium text-amber-600 hover:text-amber-800"
             >
               View all products
             </button>
@@ -60,8 +60,8 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                  ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
           >
@@ -76,8 +76,8 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                  ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
           >

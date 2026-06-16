@@ -9,10 +9,10 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
     <section className="w-full py-10 sm:py-14 bg-transparent">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#FFDA03]">
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
             Explore Our Wooden Lamp Collections
           </h2>
-          <p className="mt-2 text-xs sm:text-sm text-yellow-100/80">
+          <p className="mt-2 text-xs sm:text-sm text-stone-500">
            Discover unique handcrafted designs and find the perfect piece to light up your home.
           </p>
         </div>
@@ -27,8 +27,8 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+              ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+              : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
           >
@@ -43,8 +43,8 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+              ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+              : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
           >
@@ -91,8 +91,8 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
 
         <div className="mt-6 flex justify-center">
           <button
-            onClick={onViewAll}
-            className="inline-flex text-xs font-semibold text-[#FFDA03] hover:text-yellow-300 transition-colors"
+              onClick={onViewAll}
+              className="inline-flex text-xs font-semibold text-amber-600 hover:text-amber-800 transition-colors"
           >
             View all collections →
           </button>

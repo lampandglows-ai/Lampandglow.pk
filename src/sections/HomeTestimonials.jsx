@@ -9,11 +9,11 @@ export default function HomeTestimonials({ testimonials }) {
 
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-amber-200">
+          <h2 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
             1000 + HAPPY CUSTOMERS
           </h2>
-          <div className="mx-auto mt-3 h-px w-24 bg-white/30" />
-          <p className="mt-4 text-xs sm:text-sm text-white/70">
+          <div className="mx-auto mt-3 h-px w-24 bg-amber-300" />
+          <p className="mt-4 text-xs sm:text-sm text-stone-500">
             Hear from customers who brought Lamp &amp; Glow pieces into their homes.
           </p>
         </div>

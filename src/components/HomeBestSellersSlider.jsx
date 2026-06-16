@@ -42,10 +42,10 @@ export default function HomeBestSellersSlider({ products = [] }) {
     <section className="bg-transparent">
       <div className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8 mb-8">
-          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#FFDA03]">
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
             Illuminate Your Home with Timeless Craftsmanship
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-yellow-100/85">
+          <p className="mt-1 text-xs sm:text-sm text-stone-500">
           Explore our most-loved wooden lamps, crafted to light up your moments.
           </p>
         </div>
@@ -60,8 +60,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
           >
@@ -76,8 +76,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
           >
@@ -99,7 +99,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {product.isNewArrival && (
