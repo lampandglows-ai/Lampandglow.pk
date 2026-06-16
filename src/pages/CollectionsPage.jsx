@@ -31,7 +31,7 @@ export default function CollectionsPage() {
             <div className="w-8 h-8 border-2 border-[#FFDA03] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
             {categories.map((category) => (
               <button
                 key={category.id}

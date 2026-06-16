@@ -62,7 +62,7 @@ export default function BlogsList() {
           <p className="text-white/40 text-sm mt-1">Check back soon for new articles!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {blogs.map((blog) => (
             <article
               key={blog.id}
