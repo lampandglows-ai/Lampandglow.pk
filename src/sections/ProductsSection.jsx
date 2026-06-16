@@ -303,7 +303,7 @@ export default function ProductsSection({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-5">
               {filteredProducts.map((product) => {
                 const avg = productAverageRating[product.id]
                 const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)

@@ -158,7 +158,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_5rem)/4)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_6rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {hasDiscount ? (

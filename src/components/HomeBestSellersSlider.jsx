@@ -99,7 +99,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-yellow-50 ring-1 ring-[#FFDA03]/45 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-[#FFDA03]"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {product.isNewArrival && (

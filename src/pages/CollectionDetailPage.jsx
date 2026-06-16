@@ -72,7 +72,7 @@ export default function CollectionDetailPage() {
                 <p className="text-stone-500 text-sm">No products found in this collection.</p>
               </div>
             ) : (
-              <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
                 {filteredProducts.map((product) => {
                   const { hasDiscount, originalPrice, discountedPrice, discountPercent } =
                     getDiscountInfo(product)

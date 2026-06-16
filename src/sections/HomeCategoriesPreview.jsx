@@ -61,7 +61,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
               <button
                 key={category.id}
                 onClick={() => onPickCategory(category.id)}
-                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <div className="relative aspect-[3/5] sm:aspect-[10/17] overflow-hidden">
                   <img

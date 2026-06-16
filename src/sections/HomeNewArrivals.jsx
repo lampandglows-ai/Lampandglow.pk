@@ -98,7 +98,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_3.75rem)/4)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
