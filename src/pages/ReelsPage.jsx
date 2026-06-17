@@ -36,6 +36,33 @@ export default function ReelsPage() {
     })
   }
 
+  async function handleShare(reel) {
+    const shareData = {
+      title: reel.title || 'Lamp & Glow Reel',
+      text: reel.caption || 'Check out this reel from Lamp & Glow!',
+      url: `${window.location.origin}/reels`,
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          fallbackCopy(shareData.url)
+        }
+      }
+    } else {
+      fallbackCopy(shareData.url)
+    }
+  }
+
+  function fallbackCopy(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Link copied to clipboard!')
+    }).catch(() => {
+      prompt('Copy this link:', text)
+    })
+  }
+
   if (loading) {
     return (
       <section className="w-full px-0 py-10 sm:py-14">
@@ -143,6 +170,7 @@ export default function ReelsPage() {
 
                 <button
                   type="button"
+                  onClick={() => handleShare(reel)}
                   className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50"
                 >
                   <FaShare className="text-stone-500" />
