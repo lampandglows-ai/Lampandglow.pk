@@ -9,7 +9,7 @@ export default function CollectionsPage() {
 
   return (
     <section className="w-full min-h-screen bg-[#fff7e6]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="py-12 sm:py-16">
         <button
           type="button"
           onClick={() => navigate('/')}
@@ -31,7 +31,7 @@ export default function CollectionsPage() {
             <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
+          <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-2">
             {categories.map((category) => (
               <button
                 key={category.id}
