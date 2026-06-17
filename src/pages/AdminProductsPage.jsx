@@ -30,6 +30,7 @@ export default function AdminProductsPage() {
     discountType: '',
     discountValue: '',
     sku: '',
+    productType: '',
     isNewArrival: false,
     isDiscounted: false,
   })
@@ -169,6 +170,7 @@ export default function AdminProductsPage() {
         stock: parseInt(formData.stock, 10),
         status: statusOverride || formData.status,
         sku: formData.sku.trim() || null,
+        productType: formData.productType.trim() || null,
         images: finalImages,
         image: finalImages[0] || '',
         isNewArrival: formData.isNewArrival === true,
@@ -230,6 +232,7 @@ export default function AdminProductsPage() {
       discountType: '',
       discountValue: '',
       sku: '',
+      productType: '',
       isNewArrival: false,
       isDiscounted: false,
     })
@@ -273,6 +276,7 @@ export default function AdminProductsPage() {
       stock: String(product.stock ?? ''),
       status: product.status || 'active',
       sku: product.sku || '',
+      productType: product.productType || '',
       images,
       isNewArrival: product.isNewArrival === true,
       isDiscounted: product.isDiscounted === true,
@@ -484,6 +488,21 @@ export default function AdminProductsPage() {
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
+                  </div>
+
+                  {/* Product Type */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Product Type
+                    </label>
+                    <input
+                      type="text"
+                      name="productType"
+                      value={formData.productType}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Floor Lamp, Table Lamp, Pendant Light"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
                   </div>
 
                   {/* Price (Base / Original) */}

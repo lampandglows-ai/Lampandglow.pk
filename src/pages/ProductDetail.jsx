@@ -615,12 +615,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   type="button"
                   onClick={addQuantityToCart}
                   className={classNames(
-                    'h-12 flex-1 bg-stone-900 text-white text-[13px] font-semibold tracking-wide uppercase transition-all duration-300 hover:bg-amber-700 active:scale-[0.99]',
+                    'relative h-12 flex-1 overflow-hidden bg-stone-900 text-white text-[13px] font-semibold tracking-wide uppercase active:scale-[0.99] group',
                     !inStock && 'opacity-50 cursor-not-allowed',
                   )}
                   disabled={!inStock}
                 >
-                  Add To Cart
+                  <span className="absolute inset-0 bg-gradient-to-t from-amber-600 to-amber-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                  <span className="relative z-10">Add To Cart</span>
                 </button>
               </div>
 
@@ -633,12 +634,13 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
                   navigate('/checkout')
                 }}
                 className={classNames(
-                  'mt-3 h-12 w-full border-2 border-stone-900 bg-white text-[13px] font-semibold tracking-wide uppercase text-stone-900 transition-all duration-300 hover:bg-stone-900 hover:text-white active:scale-[0.99]',
+                  'mt-3 relative h-12 w-full border-2 border-stone-900 overflow-hidden text-[13px] font-semibold tracking-wide uppercase text-stone-900 active:scale-[0.99] group',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
               >
-                Buy It Now
+                <span className="absolute inset-0 bg-gradient-to-t from-stone-900 to-stone-700 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="relative z-10 group-hover:text-white transition-colors duration-300">Buy It Now</span>
               </button>
 
               {/* Share row */}
