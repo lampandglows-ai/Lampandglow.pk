@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
+import aboutService from '../utils/aboutService'
+import { Loader2 } from 'lucide-react'
 
 /* ────────── Animated counter ────────── */
 function AnimatedCounter({ end, suffix = '', duration = 2000 }) {
@@ -141,6 +143,30 @@ const values = [
 /* ────────── Main component ────────── */
 export default function AboutPage({ theme }) {
   const isDark = theme === 'dark'
+  const [pageData, setPageData] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await aboutService.getAboutPage()
+        if (data) setPageData(data)
+      } catch (e) {
+        console.error('Error loading about page:', e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+      </div>
+    )
+  }
 
   return (
     <div className={isDark ? 'bg-[#1a0f00] text-stone-100' : 'bg-[#fbf7ef] text-stone-900'}>
