@@ -9,6 +9,8 @@ export default function ProductsPage({
   setSelectedCategory,
   handleAddToCart,
   setReviewForm,
+  handleToggleWishlist,
+  isInWishlist,
 }) {
   const navigate = useNavigate()
 
@@ -31,6 +33,8 @@ export default function ProductsPage({
         handleAddToCart={handleAddToCart}
         handleNavigate={handleNavigate}
         setReviewForm={setReviewForm}
+        handleToggleWishlist={handleToggleWishlist}
+        isInWishlist={isInWishlist}
       />
     </div>
   )

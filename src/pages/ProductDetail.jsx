@@ -51,7 +51,7 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
   )
 }
 
-export default function ProductDetail({ products, onAddToCart, reviews }) {
+export default function ProductDetail({ products, onAddToCart, reviews, handleToggleWishlist, isInWishlist }) {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { categories } = useCategories()
@@ -413,13 +413,19 @@ export default function ProductDetail({ products, onAddToCart, reviews }) {
               </h1>
               <button
                 type="button"
-                onClick={() => navigate('/wishlist')}
-                className="mt-1 shrink-0 text-stone-400 hover:text-red-500 transition-colors"
-                aria-label="Add to wishlist"
+                onClick={() => handleToggleWishlist?.(product)}
+                className="mt-1 shrink-0 transition-colors"
+                aria-label={isInWishlist?.(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
               >
-                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-                  <path d="M12 21s-7-4.35-9.5-8.5C.5 9.5 2.5 6.5 6 6.5c2 0 3.5 1.2 4 2 0.5-0.8 2-2 4-2 3.5 0 5.5 3 3.5 6-2.5 4.15-9.5 8.5-9.5 8.5z" />
-                </svg>
+                {isInWishlist?.(product.id) ? (
+                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M12 21s-7-4.35-9.5-8.5C.5 9.5 2.5 6.5 6 6.5c2 0 3.5 1.2 4 2 0.5-0.8 2-2 4-2 3.5 0 5.5 3 3.5 6-2.5 4.15-9.5 8.5-9.5 8.5z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" className="h-6 w-6 text-stone-400 hover:text-red-500" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M12 21s-7-4.35-9.5-8.5C.5 9.5 2.5 6.5 6 6.5c2 0 3.5 1.2 4 2 0.5-0.8 2-2 4-2 3.5 0 5.5 3 3.5 6-2.5 4.15-9.5 8.5-9.5 8.5z" />
+                  </svg>
+                )}
               </button>
             </div>
 

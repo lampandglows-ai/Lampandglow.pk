@@ -23,6 +23,7 @@ const Header = forwardRef(function Header({
   setSearchQuery,
   theme,
   toggleTheme,
+  wishlistItemsCount = 0,
 }, ref) {
   const navigate = useNavigate()
   const location = useLocation()
@@ -478,7 +479,7 @@ const Header = forwardRef(function Header({
             <button
               onClick={navigateToWishlist}
               className={classNames(
-                'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
                   ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
                   : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
@@ -486,6 +487,11 @@ const Header = forwardRef(function Header({
               aria-label="Wishlist"
             >
               <FaHeart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              {wishlistItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-amber-600 text-[9px] sm:text-[10px] font-bold text-white leading-none">
+                  {wishlistItemsCount}
+                </span>
+              )}
             </button>
 
             {/* Cart */}

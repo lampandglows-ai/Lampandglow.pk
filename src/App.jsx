@@ -88,6 +88,7 @@ function AppContent() {
     return saved === 'dark' ? 'dark' : 'light'
   })
   const [cart, setCart] = useState([])
+  const [wishlist, setWishlist] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -220,6 +221,20 @@ function AppContent() {
   useEffect(() => {
     window.localStorage.setItem('lg-theme', theme)
   }, [theme])
+
+  function handleToggleWishlist(product) {
+    setWishlist((prev) => {
+      const exists = prev.find((p) => p.id === product.id)
+      if (exists) {
+        return prev.filter((p) => p.id !== product.id)
+      }
+      return [...prev, product]
+    })
+  }
+
+  function isInWishlist(productId) {
+    return wishlist.some((p) => p.id === productId)
+  }
 
   function handleAddToCart(payload) {
     const item = payload.product ? payload : { product: payload }
@@ -441,6 +456,7 @@ function AppContent() {
           setSearchQuery={setSearchQuery}
           theme={theme}
           toggleTheme={toggleTheme}
+          wishlistItemsCount={wishlist.length}
         />
       )}
 
@@ -478,6 +494,8 @@ function AppContent() {
                     handleAddToCart={handleAddToCart}
                     handleNavigate={handleNavigate}
                     setReviewForm={setReviewForm}
+                    handleToggleWishlist={handleToggleWishlist}
+                    isInWishlist={isInWishlist}
                   />
                 )}
 
@@ -542,10 +560,27 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage theme={theme} />} />
           <Route path="/contact-us" element={<ContactUsPage />} />
           <Route path="/collections" element={<CollectionsPage />} />
-          <Route path="/collections/:slug" element={<CollectionDetailPage />} />
+          <Route
+            path="/collections/:slug"
+            element={
+              <CollectionDetailPage
+                handleToggleWishlist={handleToggleWishlist}
+                isInWishlist={isInWishlist}
+              />
+            }
+          />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
-          <Route path="/wishlist" element={<WishlistPage />} />
-          <Route path="/products" element={<ProductsPage categories={dynamicCategories} filteredProducts={filteredProducts} productAverageRating={productAverageRating} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleAddToCart={handleAddToCart} setReviewForm={setReviewForm} />} />
+          <Route
+            path="/wishlist"
+            element={
+              <WishlistPage
+                wishlist={wishlist}
+                handleToggleWishlist={handleToggleWishlist}
+                handleAddToCart={handleAddToCart}
+              />
+            }
+          />
+          <Route path="/products" element={<ProductsPage categories={dynamicCategories} filteredProducts={filteredProducts} productAverageRating={productAverageRating} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleAddToCart={handleAddToCart} setReviewForm={setReviewForm} handleToggleWishlist={handleToggleWishlist} isInWishlist={isInWishlist} />} />
           <Route path="/cart" element={<CartPage cart={cart} cartItemsCount={cartItemsCount} cartTotal={cartTotal} handleRemoveFromCart={handleRemoveFromCart} handleUpdateCartQuantity={handleUpdateCartQuantity} onCheckout={() => navigate('/checkout')} />} />
           <Route path="/orders" element={<OrdersPage orders={orders} />} />
           <Route
@@ -567,6 +602,8 @@ function AppContent() {
                 productsLoading={productsLoading}
                 onAddToCart={handleAddToCart}
                 reviews={reviews}
+                handleToggleWishlist={handleToggleWishlist}
+                isInWishlist={isInWishlist}
               />
             )}
           />

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import classNames from '../utils/classNames.js'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
 import { slugify } from '../utils/slugify.js'
@@ -67,6 +68,8 @@ export default function ProductsSection({
   handleAddToCart,
   handleNavigate,
   setReviewForm,
+  handleToggleWishlist,
+  isInWishlist,
 }) {
   // ── Local filter state ──
   const [showNewArrival, setShowNewArrival] = useState(false)
@@ -367,6 +370,17 @@ export default function ProductsSection({
                         className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-1.5 text-[11px] font-medium text-stone-700 transition-all duration-200 hover:bg-stone-50 hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
                       >
                         Reviews
+                      </button>
+                      <button
+                        onClick={() => handleToggleWishlist?.(product)}
+                        className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white p-2 transition-all duration-200 hover:bg-stone-50 hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
+                        aria-label={isInWishlist?.(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                      >
+                        {isInWishlist?.(product.id) ? (
+                          <FaHeart className="text-rose-600 text-xs" />
+                        ) : (
+                          <FaRegHeart className="text-stone-600 text-xs" />
+                        )}
                       </button>
                     </div>
                   </article>

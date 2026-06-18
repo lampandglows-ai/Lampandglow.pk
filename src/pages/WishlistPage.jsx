@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
+import { FaHeart, FaRegHeart, FaShoppingCart } from 'react-icons/fa'
 
-export default function WishlistPage() {
+export default function WishlistPage({ wishlist = [], handleToggleWishlist, handleAddToCart }) {
   const navigate = useNavigate()
 
   return (
-    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       <button
         onClick={() => navigate(-1)}
         className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
@@ -12,9 +13,84 @@ export default function WishlistPage() {
         <span aria-hidden>←</span>
         Back
       </button>
-      <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 text-sm text-stone-600">
-        Wishlist is coming soon.
+
+      <div className="mt-6">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
+          My Wishlist
+        </h1>
+        <p className="mt-1 text-xs sm:text-sm text-stone-500">
+          {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
+        </p>
       </div>
+
+      {wishlist.length === 0 ? (
+        <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-10 text-center">
+          <FaRegHeart className="mx-auto text-4xl text-stone-300 mb-4" />
+          <p className="text-sm text-stone-500">Your wishlist is empty.</p>
+          <button
+            onClick={() => navigate('/products')}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700"
+          >
+            Browse Products
+          </button>
+        </div>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {wishlist.map((product) => (
+            <div
+              key={product.id}
+              className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden"
+            >
+              <div
+                className="aspect-square bg-stone-100 cursor-pointer"
+                onClick={() => navigate(`/products/${product.slug || product.id}`)}
+              >
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-stone-400 text-xs">
+                    No image
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4">
+                <h3
+                  className="text-sm font-semibold text-stone-900 truncate cursor-pointer hover:text-amber-700"
+                  onClick={() => navigate(`/products/${product.slug || product.id}`)}
+                >
+                  {product.name}
+                </h3>
+                <p className="mt-1 text-sm font-bold text-amber-700">
+                  Rs {Number(product.price).toLocaleString()}
+                </p>
+
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="inline-flex items-center gap-2 rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-700"
+                  >
+                    <FaShoppingCart className="text-[11px]" />
+                    Add to Cart
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleWishlist(product)}
+                    className="inline-flex items-center justify-center rounded-full border border-stone-200 bg-white p-2 text-rose-600 hover:bg-stone-50"
+                    aria-label="Remove from wishlist"
+                  >
+                    <FaHeart />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

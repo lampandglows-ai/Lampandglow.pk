@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ShoppingCart } from 'lucide-react'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import useCategories from '../hooks/useCategories.js'
 import useProducts from '../hooks/useProducts.js'
 import { findCategoryBySlug, slugify } from '../utils/slugify.js'
@@ -13,7 +14,7 @@ const formatPricePKR = (value) => {
   }).format(value)
 }
 
-export default function CollectionDetailPage() {
+export default function CollectionDetailPage({ handleToggleWishlist, isInWishlist }) {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { categories, loading: catsLoading } = useCategories()
@@ -121,14 +122,26 @@ export default function CollectionDetailPage() {
                         </div>
                       </Link>
 
-                      <div className="mt-auto px-4 pb-4">
+                      <div className="mt-auto px-4 pb-4 flex items-center gap-2">
                         <Link
                           to={`/products/${slugify(product.name)}`}
-                          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-600 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-amber-700 hover:shadow-sm active:scale-[0.98]"
+                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-amber-600 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-amber-700 hover:shadow-sm active:scale-[0.98]"
                         >
                           <ShoppingCart className="w-3.5 h-3.5" />
                           View Product
                         </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleWishlist?.(product)}
+                          className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white p-2 transition-all duration-200 hover:bg-stone-50 hover:shadow-sm active:scale-[0.98]"
+                          aria-label={isInWishlist?.(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                        >
+                          {isInWishlist?.(product.id) ? (
+                            <FaHeart className="text-rose-600 text-xs" />
+                          ) : (
+                            <FaRegHeart className="text-stone-600 text-xs" />
+                          )}
+                        </button>
                       </div>
                     </article>
                   )
