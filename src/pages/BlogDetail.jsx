@@ -29,7 +29,7 @@ export default function BlogDetail() {
     return (
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh] flex items-center justify-center">
         <div className="flex items-center gap-3 text-stone-500">
-          <Loader2 className="w-6 h-6 animate-spin text-amber-600" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#FFD400]" />
           <span>Loading blog...</span>
         </div>
       </section>
@@ -41,7 +41,7 @@ export default function BlogDetail() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh]">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
         >
           <span aria-hidden>←</span>
           Back
@@ -59,7 +59,7 @@ export default function BlogDetail() {
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
         >
           <span aria-hidden>←</span>
           Back
@@ -85,7 +85,7 @@ export default function BlogDetail() {
         <div className="p-5 sm:p-7">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {blog.category && (
-              <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full">
+              <span className="text-xs font-medium text-[#5A2D0C] bg-amber-100 px-2.5 py-1 rounded-full">
                 {blog.category}
               </span>
             )}

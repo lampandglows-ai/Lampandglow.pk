@@ -161,12 +161,12 @@ export default function ContactUsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#fbf7ef]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       {/* ════════════════════ HERO ════════════════════ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-900/70 via-[#4C2600] to-stone-900 py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-900/70 via-[#5A2D0C] to-stone-900 py-20 sm:py-28">
         <Particles />
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold text-amber-300 border border-amber-400/20 mb-6">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold text-[#FFD400] border border-amber-400/20 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
             {content.pageTitle}
           </span>
@@ -180,7 +180,7 @@ export default function ContactUsPage() {
         {/* Bottom curve */}
         <div className="relative z-10 -mb-1">
           <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
-            <path d="M0 60V30C240 0 480 15 720 30C960 45 1200 30 1440 15V60H0Z" className="fill-[#fbf7ef]" />
+            <path d="M0 60V30C240 0 480 15 720 30C960 45 1200 30 1440 15V60H0Z" className="fill-[#FAFAF8]" />
           </svg>
         </div>
       </section>
@@ -195,12 +195,12 @@ export default function ContactUsPage() {
                   key={info.label}
                   className="group bg-white rounded-2xl shadow-lg border border-stone-200 p-5 sm:p-6 text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
                 >
-                  <div className="w-12 h-12 mx-auto rounded-full bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                    <info.icon className="w-5 h-5 text-amber-600" />
+                  <div className="w-12 h-12 mx-auto rounded-full bg-[#F5F1EA] flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                    <info.icon className="w-5 h-5 text-[#FFD400]" />
                   </div>
                   <p className="mt-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">{info.label}</p>
                   {info.href ? (
-                    <a href={info.href} className="mt-1 text-sm font-bold text-stone-900 hover:text-amber-700 transition block">
+                    <a href={info.href} className="mt-1 text-sm font-bold text-stone-900 hover:text-[#5A2D0C] transition block">
                       {info.value}
                     </a>
                   ) : (
@@ -222,8 +222,8 @@ export default function ContactUsPage() {
             <div className="lg:col-span-3">
               <div className="bg-white rounded-3xl shadow-lg border border-stone-200 p-6 sm:p-8 lg:p-10">
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center">
-                    <MessageSquare className="w-4 h-4 text-amber-600" />
+                  <div className="w-8 h-8 rounded-full bg-[#F5F1EA] flex items-center justify-center">
+                    <MessageSquare className="w-4 h-4 text-[#FFD400]" />
                   </div>
                   <h3 className="text-lg font-bold text-stone-900">{content.formTitle}</h3>
                 </div>
@@ -298,7 +298,7 @@ export default function ContactUsPage() {
 
                   {submitted && (
                     <div className="p-4 rounded-xl bg-green-50 border border-green-200 flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
                       <p className="text-sm text-green-700 font-medium">
                         Thank you! Your message has been sent successfully. We'll get back to you within 20-36 hours.
                       </p>
@@ -308,7 +308,7 @@ export default function ContactUsPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 px-8 text-sm font-bold text-stone-900 shadow-md transition-all duration-200 hover:shadow-lg hover:from-amber-400 hover:to-amber-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#F5F1EA]0 to-amber-400 px-8 text-sm font-bold text-stone-900 shadow-md transition-all duration-200 hover:shadow-lg hover:from-amber-400 hover:to-amber-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {submitting ? (
                       <>
@@ -335,8 +335,8 @@ export default function ContactUsPage() {
             <div className="lg:col-span-2 space-y-6">
               {/* Live Help Card */}
               <div className="bg-white rounded-3xl shadow-lg border border-stone-200 p-6 sm:p-8">
-                <div className="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center mb-4">
-                  <Smartphone className="w-6 h-6 text-amber-600" />
+                <div className="w-14 h-14 rounded-full bg-[#F5F1EA] flex items-center justify-center mb-4">
+                  <Smartphone className="w-6 h-6 text-[#FFD400]" />
                 </div>
                 <h3 className="text-lg font-bold text-stone-900">{content.liveHelpTitle}</h3>
                 <p className="mt-2 text-sm text-stone-500 leading-relaxed">
@@ -358,8 +358,8 @@ export default function ContactUsPage() {
                 <div className="mt-8 space-y-4 pt-6 border-t border-stone-100">
                   {content.phoneText && (
                     <div className="flex items-start gap-3 group">
-                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
-                        <Phone className="w-4 h-4 text-amber-600" />
+                      <div className="w-8 h-8 rounded-lg bg-[#F5F1EA] flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
+                        <Phone className="w-4 h-4 text-[#FFD400]" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Phone</p>
@@ -370,12 +370,12 @@ export default function ContactUsPage() {
 
                   {content.email && (
                     <div className="flex items-start gap-3 group">
-                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
-                        <Mail className="w-4 h-4 text-amber-600" />
+                      <div className="w-8 h-8 rounded-lg bg-[#F5F1EA] flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
+                        <Mail className="w-4 h-4 text-[#FFD400]" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Email</p>
-                        <a href={`mailto:${content.email}`} className="text-sm font-medium text-amber-700 hover:underline">
+                        <a href={`mailto:${content.email}`} className="text-sm font-medium text-[#5A2D0C] hover:underline">
                           {content.email}
                         </a>
                       </div>
@@ -384,8 +384,8 @@ export default function ContactUsPage() {
 
                   {content.address && (
                     <div className="flex items-start gap-3 group">
-                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
-                        <MapPin className="w-4 h-4 text-amber-600" />
+                      <div className="w-8 h-8 rounded-lg bg-[#F5F1EA] flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
+                        <MapPin className="w-4 h-4 text-[#FFD400]" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Address</p>
@@ -398,7 +398,7 @@ export default function ContactUsPage() {
                 {content.showOpeningHours && content.openingHours && (
                   <div className="mt-6 pt-6 border-t border-stone-100">
                     <div className="flex items-center gap-2 mb-3">
-                      <Clock className="w-4 h-4 text-amber-600" />
+                      <Clock className="w-4 h-4 text-[#FFD400]" />
                       <span className="text-sm font-bold text-stone-800">
                         Opening Hours
                       </span>
@@ -422,12 +422,12 @@ export default function ContactUsPage() {
                     <Link
                       key={link.to}
                       to={link.to}
-                      className="flex items-center justify-between group px-4 py-3 rounded-xl hover:bg-amber-50 transition-colors"
+                      className="flex items-center justify-between group px-4 py-3 rounded-xl hover:bg-[#F5F1EA] transition-colors"
                     >
-                      <span className="text-sm font-medium text-stone-700 group-hover:text-amber-800 transition-colors">
+                      <span className="text-sm font-medium text-stone-700 group-hover:text-[#5A2D0C] transition-colors">
                         {link.label}
                       </span>
-                      <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-amber-600 transition-colors" />
+                      <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-[#FFD400] transition-colors" />
                     </Link>
                   ))}
                 </div>

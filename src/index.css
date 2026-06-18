@@ -1,5 +1,70 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brown: #5A2D0C;
+  --color-brown-walnut: #7A4A20;
+  --color-gold: #FFD400;
+  --color-gold-light: #FFE566;
+  --color-warm-white: #FAFAF8;
+  --color-cream: #F5F1EA;
+  --color-charcoal: #1F1F1F;
+  --color-rich-black: #222222;
+  --color-gray-text: #666666;
+  --color-border-brand: #E5E5E5;
+  --color-success: #22C55E;
+  --color-sale: #E53935;
+  --color-footer-text: #D1D1D1;
+}
+
+/* Primary button: brown bg, white text, gold hover */
+.btn-primary {
+  background-color: #5A2D0C;
+  color: #ffffff;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #FFD400;
+  color: #222222;
+}
+
+/* Secondary button: transparent, brown border, inverted hover */
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #5A2D0C;
+  color: #5A2D0C;
+  transition: background-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5A2D0C;
+  color: #ffffff;
+}
+
+/* Product card hover effects */
+.product-card {
+  background-color: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+.product-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.product-card-image {
+  transition: transform 0.3s ease;
+}
+.product-card:hover .product-card-image {
+  transform: scale(1.05);
+}
+
+/* Sale badge */
+.sale-badge {
+  background-color: #E53935;
+  color: #ffffff;
+}
+
+/* Hero gradient background */
+.hero-gradient-bg {
+  background: linear-gradient(180deg, #FAFAF8 0%, #F5F1EA 100%);
+}
+
 @keyframes lg-marquee {
   0% {
     transform: translateX(0);
@@ -82,39 +147,39 @@ button {
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 700;
-  color: #4C2600;
+  color: #5A2D0C;
   margin-bottom: 1.5rem;
   margin-top: 2rem;
 }
 
 .dark .page-content h1 {
-  color: #FFDA03;
+  color: #FFD400;
 }
 
 .page-content h2 {
   font-size: 1.875rem;
   line-height: 2.25rem;
   font-weight: 700;
-  color: #4C2600;
+  color: #5A2D0C;
   margin-bottom: 1rem;
   margin-top: 1.5rem;
 }
 
 .dark .page-content h2 {
-  color: #FFDA03;
+  color: #FFD400;
 }
 
 .page-content h3 {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: #4C2600;
+  color: #5A2D0C;
   margin-bottom: 0.75rem;
   margin-top: 1rem;
 }
 
 .dark .page-content h3 {
-  color: #FFDA03;
+  color: #FFD400;
 }
 
 .page-content p {
@@ -140,23 +205,23 @@ button {
 }
 
 .page-content a {
-  color: #FFDA03;
+  color: #FFD400;
   text-decoration: underline;
 }
 
 .page-content a:hover {
-  color: #fde047;
+  color: #FFE566;
 }
 
 .page-content strong,
 .page-content b {
   font-weight: 700;
-  color: #4C2600;
+  color: #5A2D0C;
 }
 
 .dark .page-content strong,
 .dark .page-content b {
-  color: #FFDA03;
+  color: #FFD400;
 }
 
 .page-content em,
@@ -195,7 +260,7 @@ button {
 }
 
 .page-content blockquote {
-  border-left: 4px solid #FFDA03;
+  border-left: 4px solid #FFD400;
   padding-left: 1rem;
   font-style: italic;
   color: #374151;

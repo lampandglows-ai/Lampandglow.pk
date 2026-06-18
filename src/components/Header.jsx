@@ -154,7 +154,7 @@ const Header = forwardRef(function Header({
           <nav
             className={classNames(
               'absolute top-0 right-0 h-[100dvh] w-[85vw] max-w-[360px] shadow-2xl border-l flex flex-col',
-              theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
+              theme === 'dark' ? 'bg-[#1F1F1F] border-white/10' : 'bg-white border-[#E5E5E5]',
             )}
           >
             {/* Drawer header */}
@@ -206,12 +206,8 @@ const Header = forwardRef(function Header({
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                     isNavActive(key)
-                      ? theme === 'dark'
-                        ? 'bg-amber-900/40 text-amber-300'
-                        : 'bg-amber-50 text-amber-800'
-                      : theme === 'dark'
-                        ? 'text-stone-200 hover:bg-white/5'
-                        : 'text-stone-800 hover:bg-stone-50',
+                      ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                      : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   {mobileLabel}
@@ -224,17 +220,13 @@ const Header = forwardRef(function Header({
                 className={classNames(
                   'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                   activeSection === 'cart'
-                    ? theme === 'dark'
-                      ? 'bg-amber-900/40 text-amber-300'
-                      : 'bg-amber-50 text-amber-800'
-                    : theme === 'dark'
-                      ? 'text-stone-200 hover:bg-white/5'
-                      : 'text-stone-800 hover:bg-stone-50',
+                    ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                    : 'text-[#222222] hover:bg-[#F5F1EA]',
                 )}
               >
                 Cart
                 {cartItemsCount > 0 && (
-                  <span className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-600 text-[10px] font-bold text-white">
+                  <span className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#5A2D0C] text-[10px] font-bold text-white">
                     {cartItemsCount}
                   </span>
                 )}
@@ -247,12 +239,8 @@ const Header = forwardRef(function Header({
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                     activeSection === 'profile'
-                      ? theme === 'dark'
-                        ? 'bg-amber-900/40 text-amber-300'
-                        : 'bg-amber-50 text-amber-800'
-                      : theme === 'dark'
-                        ? 'text-stone-200 hover:bg-white/5'
-                        : 'text-stone-800 hover:bg-stone-50',
+                      ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                      : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   Profile
@@ -262,7 +250,7 @@ const Header = forwardRef(function Header({
                   onClick={() => { navigate('/login'); setMobileNavOpen(false) }}
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
-                    theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-stone-800 hover:bg-stone-50',
+                    theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   Sign In
@@ -274,7 +262,7 @@ const Header = forwardRef(function Header({
                 onClick={navigateToWishlist}
                 className={classNames(
                   'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
-                  theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-stone-800 hover:bg-stone-50',
+                  theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-[#222222] hover:bg-[#F5F1EA]',
                 )}
               >
                 Wishlist
@@ -286,7 +274,7 @@ const Header = forwardRef(function Header({
                   onClick={toggleTheme}
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors flex items-center justify-end gap-2',
-                    theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-stone-800 hover:bg-stone-50',
+                    theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   {theme === 'dark' ? (
@@ -310,7 +298,7 @@ const Header = forwardRef(function Header({
         className={classNames(
           'fixed left-0 right-0 top-0 z-[150] border-b transition-shadow duration-300',
           isScrolled && 'shadow-md',
-          theme === 'dark' ? 'bg-[#1a0f00] border-white/10' : 'bg-white border-stone-200',
+          theme === 'dark' ? 'bg-[#1F1F1F] border-white/10' : 'bg-white border-[#E5E5E5]',
         )}
         style={{ transform: `translateY(${headerTranslate}px)` }}
       >
@@ -325,7 +313,7 @@ const Header = forwardRef(function Header({
           >
             {logoError ? (
               <div className="h-[52px] w-[52px] p-2 sm:h-[68px] sm:w-[68px] sm:p-3">
-                <div className="h-full w-full rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-md">
+                <div className="h-full w-full rounded-full bg-gradient-to-br from-[#F5F1EA]0 to-amber-700 flex items-center justify-center shadow-md">
                   <span className="text-white font-bold text-xl sm:text-2xl">LG</span>
                 </div>
               </div>
@@ -345,14 +333,17 @@ const Header = forwardRef(function Header({
           <nav
             className={classNames(
               'hidden lg:flex items-center gap-7 text-xs font-black tracking-[0.12em]',
-              theme === 'dark' ? 'text-stone-200' : 'text-stone-800',
+              theme === 'dark' ? 'text-stone-200' : 'text-[#222222]',
             )}
           >
             {navLinks.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => key === 'products' ? navigate('/products') : handleNavigate(key)}
-                className="transition-all duration-200 hover:text-amber-700 hover:-translate-y-0.5 motion-reduce:transform-none"
+                className={classNames(
+                  'transition-all duration-200 hover:text-[#FFD400] hover:-translate-y-0.5 motion-reduce:transform-none',
+                  isNavActive(key) && (theme === 'dark' ? 'text-[#FFD400]' : 'text-[#5A2D0C]'),
+                )}
               >
                 {label}
               </button>
@@ -392,7 +383,7 @@ const Header = forwardRef(function Header({
               <div
                 className={classNames(
                   'absolute left-0 right-0 top-full mt-2 rounded-2xl border shadow-lg overflow-hidden z-30',
-                  theme === 'dark' ? 'border-white/10 bg-[#2b1500]' : 'border-stone-200 bg-white',
+                  theme === 'dark' ? 'border-white/10 bg-[#5A2D0C]' : 'border-stone-200 bg-white',
                 )}
               >
                 {searchSuggestions.length === 0 ? (
@@ -452,8 +443,8 @@ const Header = forwardRef(function Header({
                 className={classNames(
                   'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                   theme === 'dark'
-                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
-                    : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                    : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
                 )}
                 aria-label="Profile"
               >
@@ -465,8 +456,8 @@ const Header = forwardRef(function Header({
                 className={classNames(
                   'inline-flex h-9 w-9 sm:h-10 sm:w-auto sm:px-4 items-center justify-center gap-1.5 rounded-full border text-xs sm:text-sm font-bold transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                   theme === 'dark'
-                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
-                    : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                    : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
                 )}
                 aria-label="Sign In"
               >
@@ -481,14 +472,14 @@ const Header = forwardRef(function Header({
               className={classNames(
                 'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
-                  : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                  : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
               )}
               aria-label="Wishlist"
             >
               <FaHeart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               {wishlistItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-amber-600 text-[9px] sm:text-[10px] font-bold text-white leading-none">
+                <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-[#5A2D0C] text-[9px] sm:text-[10px] font-bold text-white leading-none">
                   {wishlistItemsCount}
                 </span>
               )}
@@ -500,13 +491,13 @@ const Header = forwardRef(function Header({
               className={classNames(
                 'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-transform duration-200 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-amber-300 hover:bg-white/10'
-                  : 'border-stone-200 bg-white text-stone-700 hover:text-amber-700 hover:bg-stone-50',
+                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                  : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
               )}
               aria-label="Cart"
             >
               <FaShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-amber-600 text-[9px] sm:text-[10px] font-bold text-white leading-none">
+              <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-[#5A2D0C] text-[9px] sm:text-[10px] font-bold text-white leading-none">
                 {cartItemsCount}
               </span>
             </button>
@@ -537,7 +528,7 @@ const Header = forwardRef(function Header({
         <div
           className={classNames(
             'md:hidden border-t',
-            theme === 'dark' ? 'border-white/10 bg-[#1a0f00]' : 'border-stone-200 bg-white',
+            theme === 'dark' ? 'border-white/10 bg-[#1F1F1F]' : 'border-stone-200 bg-white',
           )}
         >
           <div className="w-full px-3 sm:px-6 py-2.5">
@@ -578,7 +569,7 @@ const Header = forwardRef(function Header({
                   <div
                     className={classNames(
                       'absolute left-0 right-0 top-full mt-2 rounded-2xl border shadow-2xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto',
-                      theme === 'dark' ? 'border-white/10 bg-[#2b1500]' : 'border-stone-200 bg-white',
+                      theme === 'dark' ? 'border-white/10 bg-[#5A2D0C]' : 'border-stone-200 bg-white',
                     )}
                   >
                     {searchSuggestions.length === 0 ? (

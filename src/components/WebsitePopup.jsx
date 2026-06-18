@@ -108,7 +108,7 @@ export default function WebsitePopup() {
             <a
               href={popup.buttonUrl}
               onClick={handleClose}
-              className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition"
+              className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition"
             >
               {popup.buttonText}
             </a>

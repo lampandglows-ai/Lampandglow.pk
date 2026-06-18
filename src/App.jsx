@@ -455,10 +455,10 @@ function AppContent() {
     <div
       className={
         theme === 'dark'
-          ? 'min-h-screen bg-[#1a0f00] text-stone-100 flex flex-col'
+          ? 'min-h-screen bg-[#1F1F1F] text-stone-100 flex flex-col'
           : activeSection === 'home'
-            ? 'min-h-screen bg-[#D97706] text-white flex flex-col'
-            : 'min-h-screen bg-[#fff7e6] text-stone-900 flex flex-col'
+            ? 'min-h-screen hero-gradient-bg text-[#222222] flex flex-col'
+            : 'min-h-screen bg-[#FAFAF8] text-[#222222] flex flex-col'
       }
     >
       {/* Announcement Bar - hidden on admin routes */}

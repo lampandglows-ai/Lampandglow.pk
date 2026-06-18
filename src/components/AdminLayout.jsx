@@ -172,7 +172,7 @@ export default function AdminLayout({ children }) {
         <div className="h-20 flex items-center justify-between px-4 border-b border-gray-700">
           {sidebarOpen && (
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-lg flex items-center justify-center font-bold text-lg">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-[#F5F1EA]0 rounded-lg flex items-center justify-center font-bold text-lg">
                 LG
               </div>
               <div className="flex flex-col">
@@ -200,7 +200,7 @@ export default function AdminLayout({ children }) {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                   active
-                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white shadow-lg'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
                 title={!sidebarOpen ? item.label : ''}
@@ -229,7 +229,7 @@ export default function AdminLayout({ children }) {
               onClick={() => setUserMenuOpen(!userMenuOpen)}
               className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-lg flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-[#F5F1EA]0 rounded-lg flex items-center justify-center text-white font-bold">
                 {adminUser?.email.charAt(0).toUpperCase()}
               </div>
               <div className="text-left">
@@ -248,7 +248,7 @@ export default function AdminLayout({ children }) {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-[#E53935] hover:bg-red-50 transition text-left"
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="font-medium">Logout</span>

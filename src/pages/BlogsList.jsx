@@ -27,7 +27,7 @@ export default function BlogsList() {
     return (
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh] flex items-center justify-center">
         <div className="flex items-center gap-3 text-stone-500">
-          <Loader2 className="w-6 h-6 animate-spin text-amber-600" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#FFD400]" />
           <span>Loading blogs...</span>
         </div>
       </section>
@@ -37,16 +37,16 @@ export default function BlogsList() {
   if (error) {
     return (
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-[50vh] flex items-center justify-center">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[#E53935]">{error}</p>
       </section>
     )
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-screen">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-screen bg-white">
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#222222]">
             Blogs
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-stone-500 max-w-2xl">
@@ -88,11 +88,11 @@ export default function BlogsList() {
                   {blog.excerpt}
                 </p>
                 {blog.category && (
-                  <span className="inline-block mt-3 text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                  <span className="inline-block mt-3 text-xs font-medium text-[#222222] bg-[#FFD400] px-2 py-0.5 rounded-full">
                     {blog.category}
                   </span>
                 )}
-                <div className="relative z-20 mt-4 inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                <div className="relative z-20 mt-4 inline-flex items-center gap-1 text-xs font-medium text-[#5A2D0C] hover:text-[#FFD400] transition-colors">
                   Read more
                   <span aria-hidden>→</span>
                 </div>

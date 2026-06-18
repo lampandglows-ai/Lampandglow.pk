@@ -213,7 +213,7 @@ export default function AdminReelsPage() {
 
           {/* Messages */}
           {message.text && (
-            <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
+            <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-[#22C55E]'}`}>
               {message.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
               {message.text}
             </div>
@@ -342,7 +342,7 @@ export default function AdminReelsPage() {
                             {uploadingVideo ? 'Uploading...' : formData.videoUrl ? 'Replace Video' : 'Upload Video'}
                           </button>
                           {formData.videoUrl && (
-                            <p className="text-xs text-green-600 dark:text-green-400 truncate">{formData.videoUrl}</p>
+                            <p className="text-xs text-[#22C55E] dark:text-[#22C55E] truncate">{formData.videoUrl}</p>
                           )}
                         </div>
                       )}
@@ -506,7 +506,7 @@ export default function AdminReelsPage() {
                         <span
                           className={`absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${
                             reel.isActive !== false
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-[#22C55E]'
                               : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
                           }`}
                         >
@@ -531,7 +531,7 @@ export default function AdminReelsPage() {
                             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50 transition-colors"
                           >
                             {reel.isActive !== false ? (
-                              <Eye size={18} className="text-green-600" />
+                              <Eye size={18} className="text-[#22C55E]" />
                             ) : (
                               <EyeOff size={18} className="text-gray-400" />
                             )}
@@ -548,7 +548,7 @@ export default function AdminReelsPage() {
                             disabled={saving}
                             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50 transition-colors"
                           >
-                            <Trash2 size={18} className="text-red-600" />
+                            <Trash2 size={18} className="text-[#E53935]" />
                           </button>
                         </div>
                       </div>

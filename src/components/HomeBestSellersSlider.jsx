@@ -60,7 +60,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
                 : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
@@ -76,7 +76,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
                 : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
@@ -99,11 +99,11 @@ export default function HomeBestSellersSlider({ products = [] }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {product.isNewArrival && (
-                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                        <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-2 py-1 text-xs font-semibold text-white">
                           New
                         </span>
                       )}

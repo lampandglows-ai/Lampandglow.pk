@@ -18,7 +18,7 @@ const PLATFORM_OPTIONS = [
   { value: 'facebook', label: 'Facebook', color: 'bg-blue-600 text-white' },
   { value: 'instagram', label: 'Instagram', color: 'bg-pink-600 text-white' },
   { value: 'tiktok', label: 'TikTok', color: 'bg-black text-white' },
-  { value: 'youtube', label: 'YouTube', color: 'bg-red-600 text-white' },
+  { value: 'youtube', label: 'YouTube', color: 'bg-[#E53935] text-white' },
   { value: 'linkedin', label: 'LinkedIn', color: 'bg-blue-700 text-white' },
   { value: 'x', label: 'X (Twitter)', color: 'bg-gray-900 text-white' },
   { value: 'pinterest', label: 'Pinterest', color: 'bg-red-700 text-white' },
@@ -210,7 +210,7 @@ export default function AdminSocialLinksPage() {
               resetForm()
               setShowForm(true)
             }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
           >
             <Plus className="w-5 h-5" />
             Add Link
@@ -227,9 +227,9 @@ export default function AdminSocialLinksPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -353,7 +353,7 @@ export default function AdminSocialLinksPage() {
                             </button>
                             <button
                               onClick={() => handleDelete(link.id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                              className="p-2 text-[#E53935] hover:bg-red-50 rounded-lg transition"
                               title="Delete"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -516,7 +516,7 @@ export default function AdminSocialLinksPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving

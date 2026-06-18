@@ -72,7 +72,7 @@ export default function ReelsPage() {
       <section className="w-full px-0 py-10 sm:py-14">
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center">
-            <Loader2 size={40} className="animate-spin mx-auto text-amber-500 mb-4" />
+            <Loader2 size={40} className="animate-spin mx-auto text-[#FFD400] mb-4" />
             <p className="text-stone-500">Loading reels...</p>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function ReelsPage() {
       <section className="w-full px-0 py-10 sm:py-14">
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center max-w-md px-4">
-            <AlertCircle size={48} className="mx-auto text-red-600 mb-4" />
+            <AlertCircle size={48} className="mx-auto text-[#E53935] mb-4" />
             <h2 className="text-xl font-bold text-stone-900 mb-2">Something went wrong</h2>
             <p className="text-stone-600">{error}</p>
           </div>

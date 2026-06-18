@@ -88,7 +88,7 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto">
         {message && (
           <div className="bg-green-900/30 border border-green-700/50 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <CheckCircle className="text-green-400 flex-shrink-0 mt-0.5" size={20} />
+            <CheckCircle className="text-[#22C55E] flex-shrink-0 mt-0.5" size={20} />
             <p className="text-green-300">{message}</p>
           </div>
         )}
@@ -96,7 +96,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Section */}
           <div className="lg:col-span-1">
-            <div className="bg-[#5c3418] rounded-lg shadow p-6">
+            <div className="bg-[#7A4A20] rounded-lg shadow p-6">
               <div className="text-center mb-6">
                 <div className="w-20 h-20 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <User size={40} className="text-white" />
@@ -104,7 +104,7 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-bold text-white">{user.name}</h2>
                 <p className="text-white/70 text-sm">{user.email}</p>
                 {user.role === 'admin' && (
-                  <span className="inline-block mt-2 px-3 py-1 bg-[#FFDA03]/20 text-[#FFDA03] rounded-full text-xs font-semibold">
+                  <span className="inline-block mt-2 px-3 py-1 bg-[#FFD400]/20 text-[#FFD400] rounded-full text-xs font-semibold">
                     Admin
                   </span>
                 )}
@@ -112,7 +112,7 @@ export default function ProfilePage() {
 
               <button
                 onClick={logout}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition duration-200"
+                className="w-full bg-[#E53935] hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition duration-200"
               >
                 Logout
               </button>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
 
           {/* Profile Information Section */}
           <div className="lg:col-span-2">
-            <div className="bg-[#5c3418] rounded-lg shadow p-6 mb-8">
+            <div className="bg-[#7A4A20] rounded-lg shadow p-6 mb-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-white">Profile Information</h3>
                 {!editing && (
@@ -151,7 +151,7 @@ export default function ProfilePage() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                     <div>
@@ -161,7 +161,7 @@ export default function ProfilePage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                     <div className="md:col-span-2">
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                     <div>
@@ -181,7 +181,7 @@ export default function ProfilePage() {
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                     <div>
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                     <div>
@@ -201,7 +201,7 @@ export default function ProfilePage() {
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFDA03]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#4C2600] text-white"
+                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
                       />
                     </div>
                   </div>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Orders Section */}
-            <div className="bg-[#5c3418] rounded-lg shadow p-6">
+            <div className="bg-[#7A4A20] rounded-lg shadow p-6">
               <h3 className="text-xl font-bold text-white mb-6">My Orders</h3>
 
               {loadingOrders ? (
@@ -270,7 +270,7 @@ export default function ProfilePage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-[#5c3418] border-b border-[#FFDA03]/20">
+                    <thead className="bg-[#7A4A20] border-b border-[#FFD400]/20">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-white/80">Order ID</th>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-white/80">Date</th>
@@ -280,7 +280,7 @@ export default function ProfilePage() {
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order._id} className="border-b border-[#FFDA03]/10 hover:bg-[#5c3418]/80">
+                        <tr key={order._id} className="border-b border-[#FFD400]/10 hover:bg-[#7A4A20]/80">
                           <td className="px-4 py-3 text-sm text-white">{order._id?.substring(0, 8)}...</td>
                           <td className="px-4 py-3 text-sm text-white/70">
                             {new Date(order.createdAt).toLocaleDateString()}

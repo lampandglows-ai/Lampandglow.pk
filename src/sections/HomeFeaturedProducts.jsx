@@ -44,7 +44,7 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
             </div>
             <button
               onClick={onViewAll}
-              className="hidden sm:inline-flex text-xs font-medium text-amber-600 hover:text-amber-800"
+              className="hidden sm:inline-flex text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
             >
               View all products
             </button>
@@ -60,11 +60,11 @@ export default function HomeFeaturedProducts({ products, onViewAll }) {
                 <Link
                   key={product.id}
                   to={`/products/${slugify(product.name)}`}
-                   className="group block overflow-hidden rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                   className="group block overflow-hidden rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     {hasDiscount ? (
-                      <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                      <span className="absolute left-0 top-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">
                         -{discountPercent}%
                       </span>
                     ) : null}

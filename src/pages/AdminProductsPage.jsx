@@ -380,7 +380,7 @@ export default function AdminProductsPage() {
               resetForm()
               setShowForm(true)
             }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -397,9 +397,9 @@ export default function AdminProductsPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -416,7 +416,7 @@ export default function AdminProductsPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               {/* Form Header */}
-              <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-6 flex items-center justify-between text-white">
+              <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-8 py-6 flex items-center justify-between text-white">
                 <h3 className="text-2xl font-bold">
                   {editingId ? 'Edit Product' : 'Add New Product'}
                 </h3>
@@ -624,7 +624,7 @@ export default function AdminProductsPage() {
                       className="w-4 h-4 text-orange-500 rounded focus:ring-orange-500"
                     />
                     <label htmlFor="isNewArrival" className="text-sm font-medium text-gray-700 flex items-center gap-1">
-                      <Sparkles size={14} className="text-amber-500" />
+                      <Sparkles size={14} className="text-[#FFD400]" />
                       New Arrival
                     </label>
                   </div>
@@ -723,7 +723,7 @@ export default function AdminProductsPage() {
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(idx)}
-                            className="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
+                            className="bg-red-500 text-white rounded-full p-1 hover:bg-[#E53935] transition"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -740,7 +740,7 @@ export default function AdminProductsPage() {
                   <button
                     type="submit"
                     disabled={saving || imageUploading}
-                    className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {saving && formData.status !== 'draft' && <Loader2 className="w-4 h-4 animate-spin" />}
                     {editingId ? 'Update & Publish' : 'Publish Product'}
@@ -789,7 +789,7 @@ export default function AdminProductsPage() {
             </button>
             <button
               onClick={() => setStatusFilter('newArrivals')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1 ${statusFilter === 'newArrivals' ? 'bg-amber-500 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1 ${statusFilter === 'newArrivals' ? 'bg-[#F5F1EA]0 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}
             >
               <Sparkles size={14} />
               New Arrivals
@@ -848,7 +848,7 @@ export default function AdminProductsPage() {
                     {/* Status Badges */}
                     <div className="flex flex-wrap gap-1.5 mb-2">
                       {product.isNewArrival && (
-                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                        <span className="inline-flex items-center gap-1 bg-amber-100 text-[#5A2D0C] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
                           <Sparkles size={10} /> New Arrival
                         </span>
                       )}
@@ -882,7 +882,7 @@ export default function AdminProductsPage() {
                         product.status === 'active'
                           ? 'bg-green-100 text-green-800'
                           : product.status === 'draft'
-                          ? 'bg-amber-100 text-amber-800'
+                          ? 'bg-amber-100 text-[#5A2D0C]'
                           : 'bg-red-100 text-red-800'
                       }`}>
                         {product.status === 'active' ? 'Active' : product.status === 'draft' ? 'Draft' : 'Inactive'}
@@ -892,7 +892,7 @@ export default function AdminProductsPage() {
                     <div className="flex items-center justify-between mb-4 text-sm">
                       <div>
                         <p className="text-gray-600">Stock: <span className="font-semibold text-gray-900">{product.stock || 0}</span></p>
-                        {product.stock === 0 && <p className="text-red-600 font-semibold text-xs">Out of Stock</p>}
+                        {product.stock === 0 && <p className="text-[#E53935] font-semibold text-xs">Out of Stock</p>}
                       </div>
                       <p className="text-xs text-gray-500">
                         {product.createdAt ? new Date(product.createdAt).toLocaleDateString() : ''}
@@ -906,8 +906,8 @@ export default function AdminProductsPage() {
                         title={product.isNewArrival ? 'Remove from New Arrivals' : 'Add to New Arrivals'}
                         className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1 ${
                           product.isNewArrival
-                            ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                            : 'bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-700'
+                            ? 'bg-amber-100 text-[#5A2D0C] hover:bg-amber-200'
+                            : 'bg-gray-100 text-gray-600 hover:bg-[#F5F1EA] hover:text-[#5A2D0C]'
                         }`}
                       >
                         <Sparkles className="w-3.5 h-3.5" />
@@ -947,7 +947,7 @@ export default function AdminProductsPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="flex-1 bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2"
+                        className="flex-1 bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-[#E53935] transition flex items-center justify-center gap-2"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete

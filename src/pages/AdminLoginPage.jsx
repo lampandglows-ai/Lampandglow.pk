@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-[#F5F1EA] flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-12 text-center">
+          <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-8 py-12 text-center">
             <div className="flex justify-center mb-4">
               <div className="bg-white/20 p-4 rounded-full">
                 <Lock className="w-8 h-8 text-white" />
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-red-800">{error || authError}</p>
-                  <p className="text-xs text-red-600 mt-1">Please check your credentials and try again.</p>
+                  <p className="text-xs text-[#E53935] mt-1">Please check your credentials and try again.</p>
                 </div>
               </div>
             )}
@@ -140,7 +140,7 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-3 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>

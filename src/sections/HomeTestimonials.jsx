@@ -1,6 +1,6 @@
 export default function HomeTestimonials({ testimonials }) {
   return (
-    <section className="relative w-full px-0 py-14 sm:py-16 bg-transparent overflow-hidden">
+    <section className="relative w-full px-0 py-14 sm:py-16 bg-[#F5F1EA] overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute left-1/2 top-24 -translate-x-1/2 text-[140px] sm:text-[180px] leading-none tracking-[0.2em] text-amber-200 select-none">
           ★ ★ ★ ★ ★
@@ -9,10 +9,10 @@ export default function HomeTestimonials({ testimonials }) {
 
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
+          <h2 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[#222222]">
             1000 + HAPPY CUSTOMERS
           </h2>
-          <div className="mx-auto mt-3 h-px w-24 bg-amber-300" />
+          <div className="mx-auto mt-3 h-px w-24 bg-[#FFD400]" />
           <p className="mt-4 text-xs sm:text-sm text-stone-500">
             Hear from customers who brought Lamp &amp; Glow pieces into their homes.
           </p>
@@ -38,7 +38,7 @@ export default function HomeTestimonials({ testimonials }) {
                 </div>
 
                 <div className="text-center">
-                  <p className="text-sm font-semibold text-stone-900 tracking-wide">{t.name}</p>
+                  <p className="text-sm font-semibold text-[#5A2D0C] tracking-wide">{t.name}</p>
                   <p className="mt-0.5 text-[10px] text-stone-500">VERIFIED BUYER</p>
                 </div>
 
@@ -56,7 +56,7 @@ export default function HomeTestimonials({ testimonials }) {
                   {t.text}
                 </p>
 
-                <div className="mt-auto pt-5 text-center text-amber-500 text-[12px] tracking-widest">★★★★★</div>
+                <div className="mt-auto pt-5 text-center text-[#FFD400] text-[12px] tracking-widest">★★★★★</div>
               </figure>
             )
           })}

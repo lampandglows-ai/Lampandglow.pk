@@ -19,7 +19,7 @@ export default function HomeSection({
   onViewAllProducts,
 }) {
   return (
-    <section className="bg-[#fdf0c8]">
+    <section className="hero-gradient-bg">
       <HeroSlider slides={heroSlides} onPrimaryAction={onHeroAction} />
 
       <HomeBestSellersSlider products={products} theme={theme} />

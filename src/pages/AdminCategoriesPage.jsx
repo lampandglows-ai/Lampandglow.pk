@@ -227,7 +227,7 @@ export default function AdminCategoriesPage() {
               resetForm()
               setShowForm(true)
             }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
           >
             <Plus className="w-5 h-5" />
             Add Category
@@ -244,9 +244,9 @@ export default function AdminCategoriesPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -299,7 +299,7 @@ export default function AdminCategoriesPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               {/* Form Header */}
-              <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-6 flex items-center justify-between text-white">
+              <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-8 py-6 flex items-center justify-between text-white">
                 <h3 className="text-2xl font-bold">
                   {editingId ? 'Edit Category' : 'Add New Category'}
                 </h3>
@@ -422,7 +422,7 @@ export default function AdminCategoriesPage() {
                         <button
                           type="button"
                           onClick={handleRemoveImage}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-[#E53935] transition"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -439,7 +439,7 @@ export default function AdminCategoriesPage() {
                   <button
                     type="submit"
                     disabled={saving || imageUploading}
-                    className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                     {editingId ? 'Update Category' : 'Add Category'}
@@ -553,7 +553,7 @@ export default function AdminCategoriesPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(category.id)}
-                        className="flex-1 bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition flex items-center justify-center gap-2"
+                        className="flex-1 bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-[#E53935] transition flex items-center justify-center gap-2"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete

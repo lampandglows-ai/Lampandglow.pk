@@ -275,7 +275,7 @@ export default function AdminOnboardingPage() {
               resetForm()
               setShowForm(true)
             }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
           >
             <Plus className="w-5 h-5" />
             Add Guide
@@ -292,9 +292,9 @@ export default function AdminOnboardingPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -369,7 +369,7 @@ export default function AdminOnboardingPage() {
                     </button>
                     <button
                       onClick={() => handleDelete(guide.id)}
-                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                      className="p-1.5 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -538,7 +538,7 @@ export default function AdminOnboardingPage() {
                             <button
                               type="button"
                               onClick={() => removeStep(index)}
-                              className="p-1 text-gray-400 hover:text-red-600 rounded transition"
+                              className="p-1 text-gray-400 hover:text-[#E53935] rounded transition"
                             >
                               <X className="w-4 h-4" />
                             </button>
@@ -585,7 +585,7 @@ export default function AdminOnboardingPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : editingId ? 'Update Guide' : 'Create Guide'}
@@ -604,7 +604,7 @@ export default function AdminOnboardingPage() {
             onClick={() => setPreviewGuide(null)}
           />
           <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-5 h-5 text-white" />
                 <h3 className="text-white font-bold text-sm">
@@ -669,7 +669,7 @@ export default function AdminOnboardingPage() {
                       setPreviewGuide(null)
                     }
                   }}
-                  className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-medium hover:shadow-md transition"
+                  className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white text-sm font-medium hover:shadow-md transition"
                 >
                   {previewStep === previewGuide.steps.length - 1
                     ? 'Finish'

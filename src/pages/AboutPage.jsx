@@ -105,7 +105,7 @@ const team = [
     role: 'Founder & Creative Director',
     img: null,
     bio: 'With a passion for handcrafted design, Ayesha founded Lamp & Glow to bring warm, soulful lighting into every home.',
-    color: 'from-amber-500/30',
+    color: 'from-[#F5F1EA]0/30',
   },
   {
     name: 'Usman Ali',
@@ -163,23 +163,23 @@ export default function AboutPage({ theme }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#FFD400]" />
       </div>
     )
   }
 
   return (
-    <div className={isDark ? 'bg-[#1a0f00] text-stone-100' : 'bg-[#fbf7ef] text-stone-900'}>
+    <div className={isDark ? 'bg-[#1F1F1F] text-stone-100' : 'bg-[#FAFAF8] text-stone-900'}>
 
       {/* ════════════════════ HERO SECTION ════════════════════ */}
       <section className="relative overflow-hidden">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-[#4C2600] to-stone-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-[#5A2D0C] to-stone-900" />
         <Particles />
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold text-amber-300 border border-amber-400/20 mb-6">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold text-[#FFD400] border border-amber-400/20 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               Our Story
             </span>
@@ -197,7 +197,7 @@ export default function AboutPage({ theme }) {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 to="/collections"
-                className="inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-900 font-bold px-6 py-3 text-sm transition-all duration-200 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#F5F1EA]0 hover:bg-[#FFD400] text-stone-900 font-bold px-6 py-3 text-sm transition-all duration-200 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
               >
                 Explore Collection
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -217,7 +217,7 @@ export default function AboutPage({ theme }) {
         {/* Decorative bottom curve */}
         <div className="relative z-10 -mb-1">
           <svg viewBox="0 0 1440 80" fill="none" className="w-full h-auto">
-            <path d="M0 80V40C240 0 480 20 720 40C960 60 1200 40 1440 20V80H0Z" className="fill-[#fbf7ef] dark:fill-[#1a0f00]" />
+            <path d="M0 80V40C240 0 480 20 720 40C960 60 1200 40 1440 20V80H0Z" className="fill-[#FAFAF8] dark:fill-[#1F1F1F]" />
           </svg>
         </div>
       </section>
@@ -260,7 +260,7 @@ export default function AboutPage({ theme }) {
                 </div>
               </div>
               {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-4 bg-amber-500 text-stone-900 rounded-2xl px-5 py-3 shadow-xl">
+              <div className="absolute -bottom-4 -right-4 bg-[#F5F1EA]0 text-stone-900 rounded-2xl px-5 py-3 shadow-xl">
                 <p className="text-xs font-bold">Handcrafted</p>
                 <p className="text-lg font-black">with ❤️</p>
               </div>
@@ -268,10 +268,10 @@ export default function AboutPage({ theme }) {
 
             {/* Text side */}
             <div>
-              <span className="text-xs font-bold tracking-[0.15em] uppercase text-amber-600">Our Journey</span>
+              <span className="text-xs font-bold tracking-[0.15em] uppercase text-[#FFD400]">Our Journey</span>
               <h2 className="mt-3 text-2xl sm:text-3xl font-bold leading-tight">
                 From a Small Workshop to{' '}
-                <span className="text-amber-600">Your Living Room</span>
+                <span className="text-[#FFD400]">Your Living Room</span>
               </h2>
               <div className="mt-6 space-y-4 text-sm sm:text-base leading-relaxed text-stone-600 dark:text-stone-300">
                 <p>
@@ -314,7 +314,7 @@ export default function AboutPage({ theme }) {
       <section className="py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-bold tracking-[0.15em] uppercase text-amber-600">What We Stand For</span>
+            <span className="text-xs font-bold tracking-[0.15em] uppercase text-[#FFD400]">What We Stand For</span>
             <h2 className="mt-3 text-2xl sm:text-3xl font-bold">Our Core Values</h2>
             <p className="mt-3 text-sm text-stone-500 dark:text-stone-400">
               Every decision we make is guided by these principles.
@@ -340,13 +340,13 @@ export default function AboutPage({ theme }) {
       <section className="py-16 sm:py-20 bg-white/50 dark:bg-white/5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-bold tracking-[0.15em] uppercase text-amber-600">Our Milestones</span>
+            <span className="text-xs font-bold tracking-[0.15em] uppercase text-[#FFD400]">Our Milestones</span>
             <h2 className="mt-3 text-2xl sm:text-3xl font-bold">The Journey So Far</h2>
           </div>
 
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-amber-400 via-amber-500 to-amber-400/20" />
+            <div className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-amber-400 via-[#F5F1EA]0 to-amber-400/20" />
 
             {milestones.map((m, idx) => (
               <div
@@ -356,11 +356,11 @@ export default function AboutPage({ theme }) {
                 }`}
               >
                 {/* Dot */}
-                <div className="absolute left-6 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-amber-500 border-4 border-white dark:border-stone-800 z-10 shadow-md" />
+                <div className="absolute left-6 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#F5F1EA]0 border-4 border-white dark:border-stone-800 z-10 shadow-md" />
 
                 {/* Content */}
                 <div className={`ml-12 sm:ml-0 sm:w-1/2 ${idx % 2 === 0 ? 'sm:pr-12 sm:text-right' : 'sm:pl-12'}`}>
-                  <span className="text-xs font-bold text-amber-600">{m.year}</span>
+                  <span className="text-xs font-bold text-[#FFD400]">{m.year}</span>
                   <h3 className="mt-1 text-base font-bold">{m.title}</h3>
                   <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400 leading-relaxed">{m.desc}</p>
                 </div>
@@ -377,7 +377,7 @@ export default function AboutPage({ theme }) {
       <section className="py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-bold tracking-[0.15em] uppercase text-amber-600">The People</span>
+            <span className="text-xs font-bold tracking-[0.15em] uppercase text-[#FFD400]">The People</span>
             <h2 className="mt-3 text-2xl sm:text-3xl font-bold">Meet the Team</h2>
             <p className="mt-3 text-sm text-stone-500 dark:text-stone-400">
               A small, passionate team behind every piece that reaches your home.
@@ -395,7 +395,7 @@ export default function AboutPage({ theme }) {
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <h3 className="mt-4 text-sm font-bold">{member.name}</h3>
-                <p className="text-xs font-medium text-amber-600">{member.role}</p>
+                <p className="text-xs font-medium text-[#FFD400]">{member.role}</p>
                 <p className="mt-3 text-xs text-stone-500 dark:text-stone-400 leading-relaxed">{member.bio}</p>
               </div>
             ))}
@@ -405,7 +405,7 @@ export default function AboutPage({ theme }) {
 
       {/* ════════════════════ CTA SECTION ════════════════════ */}
       <section className="relative overflow-hidden py-20 sm:py-28">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-800 via-[#4C2600] to-stone-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-800 via-[#5A2D0C] to-stone-900" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffda03\' fill-opacity=\'0.15\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -419,7 +419,7 @@ export default function AboutPage({ theme }) {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               to="/collections"
-              className="inline-flex items-center gap-2 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-900 font-bold px-7 py-3.5 text-sm transition-all duration-200 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#F5F1EA]0 hover:bg-[#FFD400] text-stone-900 font-bold px-7 py-3.5 text-sm transition-all duration-200 hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
             >
               Shop Now
             </Link>

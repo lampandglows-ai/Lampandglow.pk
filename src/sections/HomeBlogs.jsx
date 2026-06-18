@@ -26,7 +26,7 @@ export default function HomeBlogs() {
     return (
       <section className="py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#FFD400]" />
         </div>
       </section>
     )
@@ -40,8 +40,8 @@ export default function HomeBlogs() {
         <div className="flex items-end justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <BookOpen className="w-5 h-5 text-amber-600" />
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">From Our Blog</span>
+              <BookOpen className="w-5 h-5 text-[#FFD400]" />
+              <span className="text-xs font-semibold text-[#FFD400] uppercase tracking-wider">From Our Blog</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
               Latest Tips & Inspiration
@@ -52,7 +52,7 @@ export default function HomeBlogs() {
           </div>
           <Link
             to="/blogs"
-            className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-amber-600 hover:text-amber-800 transition"
+            className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-[#FFD400] hover:text-[#5A2D0C] transition"
           >
             View all blogs
             <ArrowRight className="w-4 h-4" />
@@ -79,7 +79,7 @@ export default function HomeBlogs() {
               </div>
               <div className="p-4">
                 {blog.category && (
-                  <span className="inline-block text-[10px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wide mb-2">
+                  <span className="inline-block text-[10px] font-semibold text-[#5A2D0C] bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wide mb-2">
                     {blog.category}
                   </span>
                 )}
@@ -89,7 +89,7 @@ export default function HomeBlogs() {
                 <p className="mt-2 text-xs text-stone-500 line-clamp-2 leading-relaxed">
                   {blog.excerpt}
                 </p>
-                <div className="relative z-20 mt-3 inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                <div className="relative z-20 mt-3 inline-flex items-center gap-1 text-xs font-medium text-[#FFD400]">
                   Read more
                   <ArrowRight className="w-3 h-3" />
                 </div>
@@ -101,7 +101,7 @@ export default function HomeBlogs() {
         <div className="mt-6 text-center sm:hidden">
           <Link
             to="/blogs"
-            className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 hover:text-amber-800 transition"
+            className="inline-flex items-center gap-1 text-sm font-medium text-[#FFD400] hover:text-[#5A2D0C] transition"
           >
             View all blogs
             <ArrowRight className="w-4 h-4" />

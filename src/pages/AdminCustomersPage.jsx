@@ -142,9 +142,9 @@ export default function AdminCustomersPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -253,7 +253,7 @@ export default function AdminCustomersPage() {
                                 className={`px-3 py-1 text-sm rounded-lg transition text-white ${
                                   customer.isBlocked
                                     ? 'bg-green-500 hover:bg-green-600'
-                                    : 'bg-red-500 hover:bg-red-600'
+                                    : 'bg-red-500 hover:bg-[#E53935]'
                                 } disabled:opacity-60`}
                               >
                                 {customer.isBlocked ? 'Unblock' : 'Block'}
@@ -358,7 +358,7 @@ export default function AdminCustomersPage() {
                       </div>
                       <div className="bg-green-50 p-3 rounded-lg">
                         <p className="text-gray-600 text-xs">Total Spent</p>
-                        <p className="text-2xl font-bold text-green-600">Rs.{totalSpent.toLocaleString()}</p>
+                        <p className="text-2xl font-bold text-[#22C55E]">Rs.{totalSpent.toLocaleString()}</p>
                       </div>
                       <div className="bg-orange-50 p-3 rounded-lg">
                         <p className="text-gray-600 text-xs">Avg Order</p>

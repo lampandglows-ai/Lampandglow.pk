@@ -36,7 +36,7 @@ export default function PublicPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 size={40} className="animate-spin mx-auto text-amber-500 mb-4" />
+          <Loader2 size={40} className="animate-spin mx-auto text-[#FFD400] mb-4" />
           <p className="text-stone-500">Loading page...</p>
         </div>
       </div>
@@ -47,12 +47,12 @@ export default function PublicPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <AlertCircle size={48} className="mx-auto text-red-600 mb-4" />
+          <AlertCircle size={48} className="mx-auto text-[#E53935] mb-4" />
           <h1 className="text-2xl font-bold text-stone-900 mb-2">Page Not Found</h1>
           <p className="text-stone-600 mb-6">{error || 'The page you are looking for does not exist.'}</p>
           <Link
             to="/"
-            className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-full transition-colors"
+            className="inline-block bg-[#5A2D0C] hover:bg-[#FFD400] text-white font-semibold py-2 px-6 rounded-full transition-colors"
           >
             Back to Home
           </Link>
@@ -84,7 +84,7 @@ export default function PublicPage() {
         <div className="mt-12 pt-8 border-t border-stone-200">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-800 font-semibold transition-colors"
+            className="inline-flex items-center gap-2 text-[#FFD400] hover:text-[#5A2D0C] font-semibold transition-colors"
           >
             ← Back to Home
           </Link>

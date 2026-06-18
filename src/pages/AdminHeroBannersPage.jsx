@@ -238,14 +238,14 @@ export default function AdminHeroBannersPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold text-gray-900">Hero Banners</h2>
           <button onClick={() => { resetForm(); setShowForm(true) }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105">
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105">
             <Plus className="w-5 h-5" /> Add Banner
           </button>
         </div>
 
         {message.text && (
           <div className={`p-4 rounded-lg flex items-center gap-3 ${message.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-            {message.type === 'success' ? <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />}
+            {message.type === 'success' ? <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>{message.text}</p>
           </div>
         )}
@@ -309,7 +309,7 @@ export default function AdminHeroBannersPage() {
                       </button>
                       <div className="flex items-center gap-1">
                         <button onClick={() => handleEdit(banner)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit"><Edit className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(banner.id)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Delete"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => handleDelete(banner.id)} className="p-2 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition" title="Delete"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </div>
                   </div>
@@ -487,7 +487,7 @@ export default function AdminHeroBannersPage() {
               {/* Submit */}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">Cancel</button>
-                <button type="submit" disabled={saving || uploadingImage || uploadingMobileImage} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
+                <button type="submit" disabled={saving || uploadingImage || uploadingMobileImage} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : editingId ? 'Update Banner' : 'Create Banner'}
                 </button>

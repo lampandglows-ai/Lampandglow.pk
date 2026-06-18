@@ -88,7 +88,7 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
               </button>
               <button 
                 onClick={onLogout}
-                className="px-5 py-2 text-sm font-medium text-red-600 border border-red-500 rounded-full hover:bg-red-50 transition"
+                className="px-5 py-2 text-sm font-medium text-[#E53935] border border-red-500 rounded-full hover:bg-red-50 transition"
               >
                 Logout
               </button>

@@ -249,7 +249,7 @@ export default function AdminWebsitePopupsPage() {
               resetForm()
               setShowForm(true)
             }}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
           >
             <Plus className="w-5 h-5" />
             Add Popup
@@ -266,9 +266,9 @@ export default function AdminWebsitePopupsPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -342,7 +342,7 @@ export default function AdminWebsitePopupsPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(popup.id)}
-                        className="p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm text-gray-600 hover:text-red-600 transition"
+                        className="p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm text-gray-600 hover:text-[#E53935] transition"
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -620,7 +620,7 @@ export default function AdminWebsitePopupsPage() {
                 <button
                   type="submit"
                   disabled={saving || uploadingImage}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : editingId ? 'Update Popup' : 'Create Popup'}

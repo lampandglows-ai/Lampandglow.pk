@@ -27,17 +27,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff7e6] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-amber-800">LampandGlow</h1>
+            <h1 className="text-3xl font-bold text-[#5A2D0C]">LampandGlow</h1>
             <p className="text-stone-600 mt-2">Sign in to your account</p>
           </div>
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-              <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+              <AlertCircle className="text-[#E53935] flex-shrink-0 mt-0.5" size={20} />
               <p className="text-red-700 text-sm">{error}</p>
             </div>
           )}
@@ -90,7 +90,7 @@ export default function LoginPage() {
           <div className="mt-6 pt-6 border-t border-stone-200">
             <p className="text-center text-stone-600 text-sm">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-amber-600 hover:text-amber-800 font-semibold">
+              <Link to="/signup" className="text-[#FFD400] hover:text-[#5A2D0C] font-semibold">
                 Sign Up
               </Link>
             </p>

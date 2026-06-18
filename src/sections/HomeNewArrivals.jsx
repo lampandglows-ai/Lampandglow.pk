@@ -34,7 +34,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             <div>
               <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900">
                 <span className="inline-flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-amber-600" />
+                  <Sparkles className="w-6 h-6 text-[#FFD400]" />
                   New Arrivals
                 </span>
               </h2>
@@ -44,7 +44,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             </div>
             <button
               onClick={onViewAll}
-              className="hidden sm:inline-flex text-xs font-medium text-amber-600 hover:text-amber-800"
+              className="hidden sm:inline-flex text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
             >
               View all products
             </button>
@@ -60,7 +60,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-                  ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                  ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
                   : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
@@ -76,7 +76,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-                  ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+                  ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
                   : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
@@ -98,14 +98,14 @@ export default function HomeNewArrivals({ products, onViewAll }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
-                      <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                      <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-2 py-1 text-xs font-semibold text-white">
                         New Arrival
                       </span>
                       {hasDiscount ? (
-                        <span className="absolute left-0 top-7 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                        <span className="absolute left-0 top-7 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">
                           -{discountPercent}%
                         </span>
                       ) : null}

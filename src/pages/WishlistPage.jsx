@@ -8,7 +8,7 @@ export default function WishlistPage({ wishlist = [], handleToggleWishlist, hand
     <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       <button
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+        className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
       >
         <span aria-hidden>←</span>
         Back
@@ -29,7 +29,7 @@ export default function WishlistPage({ wishlist = [], handleToggleWishlist, hand
           <p className="text-sm text-stone-500">Your wishlist is empty.</p>
           <button
             onClick={() => navigate('/products')}
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700"
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#5A2D0C] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#FFD400]"
           >
             Browse Products
           </button>
@@ -60,19 +60,19 @@ export default function WishlistPage({ wishlist = [], handleToggleWishlist, hand
 
               <div className="p-4">
                 <h3
-                  className="text-sm font-semibold text-stone-900 truncate cursor-pointer hover:text-amber-700"
+                  className="text-sm font-semibold text-stone-900 truncate cursor-pointer hover:text-[#5A2D0C]"
                   onClick={() => navigate(`/products/${product.slug || product.id}`)}
                 >
                   {product.name}
                 </h3>
-                <p className="mt-1 text-sm font-bold text-amber-700">
+                <p className="mt-1 text-sm font-bold text-[#5A2D0C]">
                   Rs {Number(product.price).toLocaleString()}
                 </p>
 
                 <div className="mt-3 flex items-center gap-2">
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="inline-flex items-center gap-2 rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-700"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#5A2D0C] px-4 py-2 text-xs font-semibold text-white hover:bg-[#FFD400]"
                   >
                     <FaShoppingCart className="text-[11px]" />
                     Add to Cart

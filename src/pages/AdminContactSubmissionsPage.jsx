@@ -19,7 +19,7 @@ import contactSubmissionsService from '../utils/contactSubmissionsService.js'
 
 const STATUS_STYLES = {
   new: { label: 'New', bg: 'bg-blue-50 text-blue-700 border-blue-200' },
-  read: { label: 'Read', bg: 'bg-amber-50 text-amber-700 border-amber-200' },
+  read: { label: 'Read', bg: 'bg-[#F5F1EA] text-[#5A2D0C] border-[#FFD400]/30' },
   replied: { label: 'Replied', bg: 'bg-green-50 text-green-700 border-green-200' },
 }
 
@@ -103,9 +103,9 @@ export default function AdminContactSubmissionsPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
               {message.text}
@@ -196,7 +196,7 @@ export default function AdminContactSubmissionsPage() {
                                 e.stopPropagation()
                                 handleMarkStatus(submission.id, 'read')
                               }}
-                              className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
+                              className="p-2 text-gray-400 hover:text-[#FFD400] hover:bg-[#F5F1EA] rounded-lg transition"
                               title="Mark as read"
                             >
                               <Eye className="w-4 h-4" />
@@ -208,7 +208,7 @@ export default function AdminContactSubmissionsPage() {
                                 e.stopPropagation()
                                 handleMarkStatus(submission.id, 'replied')
                               }}
-                              className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
+                              className="p-2 text-gray-400 hover:text-[#22C55E] hover:bg-green-50 rounded-lg transition"
                               title="Mark as replied"
                             >
                               <CheckCheck className="w-4 h-4" />
@@ -219,7 +219,7 @@ export default function AdminContactSubmissionsPage() {
                               e.stopPropagation()
                               handleDelete(submission.id)
                             }}
-                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                            className="p-2 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -308,7 +308,7 @@ export default function AdminContactSubmissionsPage() {
                   <div className="flex gap-2 pt-4 border-t border-gray-100">
                     <a
                       href={`mailto:${selectedSubmission.email}`}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition"
                     >
                       <Mail className="w-4 h-4" />
                       Reply via Email

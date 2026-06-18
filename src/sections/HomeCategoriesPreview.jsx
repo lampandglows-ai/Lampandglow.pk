@@ -27,7 +27,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-              ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+              ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
               : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
@@ -43,7 +43,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-              ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg'
+              ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
               : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
@@ -61,7 +61,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
               <button
                 key={category.id}
                 onClick={() => onPickCategory(category.id)}
-                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFDA03]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFDA03]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFD400]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFD400]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <div className="relative aspect-[3/5] sm:aspect-[10/17] overflow-hidden">
                   <img
@@ -70,7 +70,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110 motion-reduce:transform-none"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/0" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#4C2600]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#5A2D0C]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
                     <h3 className="text-sm sm:text-base font-bold text-white drop-shadow leading-tight">
                       {category.title}
@@ -78,7 +78,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
                     <p className="mt-1 text-[10px] sm:text-[11px] text-white/85 max-w-[26ch] leading-snug max-h-0 overflow-hidden opacity-0 group-hover:max-h-10 group-hover:opacity-100 transition-all duration-300 ease-out">
                       {category.description}
                     </p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#FFDA03] group-hover:gap-2.5 transition-all duration-200">
+                    <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#FFD400] group-hover:gap-2.5 transition-all duration-200">
                       Explore
                       <span className="transition-transform duration-200 group-hover:translate-x-0.5">›</span>
                     </div>
@@ -92,7 +92,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
         <div className="mt-6 flex justify-center">
           <button
               onClick={onViewAll}
-              className="inline-flex text-xs font-semibold text-amber-600 hover:text-amber-800 transition-colors"
+              className="inline-flex text-xs font-semibold text-[#FFD400] hover:text-[#5A2D0C] transition-colors"
           >
             View all collections →
           </button>

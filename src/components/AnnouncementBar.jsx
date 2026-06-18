@@ -35,7 +35,7 @@ export default function AnnouncementBar() {
 
   if (!visible || !announcement) return null
 
-  const bg = announcement.bgColor || '#1a0f00'
+  const bg = announcement.bgColor || '#5A2D0C'
   const tc = announcement.textColor || '#ffffff'
   const scrollSpeed = announcement.scrollSpeed || 20
 

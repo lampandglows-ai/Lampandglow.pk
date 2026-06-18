@@ -360,7 +360,7 @@ export default function AdminBlogsPage() {
             </button>
             <button
               onClick={() => { resetForm(); setShowForm(true) }}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+              className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
             >
               <Plus className="w-5 h-5" /> Add Blog
             </button>
@@ -385,7 +385,7 @@ export default function AdminBlogsPage() {
         {/* Message */}
         {message.text && (
           <div className={`p-4 rounded-lg flex items-center gap-3 ${message.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-            {message.type === 'success' ? <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />}
+            {message.type === 'success' ? <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>{message.text}</p>
           </div>
         )}
@@ -496,7 +496,7 @@ export default function AdminBlogsPage() {
                         </button>
                         <button
                           onClick={() => handleDelete(blog.id)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                          className="p-2 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -812,7 +812,7 @@ export default function AdminBlogsPage() {
                 <button
                   type="submit"
                   disabled={saving || uploadingImage}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : editingId ? (
@@ -848,7 +848,7 @@ export default function AdminBlogsPage() {
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition text-sm"
+                  className="px-4 py-2 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition text-sm"
                 >
                   Add
                 </button>
@@ -869,7 +869,7 @@ export default function AdminBlogsPage() {
                       </div>
                       <button
                         onClick={() => handleDeleteCategory(cat.id)}
-                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition"
+                        className="p-1.5 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded transition"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

@@ -70,9 +70,9 @@ export default function AdminNewsletterPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
               {message.text}
@@ -153,7 +153,7 @@ export default function AdminNewsletterPage() {
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => handleDelete(sub.id)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                          className="p-2 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />

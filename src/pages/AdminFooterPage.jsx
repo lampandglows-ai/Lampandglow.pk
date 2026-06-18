@@ -257,9 +257,9 @@ export default function AdminFooterPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
               {message.text}
@@ -382,7 +382,7 @@ export default function AdminFooterPage() {
                 <button
                   onClick={handleSaveConfig}
                   disabled={saving}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   <Save className="w-4 h-4" />
@@ -408,7 +408,7 @@ export default function AdminFooterPage() {
                     resetLinkForm()
                     setShowLinkForm(true)
                   }}
-                  className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+                  className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
                 >
                   <Plus className="w-5 h-5" />
                   Add Link
@@ -515,7 +515,7 @@ export default function AdminFooterPage() {
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(link.id)}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                className="p-2 text-[#E53935] hover:bg-red-50 rounded-lg transition"
                                 title="Delete"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -666,7 +666,7 @@ export default function AdminFooterPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                     {saving ? 'Saving...' : editingLinkId ? 'Update Link' : 'Add Link'}

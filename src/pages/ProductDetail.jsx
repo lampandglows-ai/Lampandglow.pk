@@ -27,7 +27,7 @@ function ChevronDown({ open }) {
 function Accordion({ icon, title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border-b border-[#FFDA03]/20">
+    <div className="border-b border-[#FFD400]/20">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -129,7 +129,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         <div className="px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+            className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
           >
             <span aria-hidden>←</span>
             Back
@@ -193,7 +193,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     const value = Math.round(rating)
     return (
       <div
-        className="flex items-center gap-0.5 text-amber-500"
+        className="flex items-center gap-0.5 text-[#FFD400]"
         aria-label={`${value} out of 5 stars`}
       >
         {Array.from({ length: 5 }).map((_, idx) => (
@@ -295,14 +295,14 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               <div className="relative flex-1 overflow-hidden bg-stone-100 group rounded-sm">
                 {/* Badges */}
                 {product.isNewArrival && (
-                  <span className="absolute left-0 top-0 z-10 bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
+                  <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
                     New Arrival
                   </span>
                 )}
                 {hasDiscount && (
                   <span
                     className={classNames(
-                      'absolute z-10 bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase',
+                      'absolute z-10 bg-[#E53935] px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase',
                       product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0',
                     )}
                   >
@@ -408,7 +408,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
           <div className="lg:sticky lg:top-24">
             {/* Title + Wishlist */}
             <div className="flex items-start justify-between gap-4">
-              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#222222] leading-tight">
                 {product.name}
               </h1>
               <button
@@ -450,13 +450,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <p className="text-base text-stone-400 line-through">
                     {formatPKR(effectiveOriginalPrice)}
                   </p>
-                  <p className="text-2xl font-bold text-red-600">{formatPKR(effectivePrice)}</p>
+                  <p className="text-2xl font-bold text-[#E53935]">{formatPKR(effectivePrice)}</p>
                   <span className="inline-flex items-center bg-red-100 text-red-700 px-2 py-0.5 text-[11px] font-semibold rounded-sm">
                     Save {discountPercent}%
                   </span>
                 </>
               ) : (
-                <p className="text-2xl font-bold text-stone-900">{formatPKR(effectivePrice)}</p>
+                <p className="text-2xl font-bold text-[#5A2D0C]">{formatPKR(effectivePrice)}</p>
               )}
             </div>
 
@@ -466,12 +466,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             {/* Stock indicator */}
             {inStock && (
               <div className="mt-4">
-                <p className="text-xs font-semibold text-red-600">
-                  Hurry! Only {stock} left in stock
+                <p className="text-xs font-semibold text-[#22C55E]">
+                  In stock — {stock} available
                 </p>
                 <div className="mt-1.5 h-1 w-full max-w-xs bg-stone-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-red-500 to-amber-500 rounded-full transition-all duration-500"
+                    className="h-full bg-[#22C55E] rounded-full transition-all duration-500"
                     style={{ width: `${Math.min(100, Math.max(10, (stock / 20) * 100))}%` }}
                   />
                 </div>
@@ -486,7 +486,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
               <div className="flex gap-2">
                 <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">Availability:</span>
-                <span className={inStock ? 'text-emerald-600 font-semibold' : 'text-red-600 font-semibold'}>
+                <span className={inStock ? 'text-emerald-600 font-semibold' : 'text-[#E53935] font-semibold'}>
                   {inStock ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
@@ -621,13 +621,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   type="button"
                   onClick={addQuantityToCart}
                   className={classNames(
-                    'relative h-12 flex-1 overflow-hidden bg-stone-900 text-white text-[13px] font-semibold tracking-wide uppercase active:scale-[0.99] group',
+                    'relative h-12 flex-1 overflow-hidden bg-[#5A2D0C] text-white text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200 hover:bg-[#FFD400] hover:text-[#222222] active:scale-[0.99]',
                     !inStock && 'opacity-50 cursor-not-allowed',
                   )}
                   disabled={!inStock}
                 >
-                  <span className="absolute inset-0 bg-gradient-to-t from-amber-600 to-amber-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                  <span className="relative z-10">Add To Cart</span>
+                  Add To Cart
                 </button>
               </div>
 
@@ -640,13 +639,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   navigate('/checkout')
                 }}
                 className={classNames(
-                  'mt-3 relative h-12 w-full border-2 border-stone-900 overflow-hidden text-[13px] font-semibold tracking-wide uppercase text-stone-900 active:scale-[0.99] group',
+                  'mt-3 h-12 w-full bg-[#FFD400] text-[#222222] text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200 hover:bg-[#FFE566] active:scale-[0.99]',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
               >
-                <span className="absolute inset-0 bg-gradient-to-t from-stone-900 to-stone-700 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                <span className="relative z-10 group-hover:text-white transition-colors duration-300">Buy It Now</span>
+                Buy It Now
               </button>
 
               {/* Share row */}
@@ -659,7 +657,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-900 transition-colors" aria-label="Share on Twitter">
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                   </button>
-                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-red-600 transition-colors" aria-label="Share on Pinterest">
+                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-[#E53935] transition-colors" aria-label="Share on Pinterest">
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M12 0a12 12 0 0 0-4.37 23.17c-.02-.94-.004-2.07.24-3.09l1.73-7.33s-.43-.86-.43-2.13c0-2 1.16-3.5 2.6-3.5 1.23 0 1.82.92 1.82 2.02 0 1.23-.78 3.07-1.18 4.78-.34 1.42.71 2.58 2.1 2.58 2.52 0 4.21-3.24 4.21-7.07 0-2.92-1.97-5.1-5.55-5.1a6.4 6.4 0 0 0-6.63 6.45c0 1.17.35 2 .89 2.63.25.3.28.41.19.75l-.27 1.07c-.09.35-.36.47-.66.34-1.84-.75-2.7-2.77-2.7-5.04 0-3.75 3.16-8.24 9.42-8.24 5.04 0 8.34 3.64 8.34 7.55 0 5.17-2.88 9.04-7.12 9.04-1.42 0-2.76-.77-3.22-1.64l-.92 3.58c-.3 1.1-.89 2.2-1.43 3.07A12 12 0 1 0 12 0z" /></svg>
                   </button>
                   <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-700 transition-colors" aria-label="Share via email">
@@ -872,10 +870,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 <div>
                   <h4 className="text-base font-bold text-stone-900">Why You'll Love It</h4>
                   <ul className="mt-3 space-y-2">
-                    <li className="flex gap-2"><span className="text-amber-600 mt-0.5">✦</span><span><strong>Sculptural Simplicity</strong> – Smooth, rounded wood base in rich tones that ground your space</span></li>
-                    <li className="flex gap-2"><span className="text-amber-600 mt-0.5">✦</span><span><strong>Soft Diffused Light</strong> – Wide shade offers an elegant glow, ideal for evening ambience</span></li>
-                    <li className="flex gap-2"><span className="text-amber-600 mt-0.5">✦</span><span><strong>Handcrafted Quality</strong> – Each piece is individually made with care and attention to detail</span></li>
-                    <li className="flex gap-2"><span className="text-amber-600 mt-0.5">✦</span><span><strong>Versatile Placement</strong> – Perfect for living rooms, bedrooms, reading corners, and offices</span></li>
+                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Sculptural Simplicity</strong> – Smooth, rounded wood base in rich tones that ground your space</span></li>
+                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Soft Diffused Light</strong> – Wide shade offers an elegant glow, ideal for evening ambience</span></li>
+                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Handcrafted Quality</strong> – Each piece is individually made with care and attention to detail</span></li>
+                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Versatile Placement</strong> – Perfect for living rooms, bedrooms, reading corners, and offices</span></li>
                   </ul>
                 </div>
 
@@ -938,9 +936,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       return (
                         <div key={star} className="flex items-center gap-2 text-xs">
                           <span className="w-4 text-stone-500 text-right">{star}</span>
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-amber-500 fill-current"><path d="M12 17.27l-5.18 3.04 1.4-5.81-4.52-3.92 5.95-.5L12 4.5l2.35 5.58 5.95.5-4.52 3.92 1.4 5.81z" /></svg>
+                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-[#FFD400] fill-current"><path d="M12 17.27l-5.18 3.04 1.4-5.81-4.52-3.92 5.95-.5L12 4.5l2.35 5.58 5.95.5-4.52 3.92 1.4 5.81z" /></svg>
                           <div className="flex-1 h-2 bg-stone-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                            <div className="h-full bg-[#F5F1EA]0 rounded-full transition-all" style={{ width: `${pct}%` }} />
                           </div>
                           <span className="w-6 text-stone-400">{count}</span>
                         </div>
@@ -1024,10 +1022,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {rp.isNewArrival && (
-                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-[10px] font-bold text-white tracking-wide">New</span>
+                        <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-2 py-1 text-[10px] font-bold text-white tracking-wide">New</span>
                       )}
                       {rpInfo.hasDiscount && (
-                        <span className={classNames('absolute z-10 bg-red-600 px-2 py-1 text-[10px] font-bold text-white tracking-wide', rp.isNewArrival ? 'left-0 top-6' : 'left-0 top-0')}>
+                        <span className={classNames('absolute z-10 bg-[#E53935] px-2 py-1 text-[10px] font-bold text-white tracking-wide', rp.isNewArrival ? 'left-0 top-6' : 'left-0 top-0')}>
                           -{rpInfo.discountPercent}%
                         </span>
                       )}
@@ -1039,7 +1037,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         {rpInfo.hasDiscount ? (
                           <>
                             <span className="text-stone-400 line-through text-[12px]">Rs.{rpInfo.originalPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}</span>
-                            <span className="font-bold text-red-600 text-[13px]">Rs.{rpInfo.discountedPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}</span>
+                            <span className="font-bold text-[#E53935] text-[13px]">Rs.{rpInfo.discountedPrice.toLocaleString('en-PK', { minimumFractionDigits: 2 })}</span>
                           </>
                         ) : (
                           <span className="font-bold text-stone-900 text-[13px]">Rs.{rp.price.toLocaleString('en-PK', { minimumFractionDigits: 2 })}</span>
@@ -1066,7 +1064,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <Link key={`rv-${rp.id}`} to={`/products/${slugify(rp.name)}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                     <div className="relative aspect-square overflow-hidden bg-stone-100">
                       {rp.isNewArrival && (
-                        <span className="absolute left-0 top-0 z-10 bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">New</span>
+                        <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">New</span>
                       )}
                       <img src={rp.image} alt={rp.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
@@ -1074,7 +1072,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       <h3 className="text-[12px] font-semibold text-stone-900 leading-snug line-clamp-2">{rp.name}</h3>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-[12px]">
                         {rpInfo.hasDiscount && <span className="text-stone-400 line-through">Rs.{rpInfo.originalPrice.toLocaleString('en-PK')}</span>}
-                        <span className={rpInfo.hasDiscount ? 'font-bold text-red-600' : 'font-bold text-stone-900'}>
+                        <span className={rpInfo.hasDiscount ? 'font-bold text-[#E53935]' : 'font-bold text-stone-900'}>
                           Rs.{rpInfo.discountedPrice.toLocaleString('en-PK')}
                         </span>
                       </div>

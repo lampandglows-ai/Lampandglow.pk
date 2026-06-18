@@ -8,10 +8,10 @@ export default function ReviewsSection({
   handleSubmitReview,
 }) {
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-      <div className="rounded-3xl border border-stone-200/70 bg-white/70 backdrop-blur-sm shadow-sm overflow-hidden">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#F5F1EA]">
+      <div className="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden">
         <div className="relative px-5 sm:px-8 py-6 sm:py-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-50 via-white to-amber-50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F5F1EA] via-white to-[#F5F1EA]" />
           <div className="relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
@@ -26,7 +26,7 @@ export default function ReviewsSection({
               <select
                 value={reviewSortBy}
                 onChange={(e) => setReviewSortBy(e.target.value)}
-                className="rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs text-stone-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs text-stone-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
               >
                 <option value="recent">Most recent</option>
                 <option value="rating">Highest rating</option>
@@ -43,7 +43,7 @@ export default function ReviewsSection({
             >
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-base font-semibold text-stone-900">Leave a Review</h2>
-                <span className="hidden sm:inline-flex rounded-full bg-amber-50 px-3 py-1 text-[11px] font-semibold text-amber-800 ring-1 ring-amber-200">
+                <span className="hidden sm:inline-flex rounded-full bg-[#F5F1EA] px-3 py-1 text-[11px] font-semibold text-[#5A2D0C] ring-1 ring-[#FFD400]/30">
                   We read every review
                 </span>
               </div>
@@ -60,7 +60,7 @@ export default function ReviewsSection({
                       productId: e.target.value,
                     }))
                   }
-                  className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                 >
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -87,7 +87,7 @@ export default function ReviewsSection({
                         name: e.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                   />
                 </div>
                 <div>
@@ -103,7 +103,7 @@ export default function ReviewsSection({
                         rating: Number(e.target.value),
                       }))
                     }
-                    className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                   >
                     {[5, 4, 3, 2, 1].map((value) => (
                       <option key={value} value={value}>
@@ -127,12 +127,12 @@ export default function ReviewsSection({
                       comment: e.target.value,
                     }))
                   }
-                  className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full rounded-xl border border-stone-300 bg-stone-50 px-3 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                 />
               </div>
               <button
                 type="submit"
-                className="mt-1 inline-flex items-center justify-center rounded-full bg-amber-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-amber-700 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                className="mt-1 inline-flex items-center justify-center rounded-full bg-[#5A2D0C] px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#FFD400] hover:text-[#222222] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 Submit Review
               </button>
@@ -153,17 +153,17 @@ export default function ReviewsSection({
                     return (
                       <li
                         key={review.id}
-                        className="group rounded-3xl border border-stone-200 bg-white p-5 text-xs sm:text-sm flex flex-col gap-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-amber-200/80 motion-reduce:transform-none motion-reduce:transition-none"
+                        className="group rounded-3xl border border-stone-200 bg-white p-5 text-xs sm:text-sm flex flex-col gap-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-[#FFD400]/30/80 motion-reduce:transform-none motion-reduce:transition-none"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-stone-900 truncate">
+                            <p className="text-sm font-semibold text-[#5A2D0C] truncate">
                               {product?.name ?? 'Lamp & Glow product'}
                             </p>
                             <p className="mt-0.5 text-[11px] text-stone-500">by {review.name || 'Anonymous'}</p>
                           </div>
                           <div className="text-right text-[11px] text-stone-500 shrink-0">
-                            <div className="text-amber-500">
+                            <div className="text-[#FFD400]">
                               {'★'.repeat(review.rating)}
                               <span className="text-stone-300">{'★'.repeat(5 - review.rating)}</span>
                             </div>

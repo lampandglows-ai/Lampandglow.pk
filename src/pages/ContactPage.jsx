@@ -11,7 +11,7 @@ export default function ContactPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
         >
           <span aria-hidden>←</span>
           Back
@@ -83,7 +83,7 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="mt-1 inline-flex h-11 items-center justify-center rounded-xl bg-amber-500 px-4 text-sm font-semibold text-stone-950 transition-all duration-200 hover:bg-amber-400 active:scale-[0.99] motion-reduce:transform-none"
+                className="mt-1 inline-flex h-11 items-center justify-center rounded-xl bg-[#F5F1EA]0 px-4 text-sm font-semibold text-stone-950 transition-all duration-200 hover:bg-[#FFD400] active:scale-[0.99] motion-reduce:transform-none"
               >
                 Send Message
               </button>

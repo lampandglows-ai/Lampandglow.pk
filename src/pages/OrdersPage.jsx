@@ -43,11 +43,11 @@ export default function OrdersPage({ orders }) {
                   </div>
 
                   <div className="sm:text-right">
-                    <p className="text-sm font-semibold text-amber-700">
+                    <p className="text-sm font-semibold text-[#5A2D0C]">
                       Rs.{Number(order.total ?? 0).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     {order.status ? (
-                      <span className="mt-2 inline-flex rounded-full bg-amber-100 px-2 py-1 text-[11px] font-semibold text-amber-800">
+                      <span className="mt-2 inline-flex rounded-full bg-amber-100 px-2 py-1 text-[11px] font-semibold text-[#5A2D0C]">
                         {order.status}
                       </span>
                     ) : null}

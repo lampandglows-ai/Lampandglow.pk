@@ -28,14 +28,14 @@ export default function ShippingPolicyPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 hover:text-amber-800"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
         >
           <span aria-hidden>←</span> Back
         </button>
 
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-6">
-            <Truck className="w-7 h-7 text-amber-600" />
+            <Truck className="w-7 h-7 text-[#FFD400]" />
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
               Shipping Policy
             </h1>

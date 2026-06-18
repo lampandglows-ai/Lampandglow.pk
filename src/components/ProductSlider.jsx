@@ -78,7 +78,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                   {hasDiscount ? (
-                    <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                    <span className="absolute left-0 top-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">
                       -{discountPercent}%
                     </span>
                   ) : null}
@@ -100,7 +100,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                         Rs.{formatPrice(originalPrice)}
                       </span>
                     ) : null}
-                    <span className="font-semibold text-red-600">
+                    <span className="font-semibold text-[#E53935]">
                       Rs.{formatPrice(discountedPrice)}
                     </span>
                   </div>
@@ -121,8 +121,8 @@ export default function ProductSlider({ products, theme = 'light' }) {
               aria-label="Scroll left"
               className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
                 canScrollLeft
-                  ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                  : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                  ? 'bg-[#FFD400] hover:bg-[#FFE566] text-[#5A2D0C] shadow-lg'
+                  : 'bg-[#FFD400]/30 text-yellow-100/60 cursor-not-allowed'
               }`}
               title="Scroll left"
             >
@@ -137,8 +137,8 @@ export default function ProductSlider({ products, theme = 'light' }) {
               aria-label="Scroll right"
               className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
                 canScrollRight
-                  ? 'bg-[#FFDA03] hover:bg-yellow-300 text-[#4C2600] shadow-lg'
-                  : 'bg-[#FFDA03]/30 text-yellow-100/60 cursor-not-allowed'
+                  ? 'bg-[#FFD400] hover:bg-[#FFE566] text-[#5A2D0C] shadow-lg'
+                  : 'bg-[#FFD400]/30 text-yellow-100/60 cursor-not-allowed'
               }`}
               title="Scroll right"
             >
@@ -158,11 +158,11 @@ export default function ProductSlider({ products, theme = 'light' }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_6rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_6rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {hasDiscount ? (
-                        <span className="absolute left-0 top-0 z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                        <span className="absolute left-0 top-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">
                           -{discountPercent}%
                         </span>
                       ) : null}
@@ -184,7 +184,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
                             Rs.{formatPrice(originalPrice)}
                           </span>
                         ) : null}
-                        <span className="font-semibold text-red-600">
+                        <span className="font-semibold text-[#E53935]">
                           Rs.{formatPrice(discountedPrice)}
                         </span>
                       </div>

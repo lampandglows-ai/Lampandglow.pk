@@ -111,7 +111,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
     return (
       <section className="w-full px-0 py-10 sm:py-14">
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-[#FFDA03]/20 p-6 sm:p-8 bg-[#5c3418]">
+          <div className="rounded-2xl border border-[#FFD400]/20 p-6 sm:p-8 bg-[#7A4A20]">
             <p className="text-xs font-semibold text-white/80">
               Order placed
             </p>
@@ -123,7 +123,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             </p>
 
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
+              <div className="rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
                 <p className="text-xs font-semibold text-white/80">
                   Payment method
                 </p>
@@ -145,7 +145,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
+              <div className="rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
                 <p className="text-xs font-semibold text-white/80">
                   Order summary
                 </p>
@@ -158,7 +158,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                     <span>Shipping</span>
                     <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
                   </div>
-                  <div className="flex justify-between font-semibold pt-1 border-t border-[#FFDA03]/20 mt-1">
+                  <div className="flex justify-between font-semibold pt-1 border-t border-[#FFD400]/20 mt-1">
                     <span>Total</span>
                     <span>Rs.{formatPKR(grandTotal)}</span>
                   </div>
@@ -170,14 +170,14 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center rounded-full bg-amber-600 px-5 py-2 text-xs font-semibold text-white hover:bg-amber-700"
+                className="inline-flex items-center justify-center rounded-full bg-[#5A2D0C] px-5 py-2 text-xs font-semibold text-white hover:bg-[#FFD400]"
               >
                 Continue Shopping
               </button>
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center rounded-full border border-[#FFDA03]/20 px-5 py-2 text-xs font-semibold bg-transparent text-white hover:bg-[#5c3418]/40"
+                className="inline-flex items-center justify-center rounded-full border border-[#FFD400]/20 px-5 py-2 text-xs font-semibold bg-transparent text-white hover:bg-[#7A4A20]/40"
               >
                 Back to Home
               </button>
@@ -220,7 +220,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
         )}
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
-          <div className="rounded-2xl border border-[#FFDA03]/20 p-5 sm:p-6 bg-[#5c3418]">
+          <div className="rounded-2xl border border-[#FFD400]/20 p-5 sm:p-6 bg-[#7A4A20]">
             <p className="text-xs font-semibold text-white/80">
               Shipping details
             </p>
@@ -233,7 +233,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Your name"
                 />
               </div>
@@ -244,7 +244,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="03xx xxxxxxx"
                 />
               </div>
@@ -255,7 +255,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="you@example.com"
                 />
               </div>
@@ -266,7 +266,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Sahiwal"
                 />
               </div>
@@ -277,7 +277,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={addressLine1}
                   onChange={(e) => setAddressLine1(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Street, house, area"
                 />
               </div>
@@ -288,7 +288,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={addressLine2}
                   onChange={(e) => setAddressLine2(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Apartment, floor, landmark"
                 />
               </div>
@@ -299,7 +299,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Punjab"
                 />
               </div>
@@ -310,7 +310,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <input
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="57000"
                 />
               </div>
@@ -322,14 +322,14 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-xl border border-[#FFDA03]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#4C2600] text-white focus:ring-amber-500 placeholder:text-white/40"
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
                   placeholder="Any delivery instructions"
                 />
               </div>
             </div>
           </div>
 
-          <aside className="rounded-2xl border border-[#FFDA03]/20 p-5 sm:p-6 bg-[#5c3418]">
+          <aside className="rounded-2xl border border-[#FFD400]/20 p-5 sm:p-6 bg-[#7A4A20]">
             <p className="text-xs font-semibold text-white/80">
               Payment method
             </p>
@@ -342,7 +342,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   'flex items-start gap-3 rounded-xl border p-3 cursor-pointer transition',
                   paymentMethod === 'cod'
                     ? 'border-amber-500 bg-amber-900/20'
-                    : 'border-[#FFDA03]/20 hover:border-[#FFDA03]/30'
+                    : 'border-[#FFD400]/20 hover:border-[#FFD400]/30'
                 )}
               >
                 <input
@@ -365,7 +365,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   'flex items-start gap-3 rounded-xl border p-3 cursor-pointer transition',
                   paymentMethod === 'bank'
                     ? 'border-amber-500 bg-amber-900/20'
-                    : 'border-[#FFDA03]/20 hover:border-[#FFDA03]/30'
+                    : 'border-[#FFD400]/20 hover:border-[#FFD400]/30'
                 )}
               >
                 <input
@@ -385,7 +385,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
 
             {/* Conditional Bank Details */}
             {bankDetails && (
-              <div className="mt-4 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
+              <div className="mt-4 rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
                 <p className="text-xs font-semibold text-white/80">
                   Bank Account Details
                 </p>
@@ -414,15 +414,15 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
 
             {/* WhatsApp Payment Note */}
             <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-900/20 p-4">
-              <p className="text-xs font-semibold text-amber-300">
+              <p className="text-xs font-semibold text-[#FFD400]">
                 Important Payment Instruction
               </p>
               <p className="mt-2 text-xs text-white/80 leading-relaxed">
-                After completing your payment, please share the payment screenshot with us on WhatsApp at <span className="font-semibold text-amber-300">(0309-9164751)</span> so we can process your order smoothly. Thank you!
+                After completing your payment, please share the payment screenshot with us on WhatsApp at <span className="font-semibold text-[#FFD400]">(0309-9164751)</span> so we can process your order smoothly. Thank you!
               </p>
             </div>
 
-            <div className="mt-5 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
+            <div className="mt-5 rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
               <p className="text-xs font-semibold text-white/80">
                 Order summary
               </p>
@@ -435,7 +435,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   <span>Shipping</span>
                   <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
                 </div>
-                <div className="flex justify-between font-semibold pt-1 border-t border-[#FFDA03]/20 mt-1">
+                <div className="flex justify-between font-semibold pt-1 border-t border-[#FFD400]/20 mt-1">
                   <span>Total</span>
                   <span>Rs.{formatPKR(grandTotal)}</span>
                 </div>
@@ -446,7 +446,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-amber-600 px-5 py-2 text-xs font-semibold text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-[#5A2D0C] px-5 py-2 text-xs font-semibold text-white hover:bg-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Place Order
             </button>
@@ -454,7 +454,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             <button
               type="button"
               onClick={() => navigate('/')} 
-              className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#FFDA03]/20 px-5 py-2 text-xs font-semibold bg-transparent text-white hover:bg-[#5c3418]/40"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#FFD400]/20 px-5 py-2 text-xs font-semibold bg-transparent text-white hover:bg-[#7A4A20]/40"
             >
               Continue Shopping
             </button>

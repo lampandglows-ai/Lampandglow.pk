@@ -8,14 +8,14 @@ import AdminLayout from '../components/AdminLayout'
 import announcementService from '../utils/announcementService.js'
 
 const DEFAULT_COLORS = [
-  '#1a0f00','#fff7e6','#000000','#ffffff','#dc2626','#ea580c','#d97706','#16a34a',
+  '#5A2D0C','#FFD400','#FAFAF8','#ffffff','#E53935','#7A4A20','#1F1F1F','#22C55E',
   '#2563eb','#9333ea','#db2777','#0891b2','#4b5563','#9ca3af',
 ]
 
 function fmtDT(v){ if(!v) return ''; const d=new Date(v),p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}` }
 
 function PreviewBar({data}){
-  const bg=data.bgColor||'#1a0f00', tc=data.textColor||'#ffffff', mq=data.displayStyle==='marquee'
+  const bg=data.bgColor||'#5A2D0C', tc=data.textColor||'#ffffff', mq=data.displayStyle==='marquee'
   return (
     <div className="w-full rounded-lg overflow-hidden" style={{backgroundColor:bg,color:tc}}>
       <div className="flex items-center justify-center gap-3 px-4 py-2 text-sm">
@@ -33,7 +33,7 @@ function PreviewBar({data}){
   )
 }
 
-function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#1a0f00', textColor:'#ffffff', scrollSpeed:20, startDate:'', endDate:'' } }
+function emptyForm(){ return { message:'', isActive:true, displayStyle:'static', bgColor:'#5A2D0C', textColor:'#ffffff', scrollSpeed:20, startDate:'', endDate:'' } }
 
 export default function AdminAnnouncementsPage(){
   const [announcements,setAnnouncements]=useState([])
@@ -72,7 +72,7 @@ export default function AdminAnnouncementsPage(){
 
   const resetForm=()=>{ setForm(emptyForm()); setShowForm(false); setEditingId(null); setPreviewOpen(false) }
 
-  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#1a0f00', textColor:a.textColor||'#ffffff', scrollSpeed:a.scrollSpeed||20, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
+  const onEdit=(a)=>{ setForm({ message:a.message||'', isActive:a.isActive!==false, displayStyle:a.displayStyle||'static', bgColor:a.bgColor||'#5A2D0C', textColor:a.textColor||'#ffffff', scrollSpeed:a.scrollSpeed||20, startDate:fmtDT(a.startDate), endDate:fmtDT(a.endDate) }); setEditingId(a.id); setShowForm(true) }
 
   const onDelete=async(id)=>{ if(!window.confirm('Delete this announcement?')) return; try{ await announcementService.deleteAnnouncement(id); setAnnouncements(p=>p.filter(a=>a.id!==id)); setMsg({type:'success',text:'Deleted!'}) }catch(err){ console.error(err); setMsg({type:'error',text:'Failed to delete.'}) } setTimeout(()=>setMsg({type:'',text:''}),3000) }
 
@@ -94,7 +94,7 @@ export default function AdminAnnouncementsPage(){
               {barEnabled?<Eye className="w-4 h-4" />:<EyeOff className="w-4 h-4" />}
               {barEnabled?'Bar Enabled':'Bar Disabled'}
             </button>
-            <button onClick={()=>{resetForm();setShowForm(true)}} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105">
+            <button onClick={()=>{resetForm();setShowForm(true)}} className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105">
               <Plus className="w-5 h-5" /> Add Announcement
             </button>
           </div>
@@ -102,7 +102,7 @@ export default function AdminAnnouncementsPage(){
 
         {/* Message Alert */}
         {msg.text&&(<div className={`p-4 rounded-lg flex items-center gap-3 ${msg.type==='success'?'bg-green-50 border border-green-200':'bg-red-50 border border-red-200'}`}>
-          {msg.type==='success'?<CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />:<AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />}
+          {msg.type==='success'?<CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />:<AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />}
           <p className={`font-medium ${msg.type==='success'?'text-green-800':'text-red-800'}`}>{msg.text}</p>
         </div>)}
 
@@ -143,7 +143,7 @@ export default function AdminAnnouncementsPage(){
                       <tr key={a.id} className="hover:bg-gray-50/50 transition">
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{backgroundColor:a.bgColor||'#1a0f00',color:a.textColor||'#ffffff'}}>{a.displayStyle==='marquee'?'Marquee':'Static'}</span>
+                            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{backgroundColor:a.bgColor||'#5A2D0C',color:a.textColor||'#ffffff'}}>{a.displayStyle==='marquee'?'Marquee':'Static'}</span>
                           </div>
                           <p className="text-sm text-gray-800 font-medium line-clamp-2" dangerouslySetInnerHTML={{__html:a.message}} />
                           <p className="text-xs text-gray-400 mt-1">{a.createdAt?new Date(a.createdAt).toLocaleString():''}</p>
@@ -165,7 +165,7 @@ export default function AdminAnnouncementsPage(){
                           <div className="flex items-center justify-end gap-1">
                             <button onClick={()=>{onEdit(a);setPreviewOpen(true)}} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Preview"><Eye className="w-4 h-4" /></button>
                             <button onClick={()=>onEdit(a)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit"><Edit className="w-4 h-4" /></button>
-                            <button onClick={()=>onDelete(a.id)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Delete"><Trash2 className="w-4 h-4" /></button>
+                            <button onClick={()=>onDelete(a.id)} className="p-2 text-gray-400 hover:text-[#E53935] hover:bg-red-50 rounded-lg transition" title="Delete"><Trash2 className="w-4 h-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -267,7 +267,7 @@ export default function AdminAnnouncementsPage(){
               {/* Submit */}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">Cancel</button>
-                <button type="submit" disabled={saving} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
+                <button type="submit" disabled={saving} className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving&&<Loader2 className="w-4 h-4 animate-spin" />}{saving?'Saving...':editingId?'Update':'Create'}
                 </button>
               </div>

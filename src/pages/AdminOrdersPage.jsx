@@ -266,7 +266,7 @@ export default function AdminOrdersPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-6 text-white sticky top-0 z-10 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-8 py-6 text-white sticky top-0 z-10 flex items-center justify-between">
                 <h3 className="text-2xl font-bold">Order Details</h3>
                 <button
                   onClick={() => setSelectedOrder(null)}
@@ -369,7 +369,7 @@ export default function AdminOrdersPage() {
                 </div>
 
                 {/* Order Summary */}
-                <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-6 rounded-lg border border-orange-200">
+                <div className="bg-gradient-to-br from-orange-50 to-[#F5F1EA] p-6 rounded-lg border border-orange-200">
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">Subtotal</span>
@@ -509,7 +509,7 @@ export default function AdminOrdersPage() {
                         disabled={saving}
                         className={`px-6 py-2 rounded-lg font-semibold transition transform hover:scale-105 disabled:opacity-60 ${
                           selectedOrder.status === status
-                            ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
+                            ? 'bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white shadow-lg'
                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                         }`}
                       >
@@ -530,7 +530,7 @@ export default function AdminOrdersPage() {
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition"
+                  className="w-full bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition"
                 >
                   Close
                 </button>

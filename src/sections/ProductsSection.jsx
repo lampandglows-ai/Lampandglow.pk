@@ -107,13 +107,13 @@ export default function ProductsSection({
               className={classNames(
                 'flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
                 selectedCategory === 'All'
-                  ? 'bg-amber-50 font-semibold text-amber-800'
+                  ? 'bg-[#F5F1EA] font-semibold text-[#5A2D0C]'
                   : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900',
               )}
             >
               All Products
               {selectedCategory === 'All' && (
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#F5F1EA]0" />
               )}
             </button>
           </li>
@@ -125,13 +125,13 @@ export default function ProductsSection({
                 className={classNames(
                   'flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
                   selectedCategory === cat.id
-                    ? 'bg-amber-50 font-semibold text-amber-800'
+                    ? 'bg-[#F5F1EA] font-semibold text-[#5A2D0C]'
                     : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900',
                 )}
               >
                 {cat.title}
                 {selectedCategory === cat.id && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#F5F1EA]0" />
                 )}
               </button>
             </li>
@@ -145,7 +145,7 @@ export default function ProductsSection({
           {/* New Arrival toggle */}
           <label className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 hover:bg-stone-100 transition-colors">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-amber-500/10 text-amber-600">
+              <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-[#F5F1EA]0/10 text-[#FFD400]">
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
@@ -158,8 +158,8 @@ export default function ProductsSection({
               aria-checked={showNewArrival}
               onClick={() => setShowNewArrival((v) => !v)}
               className={classNames(
-                'relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500',
-                showNewArrival ? 'bg-amber-500' : 'bg-stone-200',
+                'relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD400]',
+                showNewArrival ? 'bg-[#F5F1EA]0' : 'bg-stone-200',
               )}
             >
               <span
@@ -174,7 +174,7 @@ export default function ProductsSection({
           {/* Discount toggle */}
           <label className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 hover:bg-stone-100 transition-colors">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-red-500/10 text-red-600">
+              <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-red-500/10 text-[#E53935]">
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M9 14l6-6M9 9h.01M15 14h.01" />
                   <circle cx="12" cy="12" r="10" />
@@ -243,7 +243,7 @@ export default function ProductsSection({
             <FilterIcon />
             Filters
             {activeFilterCount > 0 && (
-              <span className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">
+              <span className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#F5F1EA]0 text-[10px] font-bold text-white">
                 {activeFilterCount}
               </span>
             )}
@@ -260,7 +260,7 @@ export default function ProductsSection({
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-widest text-stone-400">Filters</span>
               {activeFilterCount > 0 && (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-[#5A2D0C]">
                   {activeFilterCount} active
                 </span>
               )}
@@ -275,15 +275,15 @@ export default function ProductsSection({
           {activeFilterCount > 0 && (
             <div className="mb-4 hidden lg:flex flex-wrap gap-2">
               {selectedCategory !== 'All' && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-xs font-medium text-amber-800">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#F5F1EA] border border-[#FFD400]/30 px-2.5 py-1 text-xs font-medium text-[#5A2D0C]">
                   {categories.find((c) => c.id === selectedCategory)?.title ?? selectedCategory}
-                  <button type="button" onClick={() => setSelectedCategory('All')} className="ml-0.5 hover:text-amber-600">✕</button>
+                  <button type="button" onClick={() => setSelectedCategory('All')} className="ml-0.5 hover:text-[#FFD400]">✕</button>
                 </span>
               )}
               {showNewArrival && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-xs font-medium text-amber-800">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#F5F1EA] border border-[#FFD400]/30 px-2.5 py-1 text-xs font-medium text-[#5A2D0C]">
                   New Arrivals
-                  <button type="button" onClick={() => setShowNewArrival(false)} className="ml-0.5 hover:text-amber-600">✕</button>
+                  <button type="button" onClick={() => setShowNewArrival(false)} className="ml-0.5 hover:text-[#FFD400]">✕</button>
                 </span>
               )}
               {showDiscount && (
@@ -301,7 +301,7 @@ export default function ProductsSection({
                 <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
               </svg>
               <p className="text-sm font-medium text-stone-500">No products match your filters</p>
-              <button type="button" onClick={clearAll} className="mt-3 text-xs text-amber-600 underline hover:text-amber-700">
+              <button type="button" onClick={clearAll} className="mt-3 text-xs text-[#FFD400] underline hover:text-[#5A2D0C]">
                 Clear all filters
               </button>
             </div>
@@ -314,17 +314,17 @@ export default function ProductsSection({
                 return (
                   <article
                     key={product.id}
-                    className="group flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-amber-200/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="group flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <Link to={`/products/${slugify(product.name)}`} className="group block">
                       <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                         {product.isNewArrival && (
-                          <span className="absolute left-0 top-0 z-10 bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                          <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-2 py-1 text-xs font-semibold text-white">
                             New Arrival
                           </span>
                         )}
                         {hasDiscount && (
-                          <span className={`absolute ${product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0'} z-10 bg-red-600 px-2 py-1 text-xs font-semibold text-white`}>
+                          <span className={`absolute ${product.isNewArrival ? 'left-0 top-7' : 'left-0 top-0'} z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white`}>
                             -{discountPercent}%
                           </span>
                         )}
@@ -335,7 +335,7 @@ export default function ProductsSection({
                         />
                         {avg ? (
                           <div className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-1 text-[11px] font-medium text-amber-100 backdrop-blur">
-                            <span className="text-amber-300">★</span> {avg.toFixed(1)}
+                            <span className="text-[#FFD400]">★</span> {avg.toFixed(1)}
                           </div>
                         ) : null}
                       </div>
@@ -350,7 +350,7 @@ export default function ProductsSection({
                               Rs.{formatPricePKR(originalPrice)}
                             </span>
                           )}
-                          <span className="font-semibold text-red-600">Rs.{formatPricePKR(discountedPrice)}</span>
+                          <span className="font-semibold text-[#E53935]">Rs.{formatPricePKR(discountedPrice)}</span>
                         </div>
                       </div>
                     </Link>
@@ -358,7 +358,7 @@ export default function ProductsSection({
                     <div className="relative z-20 mt-auto px-4 pb-4 flex items-center justify-between gap-2">
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="inline-flex flex-1 items-center justify-center rounded-full bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-amber-700 hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
+                        className="inline-flex flex-1 items-center justify-center rounded-full bg-[#5A2D0C] px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#FFD400] hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
                       >
                         Add to Cart
                       </button>

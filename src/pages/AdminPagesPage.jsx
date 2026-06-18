@@ -192,7 +192,7 @@ export default function AdminPagesPage() {
 
           {/* Messages */}
           {message.text && (
-            <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
+            <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${message.type === 'error' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-[#22C55E]'}`}>
               {message.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
               {message.text}
             </div>
@@ -475,7 +475,7 @@ export default function AdminPagesPage() {
                                 <span
                                   className={`px-2 py-1 text-xs font-semibold rounded-full ${
                                     page.isPublished
-                                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-[#22C55E]'
                                       : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
                                   }`}
                                 >
@@ -498,7 +498,7 @@ export default function AdminPagesPage() {
                                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50 transition-colors"
                               >
                                 {page.isPublished ? (
-                                  <Eye size={18} className="text-green-600" />
+                                  <Eye size={18} className="text-[#22C55E]" />
                                 ) : (
                                   <EyeOff size={18} className="text-gray-400" />
                                 )}
@@ -515,7 +515,7 @@ export default function AdminPagesPage() {
                                 disabled={saving}
                                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50 transition-colors"
                               >
-                                <Trash2 size={18} className="text-red-600" />
+                                <Trash2 size={18} className="text-[#E53935]" />
                               </button>
                             </div>
                           </div>

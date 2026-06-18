@@ -217,9 +217,9 @@ export default function AdminCouponsPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p
               className={`font-medium ${
@@ -494,7 +494,7 @@ export default function AdminCouponsPage() {
                         Used: <span className="font-semibold">{coupon.usageCount || 0} times</span>
                       </p>
                       {coupon.expiryDate && (
-                        <p className={`${isExpired(coupon.expiryDate) ? 'text-red-600 font-semibold' : 'text-gray-700'}`}>
+                        <p className={`${isExpired(coupon.expiryDate) ? 'text-[#E53935] font-semibold' : 'text-gray-700'}`}>
                           Expires: <span className="font-semibold">{new Date(coupon.expiryDate).toLocaleDateString()}</span>
                           {isExpired(coupon.expiryDate) && <span className="ml-2 text-xs">(Expired)</span>}
                         </p>
@@ -519,7 +519,7 @@ export default function AdminCouponsPage() {
                           onClick={() => handleToggleStatus(coupon)}
                           className={`flex-1 px-3 py-2 rounded-lg transition text-sm font-semibold text-white ${
                             coupon.isActive
-                              ? 'bg-red-500 hover:bg-red-600'
+                              ? 'bg-red-500 hover:bg-[#E53935]'
                               : 'bg-green-500 hover:bg-green-600'
                           }`}
                         >
@@ -533,7 +533,7 @@ export default function AdminCouponsPage() {
                         </button>
                         <button
                           onClick={() => handleDelete(coupon.id)}
-                          className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition text-sm font-semibold"
+                          className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-[#E53935] transition text-sm font-semibold"
                         >
                           Delete
                         </button>
@@ -555,7 +555,7 @@ export default function AdminCouponsPage() {
             </div>
             <div className="bg-green-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600 mb-1">Active Coupons</p>
-              <p className="text-3xl font-bold text-green-600">{coupons.filter((c) => c.isActive).length}</p>
+              <p className="text-3xl font-bold text-[#22C55E]">{coupons.filter((c) => c.isActive).length}</p>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600 mb-1">Total Usage</p>

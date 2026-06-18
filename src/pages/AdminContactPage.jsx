@@ -90,7 +90,7 @@ export default function AdminContactPage() {
           <button
             onClick={handleSave}
             disabled={saving || loading}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition disabled:opacity-60"
           >
             {saving ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -110,9 +110,9 @@ export default function AdminContactPage() {
             }`}
           >
             {message.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-[#22C55E] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[#E53935] flex-shrink-0" />
             )}
             <p className={`font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
               {message.text}

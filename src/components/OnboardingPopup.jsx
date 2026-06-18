@@ -115,7 +115,7 @@ export default function OnboardingPopup() {
       {/* Popup Card */}
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Lightbulb className="w-5 h-5 text-white" />
             <h3 className="text-white font-bold text-sm">
@@ -182,7 +182,7 @@ export default function OnboardingPopup() {
             )}
             <button
               onClick={handleNext}
-              className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-medium hover:shadow-md transition"
+              className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white text-sm font-medium hover:shadow-md transition"
             >
               {isLastStep ? 'Finish' : 'Next'}
               {!isLastStep && <ChevronRight className="w-4 h-4" />}

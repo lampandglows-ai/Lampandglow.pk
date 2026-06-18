@@ -23,7 +23,7 @@ export default function ProductsPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#fff7e6]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       <ProductsSection
         categories={categories}
         filteredProducts={filteredProducts}

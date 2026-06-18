@@ -205,7 +205,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl shadow-md p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
             <div className="space-y-3">
-              <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition transform hover:scale-105">
+              <button className="w-full bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition transform hover:scale-105">
                 Add New Product
               </button>
               <button className="w-full bg-blue-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition transform hover:scale-105">
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Order Status Summary */}
-            <div className="mt-8 p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+            <div className="mt-8 p-4 bg-gradient-to-br from-orange-50 to-[#F5F1EA] rounded-lg border border-orange-200">
               <p className="text-sm font-semibold text-orange-900 mb-4">Order Status Summary</p>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">

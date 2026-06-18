@@ -72,7 +72,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
           font-size: 7px;
         }
         .hero-slider .slick-dots li.slick-active button:before {
-          color: #FFDA03;
+          color: #FFD400;
           opacity: 1;
         }
         .hero-slider .slick-dots li button {
@@ -93,8 +93,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         }
       `}</style>
 
-      <section className="hero-slider bg-[#4C2600] px-2 xs:px-3 sm:px-5 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-5 lg:pb-8">
-        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl ring-1 ring-[#FFDA03]/25">
+      <section className="hero-slider hero-gradient-bg px-2 xs:px-3 sm:px-5 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-5 lg:pb-8">
+        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl ring-1 ring-[#FFD400]/25">
           <Slider key={isMobile ? 'mobile' : 'desktop'} {...settings}>
             {visibleSlides.map((slide) => (
               <div key={slide.id}>
@@ -116,7 +116,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                       width: '100%',
                       height: '100%',
                       objectFit: slide.fitToScreen !== false ? 'cover' : 'contain',
-                      backgroundColor: slide.fitToScreen === false ? '#4C2600' : undefined,
+                      backgroundColor: slide.fitToScreen === false ? '#5A2D0C' : undefined,
                     }}
                     loading="lazy"
                     decoding="async"
@@ -144,15 +144,13 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                       <button
                         onClick={() => onPrimaryAction(slide.primaryAction)}
                         className={[
-                          'inline-flex items-center justify-center rounded-full font-semibold',
-                          'bg-[#FFDA03] text-[#4C2600]',
-                          'transition-all duration-200',
-                          'hover:bg-yellow-300 hover:shadow-md hover:-translate-y-0.5',
-                          'active:translate-y-0 active:scale-[0.98]',
-                          'motion-reduce:transform-none motion-reduce:transition-none',
+                          'inline-flex items-center justify-center rounded-full font-semibold btn-primary',
                           'px-3 py-1.5 text-xs',
                           'sm:px-5 sm:py-2 sm:text-sm',
                           'lg:px-6 lg:py-2.5',
+                          'hover:shadow-md hover:-translate-y-0.5',
+                          'active:translate-y-0 active:scale-[0.98]',
+                          'motion-reduce:transform-none motion-reduce:transition-none',
                         ].join(' ')}
                       >
                         {slide.primaryLabel}
