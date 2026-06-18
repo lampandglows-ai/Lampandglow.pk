@@ -155,13 +155,6 @@ export default function ReelsPage() {
                     loop={!!reelId}
                   />
                 </div>
-
-                <div className="absolute left-3 right-3 bottom-3">
-                  <div className="rounded-xl bg-black/55 backdrop-blur px-3 py-2 text-white">
-                    <p className="text-sm font-semibold leading-tight">{reel.title}</p>
-                    <p className="mt-0.5 text-[11px] text-white/85">{reel.caption}</p>
-                  </div>
-                </div>
                 {reelId && (
                   <button
                     type="button"
@@ -173,27 +166,33 @@ export default function ReelsPage() {
                 )}
               </div>
 
-              <div className="p-3 flex items-center justify-between">
-                <button
-                  onClick={() => toggleLike(reel.id)}
-                  className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50"
-                >
-                  {isLiked ? (
-                    <FaHeart className="text-rose-600" />
-                  ) : (
-                    <FaRegHeart className="text-stone-500" />
-                  )}
-                  {isLiked ? 'Liked' : 'Like'}
-                </button>
+              <div className="p-3">
+                <div className="mb-2">
+                  <p className="text-sm font-semibold text-stone-900">{reel.title}</p>
+                  <p className="mt-0.5 text-[11px] text-stone-500">{reel.caption}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => toggleLike(reel.id)}
+                    className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50"
+                  >
+                    {isLiked ? (
+                      <FaHeart className="text-rose-600" />
+                    ) : (
+                      <FaRegHeart className="text-stone-500" />
+                    )}
+                    {isLiked ? 'Liked' : 'Like'}
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleShare(reel)}
-                  className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50"
-                >
-                  <FaShare className="text-stone-500" />
-                  Share
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleShare(reel)}
+                    className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50"
+                  >
+                    <FaShare className="text-stone-500" />
+                    Share
+                  </button>
+                </div>
               </div>
             </article>
           )
