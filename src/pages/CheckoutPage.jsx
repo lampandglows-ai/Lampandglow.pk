@@ -220,10 +220,18 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
         )}
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
-          <div className="rounded-2xl border border-[#FFD400]/20 p-5 sm:p-6 bg-[#7A4A20]">
-            <p className="text-xs font-semibold text-white/80">
-              Shipping details
-            </p>
+          <div className="rounded-3xl border-2 border-[#FFD400]/30 p-6 sm:p-8 bg-gradient-to-br from-[#7A4A20] to-[#5A2D0C] shadow-2xl">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-8 w-8 rounded-full bg-[#FFD400] flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 text-[#5A2D0C]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-[#FFD400]">
+                Shipping details
+              </p>
+            </div>
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -329,10 +337,18 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             </div>
           </div>
 
-          <aside className="rounded-2xl border border-[#FFD400]/20 p-5 sm:p-6 bg-[#7A4A20]">
-            <p className="text-xs font-semibold text-white/80">
-              Payment method
-            </p>
+          <aside className="rounded-3xl border-2 border-[#FFD400]/30 p-6 sm:p-8 bg-gradient-to-br from-[#7A4A20] to-[#5A2D0C] shadow-2xl">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-8 w-8 rounded-full bg-[#FFD400] flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 text-[#5A2D0C]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-[#FFD400]">
+                Payment method
+              </p>
+            </div>
 
             {/* Payment Method Options */}
             <div className="mt-4 space-y-3">
@@ -383,48 +399,72 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               </label>
             </div>
 
-            {/* Conditional Bank Details */}
-            {bankDetails && (
-              <div className="mt-4 rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
-                <p className="text-xs font-semibold text-white/80">
-                  Bank Account Details
-                </p>
-                <div className="mt-2 space-y-1 text-xs text-white/70">
-                  <p><span className="font-semibold">Bank Name:</span> {bankDetails.bankName}</p>
-                  <p><span className="font-semibold">Account Title:</span> {bankDetails.accountTitle}</p>
-                  <p><span className="font-semibold">Account Number:</span> {bankDetails.accountNumber}</p>
-                  <p><span className="font-semibold">IBAN:</span> {bankDetails.iban}</p>
+            {/* Conditional Bank Details - only show for bank deposit */}
+            {paymentMethod === 'bank' && bankDetails && (
+              <div className="mt-4 rounded-xl border-2 border-[#FFD400] p-5 bg-[#7A4A20] shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#FFD400]" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" />
+                  </svg>
+                  <p className="text-sm font-bold text-[#FFD400]">
+                    Bank Account Details
+                  </p>
+                </div>
+                <div className="space-y-2 text-sm text-white/90">
+                  <div className="flex justify-between py-2 border-b border-white/10">
+                    <span className="font-semibold text-white/70">Bank Name:</span>
+                    <span className="font-medium">{bankDetails.bankName}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/10">
+                    <span className="font-semibold text-white/70">Account Title:</span>
+                    <span className="font-medium">{bankDetails.accountTitle}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/10">
+                    <span className="font-semibold text-white/70">Account Number:</span>
+                    <span className="font-medium font-mono">{bankDetails.accountNumber}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/10">
+                    <span className="font-semibold text-white/70">IBAN:</span>
+                    <span className="font-medium font-mono text-xs">{bankDetails.iban}</span>
+                  </div>
                   {bankDetails.branchCode && (
-                    <p><span className="font-semibold">Branch Code:</span> {bankDetails.branchCode}</p>
+                    <div className="flex justify-between py-2">
+                      <span className="font-semibold text-white/70">Branch Code:</span>
+                      <span className="font-medium">{bankDetails.branchCode}</span>
+                    </div>
                   )}
                 </div>
-                {paymentMethod === 'cod' && advanceAmount > 0 && (
-                  <div className="mt-3 rounded-lg border p-3 text-xs border-amber-700/50 bg-amber-900/20 text-amber-200">
-                    <p className="font-semibold">Advance Payment Required ({advancePercent}%)</p>
-                    <p className="mt-1">Please deposit <span className="font-bold">{advancePercent}% (Rs.{formatPKR(advanceAmount)})</span> of the order total to the above bank account. The remaining <span className="font-bold">{100 - advancePercent}% (Rs.{formatPKR(codAmount)})</span> will be collected as Cash on Delivery when your order arrives.</p>
-                  </div>
-                )}
-                {paymentMethod === 'bank' && (
-                  <p className="mt-3 text-xs text-white/60">
-                    Please transfer the full amount <span className="font-semibold">(Rs.{formatPKR(grandTotal)})</span> and share the payment receipt via WhatsApp for faster processing.
+                <div className="mt-4 rounded-lg border-2 border-amber-400 bg-amber-900/30 p-4">
+                  <p className="text-sm font-bold text-[#FFD400]">
+                    Total Amount to Transfer: Rs.{formatPKR(grandTotal)}
                   </p>
-                )}
+                  <p className="mt-2 text-xs text-white/80 leading-relaxed">
+                    Please transfer the full amount to the above bank account and share the payment receipt via WhatsApp for faster processing.
+                  </p>
+                </div>
               </div>
             )}
 
             {/* WhatsApp Payment Note */}
-            <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-900/20 p-4">
-              <p className="text-xs font-semibold text-[#FFD400]">
-                Important Payment Instruction
-              </p>
-              <p className="mt-2 text-xs text-white/80 leading-relaxed">
-                After completing your payment, please share the payment screenshot with us on WhatsApp at <span className="font-semibold text-[#FFD400]">(0309-9164751)</span> so we can process your order smoothly. Thank you!
-              </p>
+            <div className="mt-4 rounded-xl border-2 border-green-500/50 bg-green-900/20 p-4">
+              <div className="flex items-start gap-3">
+                <svg viewBox="0 0 24 24" className="h-6 w-6 text-green-400 shrink-0 mt-0.5" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                <div>
+                  <p className="text-sm font-bold text-green-300">
+                    Payment Confirmation Required
+                  </p>
+                  <p className="mt-1 text-xs text-white/80 leading-relaxed">
+                    After completing your payment, please share the payment screenshot with us on WhatsApp at <span className="font-bold text-green-300">(0309-9164751)</span> so we can process your order smoothly. Thank you!
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-5 rounded-xl border border-[#FFD400]/20 p-4 bg-[#7A4A20]">
-              <p className="text-xs font-semibold text-white/80">
-                Order summary
+            <div className="mt-5 rounded-2xl border-2 border-[#FFD400]/30 p-5 bg-[#7A4A20]/50 backdrop-blur">
+              <p className="text-xs font-bold text-[#FFD400] uppercase tracking-wider mb-3">
+                Order Summary
               </p>
               <div className="mt-3 space-y-1 text-xs text-white/70">
                 <div className="flex justify-between">
@@ -446,15 +486,25 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-[#5A2D0C] px-5 py-2 text-xs font-semibold text-white hover:bg-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#FFD400] to-amber-500 px-6 py-3 text-sm font-bold text-[#5A2D0C] hover:from-amber-400 hover:to-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              Place Order
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                'Place Order'
+              )}
             </button>
 
             <button
               type="button"
-              onClick={() => navigate('/')} 
-              className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#FFD400]/20 px-5 py-2 text-xs font-semibold bg-transparent text-white hover:bg-[#7A4A20]/40"
+              onClick={() => navigate('/')}
+              className="mt-3 inline-flex w-full items-center justify-center rounded-full border-2 border-[#FFD400]/40 px-6 py-3 text-sm font-semibold bg-transparent text-[#FFD400] hover:bg-[#FFD400]/10 transition-all duration-200"
             >
               Continue Shopping
             </button>
