@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { FaHeart, FaRegHeart, FaShare } from 'react-icons/fa'
 import { Loader2, AlertCircle } from 'lucide-react'
+import { useParams, useNavigate } from 'react-router-dom'
 import reelsService from '../utils/reelsService'
 
 export default function ReelsPage() {
+  const { reelId } = useParams()
+  const navigate = useNavigate()
   const [reels, setReels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -37,10 +40,11 @@ export default function ReelsPage() {
   }
 
   async function handleShare(reel) {
+    const reelUrl = `${window.location.origin}/reels/${reel.id}`
     const shareData = {
       title: reel.title || 'Lamp & Glow Reel',
       text: reel.caption || 'Check out this reel from Lamp & Glow!',
-      url: `${window.location.origin}/reels`,
+      url: reelUrl,
     }
     if (navigator.share) {
       try {
@@ -112,6 +116,9 @@ export default function ReelsPage() {
     )
   }
 
+  // If a specific reel is requested, show only that reel
+  const displayReels = reelId ? reels.filter((r) => r.id === reelId) : reels
+
   return (
     <section className="w-full px-0 py-10 sm:py-14">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -128,7 +135,7 @@ export default function ReelsPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 px-4 sm:px-6 lg:px-8">
-        {reels.map((reel) => {
+        {displayReels.map((reel) => {
           const isLiked = liked.has(reel.id)
           return (
             <article
@@ -144,6 +151,8 @@ export default function ReelsPage() {
                     controls
                     playsInline
                     preload="metadata"
+                    autoPlay={!!reelId}
+                    loop={!!reelId}
                   />
                 </div>
 
@@ -153,6 +162,15 @@ export default function ReelsPage() {
                     <p className="mt-0.5 text-[11px] text-white/85">{reel.caption}</p>
                   </div>
                 </div>
+                {reelId && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/reels')}
+                    className="absolute top-3 left-3 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-black/80 transition-colors"
+                  >
+                    ← All Reels
+                  </button>
+                )}
               </div>
 
               <div className="p-3 flex items-center justify-between">

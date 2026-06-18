@@ -61,6 +61,7 @@ import useProducts from './hooks/useProducts.js'
 import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import heroBannersService from './utils/heroBannersService.js'
+import wishlistService from './utils/wishlistService.js'
 import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 
@@ -89,6 +90,7 @@ function AppContent() {
   })
   const [cart, setCart] = useState([])
   const [wishlist, setWishlist] = useState([])
+  const [wishlistLoading, setWishlistLoading] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -124,8 +126,22 @@ function AppContent() {
   useEffect(() => {
     if (user?.uid) {
       loadUserOrders()
+      loadWishlist()
     }
   }, [user?.uid])
+
+  const loadWishlist = async () => {
+    if (!user?.uid) return
+    try {
+      setWishlistLoading(true)
+      const items = await wishlistService.getWishlist(user.uid)
+      setWishlist(items)
+    } catch (error) {
+      console.error('Error loading wishlist:', error)
+    } finally {
+      setWishlistLoading(false)
+    }
+  }
 
   const loadUserOrders = async () => {
     try {
@@ -224,11 +240,15 @@ function AppContent() {
 
   function handleToggleWishlist(product) {
     setWishlist((prev) => {
-      const exists = prev.find((p) => p.id === product.id)
-      if (exists) {
-        return prev.filter((p) => p.id !== product.id)
+      const next = prev.find((p) => p.id === product.id)
+        ? prev.filter((p) => p.id !== product.id)
+        : [...prev, product]
+      if (user?.uid) {
+        wishlistService.saveWishlist(user.uid, next).catch((err) =>
+          console.error('Failed to sync wishlist:', err),
+        )
       }
-      return [...prev, product]
+      return next
     })
   }
 
@@ -537,6 +557,7 @@ function AppContent() {
           <Route path="/blogs" element={<BlogsList />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/reels" element={<ReelsPage />} />
+          <Route path="/reels/:reelId" element={<ReelsPage />} />
           <Route path="/about" element={<AboutPage theme={theme} />} />
           <Route path="/about-us" element={<AboutPage theme={theme} />} />
           <Route path="/login" element={<LoginPage />} />
