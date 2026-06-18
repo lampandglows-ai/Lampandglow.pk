@@ -412,6 +412,16 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               </div>
             )}
 
+            {/* WhatsApp Payment Note */}
+            <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-900/20 p-4">
+              <p className="text-xs font-semibold text-amber-300">
+                Important Payment Instruction
+              </p>
+              <p className="mt-2 text-xs text-white/80 leading-relaxed">
+                After completing your payment, please share the payment screenshot with us on WhatsApp at <span className="font-semibold text-amber-300">(0309-9164751)</span> so we can process your order smoothly. Thank you!
+              </p>
+            </div>
+
             <div className="mt-5 rounded-xl border border-[#FFDA03]/20 p-4 bg-[#5c3418]">
               <p className="text-xs font-semibold text-white/80">
                 Order summary
