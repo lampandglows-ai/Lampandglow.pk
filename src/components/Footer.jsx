@@ -202,9 +202,65 @@ export default function Footer({ theme = 'light' }) {
 
   return (
     <footer>
+      {/* Scoped styles for the WhatsApp "water fill + shake" hover effect */}
+      <style>{`
+        .whatsapp-float-btn {
+          position: relative;
+          overflow: hidden;
+        }
+        .whatsapp-float-btn .wa-water-wrap {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          border-radius: inherit;
+          pointer-events: none;
+          transform: translateY(100%);
+          transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .whatsapp-float-btn:hover .wa-water-wrap {
+          transform: translateY(0%);
+        }
+        .whatsapp-float-btn .wa-water-wave {
+          position: absolute;
+          left: -25%;
+          top: -55%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(180deg, #6ee7b7 0%, #10b981 45%, #047857 100%);
+          border-radius: 42%;
+          animation: wa-water-spin 6s linear infinite;
+        }
+        .whatsapp-float-btn .wa-water-wave::after {
+          content: '';
+          position: absolute;
+          inset: 6%;
+          border-radius: 42%;
+          background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+        }
+        @keyframes wa-water-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .whatsapp-float-btn:hover {
+          animation: wa-shake 0.5s ease-in-out 1;
+        }
+        @keyframes wa-shake {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          15% { transform: translateX(-4px) rotate(-6deg); }
+          30% { transform: translateX(4px) rotate(6deg); }
+          45% { transform: translateX(-3px) rotate(-4deg); }
+          60% { transform: translateX(3px) rotate(4deg); }
+          80% { transform: translateX(-1px) rotate(-1deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .whatsapp-float-btn:hover { animation: none; }
+          .whatsapp-float-btn .wa-water-wave { animation: none; }
+        }
+      `}</style>
+
       <div className="border-t border-[#E5E5E5] bg-[#1F1F1F]">
         <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-4">
             {/* Contact Info Column */}
             <div className="text-center sm:text-left">
               <p className={headingClass}>
@@ -283,38 +339,38 @@ export default function Footer({ theme = 'light' }) {
               </div>
             ))}
 
-            {/* Newsletter Column */}
-            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-1 rounded-xl bg-[#5A2D0C] p-5 -mx-2 sm:mx-0">
+            {/* Newsletter Column - wider, shorter */}
+            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-4 -mx-2 sm:mx-0">
               <p className="text-sm font-semibold text-[#FFFFFF]">
                 Newsletter Sign Up
               </p>
-              <p className="mt-4 text-sm text-white/90">
+              <p className="mt-2 text-sm text-white/90">
                 Receive our latest updates about our products & promotions.
               </p>
 
-              <form onSubmit={handleNewsletterSubmit} className="mt-4 max-w-sm mx-auto sm:mx-0">
-                <div className="flex flex-col gap-3">
+              <form onSubmit={handleNewsletterSubmit} className="mt-3 mx-auto sm:mx-0">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Email address"
                     required
-                    className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
+                    className="w-full flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                   />
                   <button
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className="w-full rounded-lg bg-[#FFD400] px-4 py-3 text-sm font-semibold text-[#222222] hover:bg-[#FFE566] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-5 py-2.5 text-sm font-semibold text-[#222222] hover:bg-[#FFE566] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {newsletterStatus === 'submitting' ? 'Subscribing...' : 'Subscribe'}
                   </button>
-                  {newsletterMsg && (
-                    <p className={`text-xs ${newsletterStatus === 'success' ? 'text-[#22C55E]' : 'text-red-400'}`}>
-                      {newsletterMsg}
-                    </p>
-                  )}
                 </div>
+                {newsletterMsg && (
+                  <p className={`mt-2 text-xs ${newsletterStatus === 'success' ? 'text-[#22C55E]' : 'text-red-400'}`}>
+                    {newsletterMsg}
+                  </p>
+                )}
               </form>
             </div>
           </div>
@@ -332,11 +388,14 @@ export default function Footer({ theme = 'light' }) {
           href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
-          className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-emerald-600"
+          className="whatsapp-float-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
           aria-label="Chat on WhatsApp"
         >
-          <FaWhatsapp className="h-5 w-5" />
-          Chat on WhatsApp
+          <span className="wa-water-wrap" aria-hidden="true">
+            <span className="wa-water-wave" />
+          </span>
+          <FaWhatsapp className="relative z-10 h-5 w-5" />
+          <span className="relative z-10">Chat on WhatsApp</span>
         </a>
       )}
     </footer>
