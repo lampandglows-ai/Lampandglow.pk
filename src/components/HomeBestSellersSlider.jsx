@@ -56,13 +56,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
           <button
             type="button"
             onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
             aria-label="Scroll left"
-            className={`hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
-              canScrollLeft
-                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
-                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            }`}
+            className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
             title="Scroll left"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -72,13 +67,8 @@ export default function HomeBestSellersSlider({ products = [] }) {
           <button
             type="button"
             onClick={() => scroll('right')}
-            disabled={!canScrollRight}
             aria-label="Scroll right"
-            className={`hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
-              canScrollRight
-                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
-                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            }`}
+            className="hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
             title="Scroll right"
           >
             <ChevronRight className="w-6 h-6" />
@@ -99,7 +89,7 @@ export default function HomeBestSellersSlider({ products = [] }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[280px] group block overflow-hidden rounded-2xl sm:rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       {product.isNewArrival && (

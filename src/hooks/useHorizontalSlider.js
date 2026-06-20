@@ -14,17 +14,22 @@ export function useHorizontalSlider(itemsLength = 0) {
   }, [])
 
   useEffect(() => {
-    checkScroll()
     const el = scrollContainerRef.current
     if (!el) return undefined
+
+    // Delay initial check to allow DOM to render
+    const timer = setTimeout(() => {
+      checkScroll()
+    }, 150)
 
     const resizeObserver = new ResizeObserver(checkScroll)
     resizeObserver.observe(el)
     window.addEventListener('resize', checkScroll)
 
     return () => {
-      resizeObserver.disconnect()
+      clearTimeout(timer)
       window.removeEventListener('resize', checkScroll)
+      resizeObserver.disconnect()
     }
   }, [checkScroll, itemsLength])
 
@@ -32,17 +37,17 @@ export function useHorizontalSlider(itemsLength = 0) {
     const el = scrollContainerRef.current
     if (!el) return
 
-    const firstChild = el.firstElementChild
-    const gap = parseFloat(getComputedStyle(el).columnGap || getComputedStyle(el).gap || '0') || 20
-    const scrollAmount = firstChild
-      ? firstChild.getBoundingClientRect().width + gap
-      : el.clientWidth * 0.8
+    // Fixed scroll amount for reliable behavior
+    const scrollAmount = 320
 
     el.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
     })
-  }, [])
+
+    // Recheck scroll state after animation
+    setTimeout(() => checkScroll(), 500)
+  }, [checkScroll])
 
   return { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll }
 }

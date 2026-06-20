@@ -56,13 +56,8 @@ export default function HomeNewArrivals({ products, onViewAll }) {
           <button
             type="button"
             onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
             aria-label="Scroll left"
-            className={`hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
-              canScrollLeft
-                  ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
-                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            }`}
+            className="hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
             title="Scroll left"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -72,13 +67,8 @@ export default function HomeNewArrivals({ products, onViewAll }) {
           <button
             type="button"
             onClick={() => scroll('right')}
-            disabled={!canScrollRight}
             aria-label="Scroll right"
-            className={`hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
-              canScrollRight
-                  ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
-                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            }`}
+            className="hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
             title="Scroll right"
           >
             <ChevronRight className="w-5 h-5" />
