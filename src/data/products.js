@@ -24,11 +24,17 @@ Perfect for bedrooms, living rooms, and reading corners.`,
     productDetails: {
       baseMaterial: "Solid wood",
       shadeMaterial: "Premium linen blend fabric",
-      baseColors: ["Deep Espresso Brown", "Black", "White"],
+      colorVariants: [
+        { name: "Deep Espresso Brown", image: "https://www.lampandglow.com/cdn/shop/files/MushroomFloorLamp_2.webp?v=1747793187" },
+        { name: "Black", image: "https://www.lampandglow.com/cdn/shop/files/MushroomFloorLamp_8.webp?v=1747793187" },
+        { name: "White", image: "https://www.lampandglow.com/cdn/shop/files/MushroomFloorLamp_9.webp?v=1747793187" }
+      ],
       height: "60 inches",
       socket: "E27",
       maxWattage: "16W"
-    }
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   },
 
   {
@@ -54,8 +60,13 @@ Elegance carved in wood. Light sculpted in warmth.`,
       material: "Solid wood base, linen shade",
       socket: "E26/E27",
       voltage: "220–240V",
-      baseColors: ["Light Brown", "Deep Espresso Brown"]
-    }
+      colorVariants: [
+        { name: "Light Brown", image: "https://www.lampandglow.com/cdn/shop/files/BriarFloorLamps_6.webp?v=1747862569" },
+        { name: "Deep Espresso Brown", image: "https://www.lampandglow.com/cdn/shop/files/BriarFloorLamps_2.webp?v=1747862569" }
+      ]
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   },
 
   {
@@ -80,8 +91,13 @@ Elegant, lightweight, and durable.`,
       finish: "Dark walnut",
       bulbType: "E27",
       height: "4.8 feet",
-      baseColors: ["Dark Walnut", "Natural Pine"]
-    }
+      colorVariants: [
+        { name: "Dark Walnut", image: "https://www.lampandglow.com/cdn/shop/files/Moon_Walker_Lamp.png?v=1732800905" },
+        { name: "Natural Pine", image: "https://www.lampandglow.com/cdn/shop/files/Moon_Walker_Floor_Lamp_2.webp?v=1732801306" }
+      ]
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   },
 
   {
@@ -100,12 +116,17 @@ Elegant, lightweight, and durable.`,
     productType: "Ceiling Lamp",
     description: "Rustic wooden chandelier with modern elegance.",
     productDetails: {
-      baseColors: ["Rustic Brown", "Black"],
+      colorVariants: [
+        { name: "Rustic Brown", image: "https://www.lampandglow.com/cdn/shop/files/140.png?v=1719989196" },
+        { name: "Black", image: "https://www.lampandglow.com/cdn/shop/files/Product_Pictures_1.webp?v=1720512730" }
+      ],
       material: "Natural Wood",
       finish: "Walnut Varnish",
       socket: "E27",
       length: "65 cm"
-    }
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   },
 
   {
@@ -127,8 +148,13 @@ Elegant, lightweight, and durable.`,
     productDetails: {
       material: "Hemp Rope, Iron",
       socket: "E27",
-      voltage: "220–240V"
-    }
+      voltage: "220–240V",
+      colorVariants: [
+        { name: "Natural", image: "https://www.lampandglow.com/cdn/shop/files/2_a9fd8981-7f23-4116-8a8c-fd37e544fe1a.webp?v=1720093595" }
+      ]
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   },
 
   {
@@ -150,7 +176,12 @@ Elegant, lightweight, and durable.`,
     productDetails: {
       material: "Wood logs",
       height: "24 cm",
-      diameter: "25 cm"
-    }
+      diameter: "25 cm",
+      colorVariants: [
+        { name: "Natural Wood", image: "https://www.lampandglow.com/cdn/shop/files/CuttingLogWoodenLamp_4.webp?v=1746759258" }
+      ]
+    },
+    bulbEnabled: true,
+    bulbPrice: 500,
   }
 ];

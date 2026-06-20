@@ -192,6 +192,13 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const advanceAmount = Math.round(grandTotal * (advancePercent / 100))
   const codAmount = grandTotal - advanceAmount
 
+  // Calculate bulb addon from cart items
+  const cartBulbAddon = cart.reduce((sum, item) => {
+    const isWithBulb = item.bulbOption && String(item.bulbOption).toLowerCase().includes('with')
+    const bulbPrice = typeof item.product?.bulbPrice === 'number' ? item.product.bulbPrice : 500
+    return sum + (isWithBulb ? bulbPrice : 0)
+  }, 0)
+
   return (
     <section className="w-full px-0 py-10 sm:py-14">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -33,6 +33,9 @@ export default function AdminProductsPage() {
     productType: '',
     isNewArrival: false,
     isDiscounted: false,
+    bulbEnabled: false,
+    bulbPrice: '',
+    colorVariants: [],
   })
 
   // Load products from Firebase
@@ -175,6 +178,13 @@ export default function AdminProductsPage() {
         image: finalImages[0] || '',
         isNewArrival: formData.isNewArrival === true,
         isDiscounted: formData.isDiscounted === true,
+        bulbEnabled: formData.bulbEnabled === true,
+        bulbPrice: formData.bulbEnabled ? parseFloat(formData.bulbPrice) || 0 : null,
+        productDetails: {
+          ...(formData.colorVariants.length > 0
+            ? { colorVariants: formData.colorVariants }
+            : {}),
+        },
       }
 
       if (editingId) {
@@ -235,6 +245,9 @@ export default function AdminProductsPage() {
       productType: '',
       isNewArrival: false,
       isDiscounted: false,
+      bulbEnabled: false,
+      bulbPrice: '',
+      colorVariants: [],
     })
     setShowForm(false)
   }
@@ -265,6 +278,10 @@ export default function AdminProductsPage() {
       typeof discountValue === 'number' ? discountValue : parseFloat(discountValue)
     )
 
+    const existingColorVariants = Array.isArray(product.productDetails?.colorVariants)
+      ? product.productDetails.colorVariants
+      : []
+
     setFormData({
       name: product.name || '',
       category: product.category || '',
@@ -280,6 +297,9 @@ export default function AdminProductsPage() {
       images,
       isNewArrival: product.isNewArrival === true,
       isDiscounted: product.isDiscounted === true,
+      bulbEnabled: product.bulbEnabled === true,
+      bulbPrice: product.bulbPrice != null ? String(product.bulbPrice) : '',
+      colorVariants: existingColorVariants,
     })
     setEditingId(product.id)
     setShowForm(true)
@@ -733,6 +753,155 @@ export default function AdminProductsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 mt-2">First image will be the main product image. Use ↑↓ buttons to reorder images.</p>
+                </div>
+
+                {/* Bulb Settings */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-800">Bulb Option</h4>
+                      <p className="text-xs text-gray-500 mt-0.5">Enable bulb selection for this product</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.bulbEnabled}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, bulbEnabled: e.target.checked }))}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                    </label>
+                  </div>
+
+                  {formData.bulbEnabled && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Bulb Price (Rs)
+                      </label>
+                      <input
+                        type="number"
+                        name="bulbPrice"
+                        value={formData.bulbPrice}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 500"
+                        step="0.01"
+                        min="0"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Price added when customer selects "Include Bulb"</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Color Variants */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-800">Color Variants</h4>
+                      <p className="text-xs text-gray-500 mt-0.5">Add color options with their own product images</p>
+                    </div>
+                  </div>
+
+                  {/* Existing Color Variants List */}
+                  {formData.colorVariants.length > 0 && (
+                    <div className="space-y-2">
+                      {formData.colorVariants.map((variant, idx) => (
+                        <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="h-12 w-12 rounded-lg overflow-hidden border border-gray-200 shrink-0">
+                            <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-900 truncate">{variant.name}</p>
+                            <p className="text-xs text-gray-500 truncate">{variant.image}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setFormData((prev) => ({
+                              ...prev,
+                              colorVariants: prev.colorVariants.filter((_, i) => i !== idx),
+                            }))}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition"
+                            title="Remove color variant"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add New Color Variant */}
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Add New Color Variant</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Color Name</label>
+                        <input
+                          type="text"
+                          id="newColorName"
+                          placeholder="e.g. Brown, Black, White"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Color Image URL</label>
+                        <input
+                          type="text"
+                          id="newColorImage"
+                          placeholder="https://... or upload below"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-3">
+                      <label className={`flex-1 h-20 border-2 border-dashed rounded-lg transition flex flex-col items-center justify-center text-center cursor-pointer border-gray-300 hover:border-orange-500`}>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id="newColorImageUpload"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            try {
+                              const storageRef = ref(storage, `color-variants/${Date.now()}_${file.name}`)
+                              await uploadBytes(storageRef, file)
+                              const url = await getDownloadURL(storageRef)
+                              document.getElementById('newColorImage').value = url
+                            } catch (err) {
+                              setMessage({ type: 'error', text: `Image upload failed: ${err.message}` })
+                            }
+                            e.target.value = ''
+                          }}
+                        />
+                        <ImagePlus className="w-5 h-5 text-gray-400 mb-1" />
+                        <span className="text-xs text-gray-500">Upload Image</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nameInput = document.getElementById('newColorName')
+                          const imageInput = document.getElementById('newColorImage')
+                          const name = nameInput.value.trim()
+                          const image = imageInput.value.trim()
+                          if (!name || !image) {
+                            setMessage({ type: 'error', text: 'Please enter both color name and image URL' })
+                            return
+                          }
+                          setFormData((prev) => ({
+                            ...prev,
+                            colorVariants: [...prev.colorVariants, { name, image }],
+                          }))
+                          nameInput.value = ''
+                          imageInput.value = ''
+                          setMessage({ type: '', text: '' })
+                        }}
+                        className="px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition"
+                      >
+                        Add Color
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
