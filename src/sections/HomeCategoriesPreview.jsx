@@ -27,7 +27,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll left"
             className={`hidden sm:flex absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollLeft
-              ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
+              ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
               : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll left"
@@ -43,7 +43,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
             aria-label="Scroll right"
             className={`hidden sm:flex absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full transition-all duration-200 ${
               canScrollRight
-              ? 'bg-[#F5F1EA]0 hover:bg-[#FFD400] text-white shadow-lg'
+              ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
               : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
             title="Scroll right"
