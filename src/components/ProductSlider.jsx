@@ -111,7 +111,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
         </div>
 
         {/* Desktop slider with arrows */}
-        <div className="hidden sm:block px-4 sm:px-6 lg:px-8">
+        <div className="hidden sm:block px-4 sm:px-6 lg:px-8 min-w-0 overflow-hidden">
           <div className="relative min-w-0">
             {/* Left Arrow — desktop only */}
             <button
@@ -147,7 +147,7 @@ export default function ProductSlider({ products, theme = 'light' }) {
 
             <div
               ref={scrollContainerRef}
-              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 max-w-full gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >

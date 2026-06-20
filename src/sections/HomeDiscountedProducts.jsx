@@ -21,7 +21,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
         const info = getDiscountInfo(p)
         return (p.isDiscounted === true || info.hasDiscount) && p.status === 'active'
       })
-      .slice(0, 5)
+      .slice(0, 12)
   }, [products])
 
   const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
@@ -87,10 +87,10 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="px-4 sm:px-6 lg:px-8 min-w-0 overflow-hidden">
             <div
               ref={scrollContainerRef}
-              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 max-w-full gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
@@ -101,7 +101,7 @@ export default function HomeDiscountedProducts({ products, onViewAll }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[260px] group block overflow-hidden rounded-3xl bg-white ring-1 ring-red-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-red-300 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       <span className="absolute left-0 top-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">

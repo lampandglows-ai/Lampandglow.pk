@@ -18,7 +18,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
         </div>
 
         {/* Horizontal scroll with desktop arrows */}
-        <div className="relative min-w-0">
+        <div className="relative min-w-0 overflow-hidden">
           {/* Desktop Left Arrow */}
           <button
             type="button"
@@ -53,15 +53,15 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
 
           <div
             ref={scrollContainerRef}
-            className="flex w-full min-w-0 gap-3 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+            className="flex w-full min-w-0 max-w-full gap-3 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
             style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
             onScroll={checkScroll}
           >
-            {categories.slice(0, 5).map((category) => (
+            {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => onPickCategory(category.id)}
-                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFD400]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFD400]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
+                className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[260px] group relative overflow-hidden rounded-2xl bg-stone-200 shadow-lg ring-1 ring-[#FFD400]/30 text-left transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:ring-[#FFD400]/70 active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <div className="relative aspect-[3/5] sm:aspect-[10/17] overflow-hidden">
                   <img

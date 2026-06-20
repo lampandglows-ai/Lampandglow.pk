@@ -19,7 +19,7 @@ export default function HomeSection({
   onViewAllProducts,
 }) {
   return (
-    <section className="hero-gradient-bg">
+    <section className="hero-gradient-bg min-w-0 overflow-x-hidden">
       <HeroSlider slides={heroSlides} onPrimaryAction={onHeroAction} />
 
       <HomeBestSellersSlider products={products} theme={theme} />

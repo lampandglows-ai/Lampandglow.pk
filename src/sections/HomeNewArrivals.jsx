@@ -18,7 +18,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
     if (!products || products.length === 0) return []
     return products
       .filter((p) => p.isNewArrival === true && p.status === 'active')
-      .slice(0, 5)
+      .slice(0, 12)
   }, [products])
 
   const { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll } =
@@ -56,8 +56,13 @@ export default function HomeNewArrivals({ products, onViewAll }) {
           <button
             type="button"
             onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
             aria-label="Scroll left"
-            className="hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
+            className={`hidden sm:flex absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full transition-all duration-200 ${
+              canScrollLeft
+                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            }`}
             title="Scroll left"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -67,17 +72,22 @@ export default function HomeNewArrivals({ products, onViewAll }) {
           <button
             type="button"
             onClick={() => scroll('right')}
+            disabled={!canScrollRight}
             aria-label="Scroll right"
-            className="hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
+            className={`hidden sm:flex absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full transition-all duration-200 ${
+              canScrollRight
+                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            }`}
             title="Scroll right"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="px-4 sm:px-6 lg:px-8 min-w-0 overflow-hidden">
             <div
               ref={scrollContainerRef}
-              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 max-w-full gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >
@@ -88,7 +98,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
                   <Link
                     key={product.id}
                     to={`/products/${slugify(product.name)}`}
-                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[calc((100%_-_5rem)/5)] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="flex-shrink-0 w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[260px] group block overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                       <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-2 py-1 text-xs font-semibold text-white">
