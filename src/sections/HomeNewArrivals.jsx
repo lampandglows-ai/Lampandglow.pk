@@ -44,7 +44,7 @@ export default function HomeNewArrivals({ products, onViewAll }) {
             </div>
             <button
               onClick={onViewAll}
-              className="hidden sm:inline-flex text-xs font-medium text-[#FFD400] hover:text-[#5A2D0C]"
+              className="hidden sm:inline-flex text-xs font-medium text-[#ffa200] hover:text-[#5A2D0C]"
             >
               View all products
             </button>
