@@ -92,7 +92,7 @@ export default function HomeCategoriesPreview({ categories, onViewAll, onPickCat
         <div className="mt-6 flex justify-center">
           <button
               onClick={onViewAll}
-              className="inline-flex text-xs font-semibold text-[#FFD400] hover:text-[#5A2D0C] transition-colors"
+              className="inline-flex text-xs font-semibold text-[#ffa200] hover:text-[#5A2D0C] transition-colors"
           >
             View all collections →
           </button>
