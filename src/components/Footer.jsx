@@ -207,38 +207,50 @@ export default function Footer({ theme = 'light' }) {
         .whatsapp-float-btn {
           overflow: hidden;
         }
-        .whatsapp-float-btn .wa-water-wrap {
+        /* Liquid layer: starts at 0 height and rises from bottom to top on hover */
+        .whatsapp-float-btn .wa-water {
           position: absolute;
-          inset: 0;
-          overflow: hidden;
-          border-radius: inherit;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 0%;
+          background: linear-gradient(180deg, #6ee7b7 0%, #10b981 55%, #047857 100%);
+          transition: height 0.8s cubic-bezier(0.22, 0.9, 0.32, 1);
           pointer-events: none;
-          transform: translateY(100%);
-          transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+          z-index: 0;
         }
-        .whatsapp-float-btn:hover .wa-water-wrap {
-          transform: translateY(0%);
+        .whatsapp-float-btn:hover .wa-water {
+          height: 100%;
         }
-        .whatsapp-float-btn .wa-water-wave {
-          position: absolute;
-          left: -25%;
-          top: -55%;
-          width: 200%;
-          height: 200%;
-          background: linear-gradient(180deg, #6ee7b7 0%, #10b981 45%, #047857 100%);
-          border-radius: 42%;
-          animation: wa-water-spin 6s linear infinite;
-        }
-        .whatsapp-float-btn .wa-water-wave::after {
+        /* Wavy surface riding on top of the rising liquid */
+        .whatsapp-float-btn .wa-water::before,
+        .whatsapp-float-btn .wa-water::after {
           content: '';
           position: absolute;
-          inset: 6%;
-          border-radius: 42%;
-          background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+          top: -8px;
+          left: -25%;
+          width: 150%;
+          height: 16px;
+          background: inherit;
+          border-radius: 45%;
+          opacity: 0;
+          transition: opacity 0.3s ease 0.4s;
         }
-        @keyframes wa-water-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        .whatsapp-float-btn .wa-water::after {
+          left: -55%;
+        }
+        .whatsapp-float-btn:hover .wa-water::before,
+        .whatsapp-float-btn:hover .wa-water::after {
+          opacity: 1;
+          animation: wa-wave-drift 2.2s ease-in-out infinite;
+        }
+        .whatsapp-float-btn:hover .wa-water::after {
+          animation-duration: 2.8s;
+          animation-direction: reverse;
+        }
+        @keyframes wa-wave-drift {
+          0%, 100% { transform: translateX(-4%) scaleY(1); }
+          50% { transform: translateX(4%) scaleY(0.6); }
         }
         .whatsapp-float-btn:hover {
           animation: wa-shake 0.5s ease-in-out 1;
@@ -253,7 +265,9 @@ export default function Footer({ theme = 'light' }) {
         }
         @media (prefers-reduced-motion: reduce) {
           .whatsapp-float-btn:hover { animation: none; }
-          .whatsapp-float-btn .wa-water-wave { animation: none; }
+          .whatsapp-float-btn:hover .wa-water { transition: none; height: 100%; }
+          .whatsapp-float-btn:hover .wa-water::before,
+          .whatsapp-float-btn:hover .wa-water::after { animation: none; }
         }
       `}</style>
 
@@ -390,9 +404,7 @@ export default function Footer({ theme = 'light' }) {
           className="whatsapp-float-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
           aria-label="Chat on WhatsApp"
         >
-          <span className="wa-water-wrap" aria-hidden="true">
-            <span className="wa-water-wave" />
-          </span>
+          <span className="wa-water" aria-hidden="true" />
           <FaWhatsapp className="relative z-10 h-5 w-5" />
           <span className="relative z-10">Chat on WhatsApp</span>
         </a>
