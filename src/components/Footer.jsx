@@ -202,13 +202,13 @@ export default function Footer({ theme = 'light' }) {
 
   return (
     <footer>
-      {/* Scoped styles for the WhatsApp "water fill + shake" hover effect */}
+      {/* Scoped styles for the reusable "water fill + shake" hover effect */}
       <style>{`
-        .whatsapp-float-btn {
+        .water-fill-btn {
           overflow: hidden;
         }
         /* Liquid layer: starts at 0 height and rises from bottom to top on hover */
-        .whatsapp-float-btn .wa-water {
+        .water-fill-btn .wa-water {
           position: absolute;
           left: 0;
           right: 0;
@@ -219,12 +219,16 @@ export default function Footer({ theme = 'light' }) {
           pointer-events: none;
           z-index: 0;
         }
-        .whatsapp-float-btn:hover .wa-water {
+        /* Amber variant used on the Subscribe button to suit its yellow background */
+        .water-fill-btn.water-fill-amber .wa-water {
+          background: linear-gradient(180deg, #fde68a 0%, #f59e0b 55%, #b45309 100%);
+        }
+        .water-fill-btn:hover .wa-water {
           height: 100%;
         }
         /* Wavy surface riding on top of the rising liquid */
-        .whatsapp-float-btn .wa-water::before,
-        .whatsapp-float-btn .wa-water::after {
+        .water-fill-btn .wa-water::before,
+        .water-fill-btn .wa-water::after {
           content: '';
           position: absolute;
           top: -8px;
@@ -236,15 +240,15 @@ export default function Footer({ theme = 'light' }) {
           opacity: 0;
           transition: opacity 0.3s ease 0.4s;
         }
-        .whatsapp-float-btn .wa-water::after {
+        .water-fill-btn .wa-water::after {
           left: -55%;
         }
-        .whatsapp-float-btn:hover .wa-water::before,
-        .whatsapp-float-btn:hover .wa-water::after {
+        .water-fill-btn:hover .wa-water::before,
+        .water-fill-btn:hover .wa-water::after {
           opacity: 1;
           animation: wa-wave-drift 2.2s ease-in-out infinite;
         }
-        .whatsapp-float-btn:hover .wa-water::after {
+        .water-fill-btn:hover .wa-water::after {
           animation-duration: 2.8s;
           animation-direction: reverse;
         }
@@ -252,7 +256,7 @@ export default function Footer({ theme = 'light' }) {
           0%, 100% { transform: translateX(-4%) scaleY(1); }
           50% { transform: translateX(4%) scaleY(0.6); }
         }
-        .whatsapp-float-btn:hover {
+        .water-fill-btn:hover {
           animation: wa-shake 0.5s ease-in-out 1;
         }
         @keyframes wa-shake {
@@ -264,10 +268,10 @@ export default function Footer({ theme = 'light' }) {
           80% { transform: translateX(-1px) rotate(-1deg); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .whatsapp-float-btn:hover { animation: none; }
-          .whatsapp-float-btn:hover .wa-water { transition: none; height: 100%; }
-          .whatsapp-float-btn:hover .wa-water::before,
-          .whatsapp-float-btn:hover .wa-water::after { animation: none; }
+          .water-fill-btn:hover { animation: none; }
+          .water-fill-btn:hover .wa-water { transition: none; height: 100%; }
+          .water-fill-btn:hover .wa-water::before,
+          .water-fill-btn:hover .wa-water::after { animation: none; }
         }
       `}</style>
 
@@ -374,9 +378,12 @@ export default function Footer({ theme = 'light' }) {
                   <button
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className="shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-5 py-2.5 text-sm font-semibold text-[#222222] hover:bg-[#FFE566] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="water-fill-btn water-fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-5 py-2.5 text-sm font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {newsletterStatus === 'submitting' ? 'Subscribing...' : 'Subscribe'}
+                    <span className="wa-water" aria-hidden="true" />
+                    <span className="relative z-10 transition-colors group-hover:text-white">
+                      {newsletterStatus === 'submitting' ? 'Subscribing...' : 'Subscribe'}
+                    </span>
                   </button>
                 </div>
                 {newsletterMsg && (
@@ -401,7 +408,7 @@ export default function Footer({ theme = 'light' }) {
           href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
-          className="whatsapp-float-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
+          className="water-fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
           aria-label="Chat on WhatsApp"
         >
           <span className="wa-water" aria-hidden="true" />

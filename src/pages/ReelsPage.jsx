@@ -104,7 +104,7 @@ export default function ReelsPage() {
                 Reels
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-stone-500 max-w-2xl">
-                Short videos featuring warm-light setups, styling ideas, and product highlights.
+               ✨ Experience the artistry behind every handcrafted lamp. Timeless designs crafted to illuminate your space.
               </p>
             </div>
           </div>
