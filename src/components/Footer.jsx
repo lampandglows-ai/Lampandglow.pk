@@ -205,7 +205,6 @@ export default function Footer({ theme = 'light' }) {
       {/* Scoped styles for the WhatsApp "water fill + shake" hover effect */}
       <style>{`
         .whatsapp-float-btn {
-          position: relative;
           overflow: hidden;
         }
         .whatsapp-float-btn .wa-water-wrap {
