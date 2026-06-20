@@ -33,7 +33,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
 
   const settings = {
     dots: hasMultiple,
-    arrows: false,
+    arrows: hasMultiple,
     infinite: hasMultiple,
     autoplay: hasMultiple,
     autoplaySpeed: 4500,
@@ -43,6 +43,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
     pauseOnHover: true,
     swipe: true,
     touchMove: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     appendDots: (dots) => (
       <div
         style={{
@@ -57,6 +59,37 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         <ul style={{ margin: 0, padding: 0, pointerEvents: 'auto' }}>{dots}</ul>
       </div>
     ),
+  }
+
+  // Custom arrow components
+  function NextArrow({ onClick }) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="absolute right-3 sm:right-4 lg:right-5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-all duration-200 shadow-lg"
+        aria-label="Next slide"
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    )
+  }
+
+  function PrevArrow({ onClick }) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="absolute left-3 sm:left-4 lg:left-5 top-1/2 -translate-y-1/2 z-20 h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-all duration-200 shadow-lg"
+        aria-label="Previous slide"
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+    )
   }
 
   // Aspect ratios
