@@ -45,7 +45,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   }
 
   const numericTotal = parseNumericTotal(cartTotal)
-  const shipping = numericTotal >= 150 || numericTotal === 0 ? 0 : 12
+  const shipping = numericTotal >= 15000 || numericTotal === 0 ? 0 : 12
   const grandTotal = numericTotal + shipping
 
   const handleSubmit = async () => {
@@ -197,6 +197,13 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const advancePercent = bankDetails?.codAdvancePercent ?? 50
   const advanceAmount = Math.round(grandTotal * (advancePercent / 100))
   const codAmount = grandTotal - advanceAmount
+
+  // Calculate bulb addon from cart items
+  const cartBulbAddon = cart.reduce((sum, item) => {
+    const isWithBulb = item.bulbOption && String(item.bulbOption).toLowerCase().includes('with')
+    const bulbPrice = typeof item.product?.bulbPrice === 'number' ? item.product.bulbPrice : 500
+    return sum + (isWithBulb ? bulbPrice : 0)
+  }, 0)
 
   return (
     <section className="w-full px-0 py-10 sm:py-14">
@@ -400,7 +407,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 />
                 <div className="text-sm">
                   <p className="font-semibold text-white/90">Bank Deposit</p>
-                  <p className="text-xs mt-0.5 text-white/60">Full payment via bank transfer before dispatch.</p>
+                  <p className="text-xs mt-0.5 text-white/60">Full payment is required in advance.</p>
                 </div>
               </label>
 
@@ -411,6 +418,34 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 </p>
               )}
             </div>
+
+            {/* Conditional COD Details - only show for COD */}
+            {paymentMethod === 'cod' && (
+              <div className="mt-4 rounded-xl border-2 border-[#FFD400] p-5 bg-[#7A4A20] shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#FFD400]" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  <p className="text-sm font-bold text-[#FFD400]">
+                    Cash on Delivery
+                  </p>
+                </div>
+                <p className="text-sm text-white/90 leading-relaxed">
+                  Payment will be made upon delivery of the order.
+                </p>
+                {bankDetails && (
+                  <div className="mt-3 rounded-lg border-2 border-amber-400 bg-amber-900/30 p-4">
+                    <p className="text-sm font-bold text-[#FFD400]">
+                      Advance Payment Required
+                    </p>
+                    <p className="mt-2 text-xs text-white/80 leading-relaxed">
+                      {bankDetails.codAdvancePercent || 50}% advance payment (Rs.{formatPKR(advanceAmount)}) is required via Bank Deposit to confirm your order. Remaining balance of Rs.{formatPKR(codAmount)} will be paid on delivery.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Conditional Bank Details - only show for bank deposit */}
             {paymentMethod === 'bank' && bankDetails && (

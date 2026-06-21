@@ -56,8 +56,13 @@ export default function HomeBestSellersSlider({ products = [] }) {
           <button
             type="button"
             onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
             aria-label="Scroll left"
-            className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
+            className={`hidden sm:flex absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full transition-all duration-200 ${
+              canScrollLeft
+                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            }`}
             title="Scroll left"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -67,18 +72,23 @@ export default function HomeBestSellersSlider({ products = [] }) {
           <button
             type="button"
             onClick={() => scroll('right')}
+            disabled={!canScrollRight}
             aria-label="Scroll right"
-            className="hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg transition-all duration-200"
+            className={`hidden sm:flex absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 rounded-full transition-all duration-200 ${
+              canScrollRight
+                ? 'bg-[#F5F1EA] hover:bg-[#FFD400] text-stone-900 shadow-lg'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            }`}
             title="Scroll right"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
 
           {/* Scrollable Products Container */}
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="px-4 sm:px-6 lg:px-8 min-w-0 overflow-hidden">
             <div
               ref={scrollContainerRef}
-              className="flex w-full min-w-0 gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
+              className="flex w-full min-w-0 max-w-full gap-5 overflow-x-auto scroll-smooth pb-2 scrollbar-hide"
               style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
               onScroll={checkScroll}
             >

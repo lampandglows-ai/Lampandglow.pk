@@ -104,12 +104,12 @@ export default function CartSection({
               </div>
               <div className="flex justify-between">
                 <span>Estimated shipping</span>
-                  <span>{cartTotal >= 150 ? 'Free' : 'Rs.12'}</span>
+                <span>{cartTotal >= 15000 ? 'Free' : 'Rs.12'}</span>
               </div>
               <div className="flex justify-between font-semibold pt-1 border-t border-amber-100 mt-1">
                 <span>Total</span>
                 <span>
-                  Rs.{(cartTotal + (cartTotal >= 150 || cartTotal === 0 ? 0 : 12)).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  Rs.{(cartTotal + (cartTotal >= 15000 || cartTotal === 0 ? 0 : 12)).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>

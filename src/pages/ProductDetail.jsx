@@ -78,16 +78,16 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const inStock = stock > 0
   const bulbOptions = Array.isArray(product?.bulbOptions) ? product.bulbOptions : []
   const sku = product?.sku || `LG-${String(product?.id ?? '0').padStart(4, '0')}`
-  const baseColors = Array.isArray(product?.productDetails?.baseColors)
-    ? product.productDetails.baseColors
+  const colorVariants = Array.isArray(product?.productDetails?.colorVariants)
+    ? product.productDetails.colorVariants
     : []
 
   // ── Effects ──
   useEffect(() => {
     if (isCompareOpen) {
-      setCompareVisibleIndices(baseColors.map((_, i) => i))
+      setCompareVisibleIndices(colorVariants.map((_, i) => i))
     }
-  }, [isCompareOpen, baseColors])
+  }, [isCompareOpen, colorVariants])
 
   useEffect(() => {
     if (!isCompareOpen) return
@@ -145,9 +145,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   /* ── Remaining derived data (product is guaranteed defined below) ── */
   const safeColorIndex = Math.min(
     Math.max(selectedColorIndex, 0),
-    Math.max(baseColors.length - 1, 0),
+    Math.max(colorVariants.length - 1, 0),
   )
-  const selectedColor = baseColors[safeColorIndex] || ''
+  const selectedColor = colorVariants[safeColorIndex]?.name || ''
   const selectedImage = images[Math.min(activeImageIndex, images.length - 1)]
 
   // ── Price Calculation ──
@@ -160,7 +160,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     selectedBulb &&
     String(selectedBulb).toLowerCase().includes('with') &&
     !String(selectedBulb).toLowerCase().includes('without')
-  const bulbAddon = isWithBulb ? 500 : 0
+  const bulbPrice = typeof product?.bulbPrice === 'number' ? product.bulbPrice : 500
+  const bulbAddon = isWithBulb ? bulbPrice : 0
 
   const colorAddon =
     selectedColor &&
@@ -216,7 +217,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const addQuantityToCart = () => {
     if (!inStock) return
     const count = Math.max(1, Math.min(quantity, Math.max(stock, 1)))
-    const payload = { product, bulbOption: selectedBulb || null, unitPrice: effectivePrice }
+    const payload = { 
+      product, 
+      bulbOption: selectedBulb || null, 
+      colorVariant: selectedColor || null,
+      unitPrice: effectivePrice 
+    }
     for (let i = 0; i < count; i += 1) {
       onAddToCart(payload)
     }
@@ -496,92 +502,94 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
-            {/* ── Color Selector ── */}
-            {baseColors.length > 0 && (
-              <div className="mt-5 border-t border-stone-200 pt-5">
-                <p className="text-[13px] font-semibold text-stone-800">
-                  Color: <span className="font-normal text-stone-500">{selectedColor}</span>
-                </p>
-                <div className="mt-3 flex items-center gap-3">
-                  {baseColors.map((color, idx) => {
-                    const active = idx === safeColorIndex
-                    const patternImg = images[Math.min(idx, Math.max(images.length - 1, 0))]
-                    return (
-                      <button
-                        key={`${color}-${idx}`}
-                        type="button"
-                        onClick={() => {
-                          setSelectedColorIndex(idx)
-                          setActiveImageIndex(Math.min(idx, Math.max(images.length - 1, 0)))
-                        }}
-                        className={classNames(
-                          'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
-                          active
-                            ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
-                            : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
-                        )}
-                        aria-label={`Select color ${color}`}
-                      >
-                        <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
-                          <img src={patternImg} alt={color} className="h-full w-full object-cover" />
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
+             {/* ── Color Selector ── */}
+             {colorVariants.length > 0 && (
+               <div className="mt-5 border-t border-stone-200 pt-5">
+                 <p className="text-[13px] font-semibold text-stone-800">
+                   Color: <span className="font-normal text-stone-500">{selectedColor}</span>
+                 </p>
+                 <div className="mt-3 flex items-center gap-3">
+                   {colorVariants.map((variant, idx) => {
+                     const active = idx === safeColorIndex
+                     return (
+                       <button
+                         key={`${variant.name}-${idx}`}
+                         type="button"
+                         onClick={() => {
+                           setSelectedColorIndex(idx)
+                           setActiveImageIndex(0)
+                         }}
+                         className={classNames(
+                           'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
+                           active
+                             ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
+                             : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
+                         )}
+                         aria-label={`Select color ${variant.name}`}
+                       >
+                         <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                           <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
+                         </div>
+                       </button>
+                     )
+                   })}
+                 </div>
 
-                {/* Compare Color Button */}
-                <button
-                  type="button"
-                  onClick={() => setIsCompareOpen(true)}
-                  className="mt-4 flex items-center gap-2 text-[13px] font-medium text-stone-700 hover:text-stone-900 hover:underline transition-all"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                    <circle cx="12" cy="12" r="10" stroke="url(#color-wheel-gradient)" strokeWidth="3" />
-                    <defs>
-                      <linearGradient id="color-wheel-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#f87171" />
-                        <stop offset="20%" stopColor="#fbbf24" />
-                        <stop offset="40%" stopColor="#34d399" />
-                        <stop offset="60%" stopColor="#60a5fa" />
-                        <stop offset="80%" stopColor="#818cf8" />
-                        <stop offset="100%" stopColor="#a78bfa" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  Compare Color
-                </button>
-              </div>
-            )}
+                 {/* Compare Color Button */}
+                 {colorVariants.length > 1 && (
+                   <button
+                     type="button"
+                     onClick={() => setIsCompareOpen(true)}
+                     className="mt-4 flex items-center gap-2 text-[13px] font-medium text-stone-700 hover:text-stone-900 hover:underline transition-all"
+                   >
+                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                       <circle cx="12" cy="12" r="10" stroke="url(#color-wheel-gradient)" strokeWidth="3" />
+                       <defs>
+                         <linearGradient id="color-wheel-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                           <stop offset="0%" stopColor="#f87171" />
+                           <stop offset="20%" stopColor="#fbbf24" />
+                           <stop offset="40%" stopColor="#34d399" />
+                           <stop offset="60%" stopColor="#60a5fa" />
+                           <stop offset="80%" stopColor="#818cf8" />
+                           <stop offset="100%" stopColor="#a78bfa" />
+                         </linearGradient>
+                       </defs>
+                     </svg>
+                     Compare Color
+                   </button>
+                 )}
+               </div>
+             )}
 
-            {/* ── Bulb Options ── */}
-            {bulbOptions.length > 0 && (
-              <div className="mt-5 border-t border-stone-200 pt-5">
-                <p className="text-[13px] font-semibold text-stone-800">
-                  Bulb: <span className="font-normal text-stone-500">{selectedBulbOption || bulbOptions[0]}</span>
-                </p>
-                <div className="mt-3 flex items-center gap-2">
-                  {bulbOptions.map((opt) => {
-                    const active = selectedBulbOption ? selectedBulbOption === opt : opt === bulbOptions[0]
-                    return (
-                      <button
-                        key={opt}
-                        type="button"
-                        onClick={() => setSelectedBulbOption(opt)}
-                        className={classNames(
-                          'px-4 py-2.5 border text-[13px] transition-all duration-200',
-                          active
-                            ? 'border-stone-900 bg-stone-900 text-white font-semibold'
-                            : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
-                        )}
-                      >
-                        {opt}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
+             {/* ── Bulb Options ── */}
+             {product.bulbEnabled && bulbOptions.length > 0 && (
+               <div className="mt-5 border-t border-stone-200 pt-5">
+                 <p className="text-[13px] font-semibold text-stone-800">
+                   Bulb: <span className="font-normal text-stone-500">{selectedBulbOption || bulbOptions[0]}</span>
+                 </p>
+                 <div className="mt-3 flex items-center gap-2">
+                   {bulbOptions.map((opt) => {
+                     const active = selectedBulbOption ? selectedBulbOption === opt : opt === bulbOptions[0]
+                     const isWith = String(opt).toLowerCase().includes('with') && !String(opt).toLowerCase().includes('without')
+                     return (
+                       <button
+                         key={opt}
+                         type="button"
+                         onClick={() => setSelectedBulbOption(opt)}
+                         className={classNames(
+                           'px-4 py-2.5 border text-[13px] transition-all duration-200',
+                           active
+                             ? 'border-stone-900 bg-stone-900 text-white font-semibold'
+                             : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
+                         )}
+                       >
+                         {opt} {isWith ? `(+Rs.${bulbPrice.toLocaleString()})` : `(-Rs.${bulbPrice.toLocaleString()})`}
+                       </button>
+                     )
+                   })}
+                 </div>
+               </div>
+             )}
 
             {/* ── Quantity + Add to Cart ── */}
             <div className="mt-6 border-t border-stone-200 pt-5">
@@ -733,7 +741,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       </div>
 
       {/* ═══════════════ COMPARE COLOR MODAL ═══════════════ */}
-      {isCompareOpen && baseColors.length > 0 && (
+      {isCompareOpen && colorVariants.length > 0 && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
           onClick={() => setIsCompareOpen(false)}
@@ -761,49 +769,46 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               <h3 className="mb-6 text-base font-bold text-stone-900">Compare Color</h3>
 
               <div className="mb-10 flex items-center gap-4">
-                {baseColors.map((color, idx) => {
-                  const patternImg = images[Math.min(idx, Math.max(images.length - 1, 0))]
-                  return (
-                    <button
-                      key={`compare-swatch-${color}-${idx}`}
-                      type="button"
-                      onClick={() => {
-                        setCompareVisibleIndices((prev) =>
-                          prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
-                        )
-                      }}
-                      className={classNames(
-                        'rounded-full p-[3px] transition-all duration-200',
-                        compareVisibleIndices.includes(idx)
-                          ? 'ring-1 ring-black opacity-100'
-                          : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
-                      )}
-                      aria-label={`Toggle visibility for ${color}`}
-                    >
-                      <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
-                        <img src={patternImg} alt={color} className="h-full w-full object-cover" />
-                      </div>
-                    </button>
-                  )
-                })}
+                {colorVariants.map((variant, idx) => (
+                  <button
+                    key={`compare-swatch-${variant.name}-${idx}`}
+                    type="button"
+                    onClick={() => {
+                      setCompareVisibleIndices((prev) =>
+                        prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
+                      )
+                    }}
+                    className={classNames(
+                      'rounded-full p-[3px] transition-all duration-200',
+                      compareVisibleIndices.includes(idx)
+                        ? 'ring-1 ring-black opacity-100'
+                        : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
+                    )}
+                    aria-label={`Toggle visibility for ${variant.name}`}
+                  >
+                    <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                      <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
+                    </div>
+                  </button>
+                ))}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {baseColors
-                  .map((color, idx) => ({ color, idx }))
+                {colorVariants
+                  .map((variant, idx) => ({ variant, idx }))
                   .filter(({ idx }) => compareVisibleIndices.includes(idx))
-                  .map(({ color, idx }) => {
-                    const imageSrc = images[Math.min(idx, Math.max(images.length - 1, 0))] || selectedImage
+                  .map(({ variant, idx }) => {
+                    const imageSrc = variant.image || selectedImage
                     return (
                       <div
-                        key={`compare-card-${color}-${idx}`}
+                        key={`compare-card-${variant.name}-${idx}`}
                         className="group cursor-pointer flex flex-col items-center"
                         onClick={() => { setSelectedColorIndex(idx); setIsCompareOpen(false) }}
                       >
                         <div className="aspect-[3/4] w-full overflow-hidden bg-stone-50 mb-4 transition-opacity group-hover:opacity-90">
-                          <img src={imageSrc} alt={color} className="h-full w-full object-cover object-center" />
+                          <img src={imageSrc} alt={variant.name} className="h-full w-full object-cover object-center" />
                         </div>
-                        <p className="text-sm font-medium text-stone-600 group-hover:text-stone-900 transition-colors">{color}</p>
+                        <p className="text-sm font-medium text-stone-600 group-hover:text-stone-900 transition-colors">{variant.name}</p>
                       </div>
                     )
                   })}

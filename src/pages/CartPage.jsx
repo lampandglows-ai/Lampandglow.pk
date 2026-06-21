@@ -78,6 +78,9 @@ export default function CartPage({
                         {item.bulbOption && (
                           <p className="text-[11px] text-stone-500">{item.bulbOption}</p>
                         )}
+                        {item.colorVariant && (
+                          <p className="text-[11px] text-stone-500">Color: {item.colorVariant}</p>
+                        )}
                       </div>
                       <button
                         onClick={() => handleRemoveFromCart(item.id)}
@@ -116,12 +119,12 @@ export default function CartPage({
                 </div>
                 <div className="flex justify-between">
                   <span>Estimated shipping</span>
-                  <span>{cartTotal >= 5000 ? 'Free' : 'Rs.200'}</span>
+                  <span>{cartTotal >= 15000 ? 'Free' : 'Rs.12'}</span>
                 </div>
                 <div className="flex justify-between font-semibold pt-1 border-t border-[#FFD400]/30 mt-1 text-[#5A2D0C]">
                   <span>Total</span>
                   <span>
-                    Rs.{formatPrice(cartTotal + (cartTotal >= 5000 || cartTotal === 0 ? 0 : 200))}
+                    Rs.{formatPrice(cartTotal + (cartTotal >= 15000 || cartTotal === 0 ? 0 : 12))}
                   </span>
                 </div>
               </div>

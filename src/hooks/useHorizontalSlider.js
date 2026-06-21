@@ -15,20 +15,28 @@ export function useHorizontalSlider(itemsLength = 0) {
 
   useEffect(() => {
     const el = scrollContainerRef.current
-    if (!el) return undefined
+    if (!el || itemsLength === 0) return undefined
 
-    // Delay initial check to allow DOM to render
-    const timer = setTimeout(() => {
-      checkScroll()
-    }, 150)
+    const runCheck = () => {
+      requestAnimationFrame(checkScroll)
+    }
 
-    const resizeObserver = new ResizeObserver(checkScroll)
+    runCheck()
+    const timer = setTimeout(runCheck, 150)
+    const timer2 = setTimeout(runCheck, 600)
+
+    const resizeObserver = new ResizeObserver(runCheck)
     resizeObserver.observe(el)
-    window.addEventListener('resize', checkScroll)
+    Array.from(el.children).forEach((child) => resizeObserver.observe(child))
+
+    window.addEventListener('resize', runCheck)
+    el.addEventListener('scroll', runCheck, { passive: true })
 
     return () => {
       clearTimeout(timer)
-      window.removeEventListener('resize', checkScroll)
+      clearTimeout(timer2)
+      window.removeEventListener('resize', runCheck)
+      el.removeEventListener('scroll', runCheck)
       resizeObserver.disconnect()
     }
   }, [checkScroll, itemsLength])
@@ -37,16 +45,20 @@ export function useHorizontalSlider(itemsLength = 0) {
     const el = scrollContainerRef.current
     if (!el) return
 
-    // Fixed scroll amount for reliable behavior
-    const scrollAmount = 320
+    const firstChild = el.firstElementChild
+    const styles = window.getComputedStyle(el)
+    const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0
+    const itemWidth = firstChild
+      ? firstChild.getBoundingClientRect().width + gap
+      : Math.min(el.clientWidth * 0.8, 320)
 
-    el.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth',
-    })
+    const nextLeft =
+      direction === 'left'
+        ? Math.max(0, el.scrollLeft - itemWidth)
+        : Math.min(el.scrollLeft + itemWidth, el.scrollWidth - el.clientWidth)
 
-    // Recheck scroll state after animation
-    setTimeout(() => checkScroll(), 500)
+    el.scrollTo({ left: nextLeft, behavior: 'smooth' })
+    setTimeout(checkScroll, 400)
   }, [checkScroll])
 
   return { scrollContainerRef, canScrollLeft, canScrollRight, checkScroll, scroll }
