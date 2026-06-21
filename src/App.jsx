@@ -64,6 +64,7 @@ import heroBannersService from './utils/heroBannersService.js'
 import wishlistService from './utils/wishlistService.js'
 import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
+import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
 // Protected Admin Route Component
 function ProtectedAdminRoute({ children }) {
@@ -734,6 +735,15 @@ function AppContent() {
             element={
               <ProtectedAdminRoute>
                 <AdminShippingPolicyPage />
+              </ProtectedAdminRoute>
+            }
+          />
+
+            <Route
+            path="/admin/shipping-fees"
+            element={
+              <ProtectedAdminRoute>
+                <AdminShippingPage />
               </ProtectedAdminRoute>
             }
           />
