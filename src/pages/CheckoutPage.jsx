@@ -19,7 +19,8 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const [error, setError] = useState('')
   const [placedOrderId, setPlacedOrderId] = useState('')
   const [loading, setLoading] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState('cod')
+  // No default payment method - user must explicitly choose one
+  const [paymentMethod, setPaymentMethod] = useState('')
   const [bankDetails, setBankDetails] = useState(null)
 
   useEffect(() => {
@@ -62,6 +63,11 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
     const required = [fullName, phone, addressLine1, city]
     if (required.some((v) => !String(v).trim())) {
       setError('Please fill in required address details.')
+      return
+    }
+
+    if (!paymentMethod) {
+      setError('Please select a payment method.')
       return
     }
 
@@ -350,7 +356,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               </p>
             </div>
 
-            {/* Payment Method Options */}
+            {/* Payment Method Options - none selected by default */}
             <div className="mt-4 space-y-3">
               {/* Cash on Delivery */}
               <label
@@ -397,6 +403,13 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   <p className="text-xs mt-0.5 text-white/60">Full payment via bank transfer before dispatch.</p>
                 </div>
               </label>
+
+              {/* Hint shown until the user picks a method */}
+              {!paymentMethod && (
+                <p className="text-[11px] text-amber-400 pt-1">
+                  Please select a payment method to continue.
+                </p>
+              )}
             </div>
 
             {/* Conditional Bank Details - only show for bank deposit */}
@@ -485,7 +498,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || !paymentMethod}
               className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#FFD400] to-amber-500 px-6 py-3 text-sm font-bold text-[#5A2D0C] hover:from-amber-400 hover:to-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200"
             >
               {loading ? (
