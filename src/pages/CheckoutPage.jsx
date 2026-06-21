@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import classNames from '../utils/classNames.js'
 import bankDetailsService from '../utils/bankDetailsService'
+import shippingService from '../utils/shippingService'
 
 export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const navigate = useNavigate()
@@ -22,6 +23,8 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   // No default payment method - user must explicitly choose one
   const [paymentMethod, setPaymentMethod] = useState('')
   const [bankDetails, setBankDetails] = useState(null)
+  const [shippingSettings, setShippingSettings] = useState({ cities: [], freeShippingThreshold: 15000 })
+  const [shippingLoading, setShippingLoading] = useState(true)
 
   useEffect(() => {
     const loadBankDetails = async () => {
@@ -29,6 +32,21 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
       setBankDetails(data)
     }
     loadBankDetails()
+  }, [])
+
+  useEffect(() => {
+    const loadShippingSettings = async () => {
+      try {
+        setShippingLoading(true)
+        const data = await shippingService.getShippingSettings()
+        setShippingSettings(data)
+      } catch (err) {
+        console.error('Error loading shipping settings:', err)
+      } finally {
+        setShippingLoading(false)
+      }
+    }
+    loadShippingSettings()
   }, [])
 
   const formatPKR = (value) => {
@@ -45,8 +63,17 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   }
 
   const numericTotal = parseNumericTotal(cartTotal)
-  const shipping = numericTotal >= 15000 || numericTotal === 0 ? 0 : 12
-  const grandTotal = numericTotal + shipping
+  const freeShippingThreshold = shippingSettings.freeShippingThreshold ?? 15000
+  const qualifiesForFreeShipping = numericTotal === 0 || numericTotal >= freeShippingThreshold
+  const selectedCityRate = shippingSettings.cities.find((c) => c.name === city)
+  const cityShippingFee = selectedCityRate ? Number(selectedCityRate.fee) || 0 : 0
+
+  // shipping is:
+  //  - 0 if the order qualifies for free shipping (regardless of city)
+  //  - null if a city hasn't been chosen yet and the order doesn't qualify for free shipping
+  //  - the selected city's fee otherwise
+  const shipping = qualifiesForFreeShipping ? 0 : city ? cityShippingFee : null
+  const grandTotal = numericTotal + (shipping || 0)
 
   const handleSubmit = async () => {
     if (!isLoggedIn()) {
@@ -95,7 +122,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
         bulbOption: item.bulbOption,
       })),
       subtotal: numericTotal,
-      shipping,
+      shipping: shipping || 0,
       total: grandTotal,
     }
 
@@ -161,8 +188,8 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                     <span>Rs.{formatPKR(numericTotal)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
+                    <span>Shipping ({city})</span>
+                    <span>{!shipping ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
                   </div>
                   <div className="flex justify-between font-semibold pt-1 border-t border-[#FFD400]/20 mt-1">
                     <span>Total</span>
@@ -197,13 +224,6 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
   const advancePercent = bankDetails?.codAdvancePercent ?? 50
   const advanceAmount = Math.round(grandTotal * (advancePercent / 100))
   const codAmount = grandTotal - advanceAmount
-
-  // Calculate bulb addon from cart items
-  const cartBulbAddon = cart.reduce((sum, item) => {
-    const isWithBulb = item.bulbOption && String(item.bulbOption).toLowerCase().includes('with')
-    const bulbPrice = typeof item.product?.bulbPrice === 'number' ? item.product.bulbPrice : 500
-    return sum + (isWithBulb ? bulbPrice : 0)
-  }, 0)
 
   return (
     <section className="w-full px-0 py-10 sm:py-14">
@@ -284,12 +304,26 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 <label className="block text-[11px] font-semibold text-white/80">
                   City
                 </label>
-                <input
+                <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] placeholder:text-white/40"
-                  placeholder="Sahiwal"
-                />
+                  disabled={shippingLoading}
+                  className="mt-2 w-full rounded-xl border border-[#FFD400]/20 px-3 py-2 text-sm focus:outline-none focus:ring-1 bg-[#5A2D0C] text-white focus:ring-[#FFD400] disabled:opacity-60"
+                >
+                  <option value="" className="text-black">
+                    {shippingLoading ? 'Loading cities...' : 'Select city'}
+                  </option>
+                  {shippingSettings.cities.map((c) => (
+                    <option key={c.id} value={c.name} className="text-black">
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                {!shippingLoading && shippingSettings.cities.length === 0 && (
+                  <p className="mt-1 text-[10px] text-amber-400">
+                    No delivery cities configured yet. Please contact support.
+                  </p>
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-semibold text-white/80">
@@ -407,7 +441,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 />
                 <div className="text-sm">
                   <p className="font-semibold text-white/90">Bank Deposit</p>
-                  <p className="text-xs mt-0.5 text-white/60">Full payment is required in advance.</p>
+                  <p className="text-xs mt-0.5 text-white/60">Full payment via bank transfer before dispatch.</p>
                 </div>
               </label>
 
@@ -418,34 +452,6 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                 </p>
               )}
             </div>
-
-            {/* Conditional COD Details - only show for COD */}
-            {paymentMethod === 'cod' && (
-              <div className="mt-4 rounded-xl border-2 border-[#FFD400] p-5 bg-[#7A4A20] shadow-lg">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#FFD400]" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
-                  <p className="text-sm font-bold text-[#FFD400]">
-                    Cash on Delivery
-                  </p>
-                </div>
-                <p className="text-sm text-white/90 leading-relaxed">
-                  Payment will be made upon delivery of the order.
-                </p>
-                {bankDetails && (
-                  <div className="mt-3 rounded-lg border-2 border-amber-400 bg-amber-900/30 p-4">
-                    <p className="text-sm font-bold text-[#FFD400]">
-                      Advance Payment Required
-                    </p>
-                    <p className="mt-2 text-xs text-white/80 leading-relaxed">
-                      {bankDetails.codAdvancePercent || 50}% advance payment (Rs.{formatPKR(advanceAmount)}) is required via Bank Deposit to confirm your order. Remaining balance of Rs.{formatPKR(codAmount)} will be paid on delivery.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Conditional Bank Details - only show for bank deposit */}
             {paymentMethod === 'bank' && bankDetails && (
@@ -520,9 +526,20 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   <span>Rs.{formatPKR(numericTotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `Rs.${formatPKR(shipping)}`}</span>
+                  <span>Shipping{city ? ` (${city})` : ''}</span>
+                  <span>
+                    {shipping === null
+                      ? 'Select city'
+                      : shipping === 0
+                      ? 'Free'
+                      : `Rs.${formatPKR(shipping)}`}
+                  </span>
                 </div>
+                {!qualifiesForFreeShipping && (
+                  <p className="text-[10px] text-amber-400 pt-1">
+                    Free shipping on orders over Rs.{formatPKR(freeShippingThreshold)}
+                  </p>
+                )}
                 <div className="flex justify-between font-semibold pt-1 border-t border-[#FFD400]/20 mt-1">
                   <span>Total</span>
                   <span>Rs.{formatPKR(grandTotal)}</span>
@@ -533,7 +550,7 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={loading || !paymentMethod}
+              disabled={loading || !paymentMethod || !city}
               className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#FFD400] to-amber-500 px-6 py-3 text-sm font-bold text-[#5A2D0C] hover:from-amber-400 hover:to-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200"
             >
               {loading ? (
