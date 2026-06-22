@@ -310,16 +310,16 @@ export default function Footer({ theme = 'light' }) {
               </div>
             ))}
 
-            {/* Newsletter Column - wider, shorter */}
-            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-2 -mx-2 sm:mx-0">
+            {/* Newsletter Column - wider, shorter, self-start so it doesn't stretch to match taller columns */}
+            <div className="self-start text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-3 -mx-2 sm:mx-0">
               <p className="text-sm font-semibold text-[#FFFFFF]">
                 Newsletter Sign Up
               </p>
-              <p className="mt-0.5 text-sm text-white/90">
+              <p className="mt-1 text-sm text-white/90">
                 Receive the latest updates about our products and promotions.
               </p>
 
-              <form onSubmit={handleNewsletterSubmit} className="mt-1.5 mx-auto sm:mx-0">
+              <form onSubmit={handleNewsletterSubmit} className="mt-2 mx-auto sm:mx-0">
                 <div className="flex flex-col sm:flex-row gap-1.5">
                   <input
                     type="email"
