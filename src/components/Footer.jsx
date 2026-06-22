@@ -214,7 +214,7 @@ export default function Footer({ theme = 'light' }) {
           bottom: 0;
           height: 0%;
           background: #059669;
-          transition: height 0.5s cubic-bezier(0.22, 0.9, 0.32, 1);
+          transition: height 0.8s cubic-bezier(0.22, 0.9, 0.32, 1);
           pointer-events: none;
           z-index: 0;
         }
