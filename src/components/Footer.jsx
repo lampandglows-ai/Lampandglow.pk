@@ -204,74 +204,28 @@ export default function Footer({ theme = 'light' }) {
     <footer>
       {/* Scoped styles for the reusable "water fill + shake" hover effect */}
       <style>{`
-        .water-fill-btn {
+        .fill-btn {
           overflow: hidden;
         }
-        /* Liquid layer: starts at 0 height and rises from bottom to top on hover */
-        .water-fill-btn .wa-water {
+        .fill-btn .fill-layer {
           position: absolute;
           left: 0;
           right: 0;
           bottom: 0;
           height: 0%;
-          background: linear-gradient(180deg, #6ee7b7 0%, #10b981 55%, #047857 100%);
-          transition: height 0.5s cubic-bezier(0.22, 0.9, 0.32, 1);
+          background: #059669;
+          transition: height 0.4s cubic-bezier(0.22, 0.9, 0.32, 1);
           pointer-events: none;
           z-index: 0;
         }
-        /* Amber variant used on the Subscribe button to suit its yellow background */
-        .water-fill-btn.water-fill-amber .wa-water {
-          background: linear-gradient(180deg, #fde68a 0%, #f59e0b 55%, #b45309 100%);
+        .fill-btn.fill-amber .fill-layer {
+          background: #d97706;
         }
-        .water-fill-btn:hover .wa-water {
+        .fill-btn:hover .fill-layer {
           height: 100%;
         }
-        /* Wavy surface riding on top of the rising liquid */
-        .water-fill-btn .wa-water::before,
-        .water-fill-btn .wa-water::after {
-          content: '';
-          position: absolute;
-          top: -8px;
-          left: -25%;
-          width: 150%;
-          height: 16px;
-          background: inherit;
-          border-radius: 45%;
-          opacity: 0;
-          transition: opacity 0.3s ease 0.4s;
-        }
-        .water-fill-btn .wa-water::after {
-          left: -55%;
-        }
-        .water-fill-btn:hover .wa-water::before,
-        .water-fill-btn:hover .wa-water::after {
-          opacity: 1;
-          animation: wa-wave-drift 2.2s ease-in-out infinite;
-        }
-        .water-fill-btn:hover .wa-water::after {
-          animation-duration: 2.8s;
-          animation-direction: reverse;
-        }
-        @keyframes wa-wave-drift {
-          0%, 100% { transform: translateX(-4%) scaleY(1); }
-          50% { transform: translateX(4%) scaleY(0.6); }
-        }
-        .water-fill-btn:hover {
-          animation: wa-shake 0.5s ease-in-out 1;
-        }
-        @keyframes wa-shake {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          15% { transform: translateX(-4px) rotate(-6deg); }
-          30% { transform: translateX(4px) rotate(6deg); }
-          45% { transform: translateX(-3px) rotate(-4deg); }
-          60% { transform: translateX(3px) rotate(4deg); }
-          80% { transform: translateX(-1px) rotate(-1deg); }
-        }
         @media (prefers-reduced-motion: reduce) {
-          .water-fill-btn:hover { animation: none; }
-          .water-fill-btn:hover .wa-water { transition: none; height: 100%; }
-          .water-fill-btn:hover .wa-water::before,
-          .water-fill-btn:hover .wa-water::after { animation: none; }
+          .fill-btn:hover .fill-layer { transition: none; height: 100%; }
         }
       `}</style>
 
@@ -357,11 +311,11 @@ export default function Footer({ theme = 'light' }) {
             ))}
 
             {/* Newsletter Column - wider, shorter */}
-            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-3 -mx-2 sm:mx-0">
-              <p className="text-sm font-semibold text-[#FFFFFF]">
+            <div className="text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-2.5 -mx-2 sm:mx-0">
+              <p className="text-xs font-semibold text-[#FFFFFF]">
                 Newsletter Sign Up
               </p>
-              <p className="mt-1.5 text-sm text-white/90">
+              <p className="mt-1 text-xs text-white/90">
                 Receive our latest updates about our products & promotions.
               </p>
 
@@ -378,9 +332,9 @@ export default function Footer({ theme = 'light' }) {
                   <button
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className="water-fill-btn water-fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-4 py-2 text-sm font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="fill-btn fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-4 py-2 text-sm font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <span className="wa-water" aria-hidden="true" />
+                    <span className="fill-layer" aria-hidden="true" />
                     <span className="relative z-10 transition-colors group-hover:text-white">
                       {newsletterStatus === 'submitting' ? 'Subscribing...' : 'Subscribe'}
                     </span>
@@ -408,10 +362,10 @@ export default function Footer({ theme = 'light' }) {
           href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
-          className="water-fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
+          className="fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg"
           aria-label="Chat on WhatsApp"
         >
-          <span className="wa-water" aria-hidden="true" />
+          <span className="fill-layer" aria-hidden="true" />
           <FaWhatsapp className="relative z-10 h-5 w-5" />
           <span className="relative z-10">Chat on WhatsApp</span>
         </a>
