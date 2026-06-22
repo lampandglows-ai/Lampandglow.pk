@@ -453,8 +453,8 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
               )}
             </div>
 
-            {/* Conditional Bank Details - only show for bank deposit */}
-            {paymentMethod === 'bank' && bankDetails && (
+            {/* Conditional Bank Details - show for both bank deposit and COD */}
+            {(paymentMethod === 'bank' || paymentMethod === 'cod') && bankDetails && (
               <div className="mt-4 rounded-xl border-2 border-[#FFD400] p-5 bg-[#7A4A20] shadow-lg">
                 <div className="flex items-center gap-2 mb-3">
                   <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#FFD400]" fill="none" stroke="currentColor" strokeWidth="2">
@@ -489,12 +489,25 @@ export default function CheckoutPage({ cart, cartTotal, onPlaceOrder }) {
                   )}
                 </div>
                 <div className="mt-4 rounded-lg border-2 border-amber-400 bg-amber-900/30 p-4">
-                  <p className="text-sm font-bold text-[#FFD400]">
-                    Total Amount to Transfer: Rs.{formatPKR(grandTotal)}
-                  </p>
-                  <p className="mt-2 text-xs text-white/80 leading-relaxed">
-                    Please transfer the full amount to the above bank account and share the payment receipt via WhatsApp for faster processing.
-                  </p>
+                  {paymentMethod === 'bank' ? (
+                    <>
+                      <p className="text-sm font-bold text-[#FFD400]">
+                        Total Amount to Transfer: Rs.{formatPKR(grandTotal)}
+                      </p>
+                      <p className="mt-2 text-xs text-white/80 leading-relaxed">
+                        Please transfer the full amount to the above bank account and share the payment receipt via WhatsApp for faster processing.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm font-bold text-[#FFD400]">
+                        Advance Payment Required: Rs.{formatPKR(advanceAmount)} ({advancePercent}% of Rs.{formatPKR(grandTotal)})
+                      </p>
+                      <p className="mt-2 text-xs text-white/80 leading-relaxed">
+                        For Cash on Delivery, please transfer the advance amount ({advancePercent}%) to the above bank account. Remaining balance of Rs.{formatPKR(codAmount)} will be collected on delivery. Share the payment receipt via WhatsApp for faster processing.
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             )}
