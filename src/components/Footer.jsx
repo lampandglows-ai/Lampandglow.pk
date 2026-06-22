@@ -214,18 +214,37 @@ export default function Footer({ theme = 'light' }) {
           bottom: 0;
           height: 0%;
           background: #059669;
-          transition: height 0.4s cubic-bezier(0.22, 0.9, 0.32, 1);
+          transition: height 0.5s cubic-bezier(0.22, 0.9, 0.32, 1);
           pointer-events: none;
           z-index: 0;
         }
+        .fill-btn .fill-layer::before {
+          content: '';
+          position: absolute;
+          top: -16px;
+          left: 0;
+          right: 0;
+          height: 32px;
+          background: #059669;
+          border-radius: 50%;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
         .fill-btn.fill-amber .fill-layer {
+          background: #d97706;
+        }
+        .fill-btn.fill-amber .fill-layer::before {
           background: #d97706;
         }
         .fill-btn:hover .fill-layer {
           height: 100%;
         }
+        .fill-btn:hover .fill-layer::before {
+          opacity: 1;
+        }
         @media (prefers-reduced-motion: reduce) {
           .fill-btn:hover .fill-layer { transition: none; height: 100%; }
+          .fill-btn:hover .fill-layer::before { opacity: 1; }
         }
       `}</style>
 
