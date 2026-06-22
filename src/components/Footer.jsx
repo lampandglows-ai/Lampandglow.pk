@@ -312,11 +312,11 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Newsletter Column - wider, shorter */}
             <div className="text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-2 -mx-2 sm:mx-0">
-              <p className="text-[11px] font-semibold text-[#FFFFFF]">
+              <p className="text-sm font-semibold text-[#FFFFFF]">
                 Newsletter Sign Up
               </p>
-              <p className="mt-0.5 text-[11px] text-white/90">
-                Receive latest updates.
+              <p className="mt-0.5 text-sm text-white/90">
+                Receive the latest updates about our products and promotions.
               </p>
 
               <form onSubmit={handleNewsletterSubmit} className="mt-1.5 mx-auto sm:mx-0">
@@ -327,12 +327,12 @@ export default function Footer({ theme = 'light' }) {
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Email address"
                     required
-                    className="w-full flex-1 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-xs text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
+                    className="w-full flex-1 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                   />
                   <button
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className="fill-btn fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-3 py-1.5 text-xs font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="fill-btn fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-3 py-1.5 text-sm font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     <span className="fill-layer" aria-hidden="true" />
                     <span className="relative z-10 transition-colors group-hover:text-white">
