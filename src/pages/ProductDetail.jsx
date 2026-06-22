@@ -155,11 +155,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const basePrice = discountInfo.discountedPrice
   const baseOriginalPrice = discountInfo.originalPrice
 
-  const selectedBulb = selectedBulbOption || (bulbOptions[0] ?? '')
-  const isWithBulb =
-    selectedBulb &&
-    String(selectedBulb).toLowerCase().includes('with') &&
-    !String(selectedBulb).toLowerCase().includes('without')
+  const selectedBulb = selectedBulbOption || 'with'
+  const isWithBulb = selectedBulb === 'with'
   const bulbPrice = typeof product?.bulbPrice === 'number' ? product.bulbPrice : 500
   const bulbAddon = isWithBulb ? bulbPrice : 0
 
@@ -233,6 +230,54 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
   return (
     <section className="w-full">
+      <style>{`
+        .fill-btn {
+          overflow: hidden;
+        }
+        .fill-btn .fill-layer {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 0%;
+          transition: height 0.8s cubic-bezier(0.22, 0.9, 0.32, 1);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .fill-btn .fill-layer::before {
+          content: '';
+          position: absolute;
+          top: -12px;
+          left: 0;
+          right: 0;
+          height: 24px;
+          border-radius: 50%;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .fill-btn.fill-dark .fill-layer {
+          background: #FFD400;
+        }
+        .fill-btn.fill-dark .fill-layer::before {
+          background: #FFD400;
+        }
+        .fill-btn.fill-amber .fill-layer {
+          background: #b45309;
+        }
+        .fill-btn.fill-amber .fill-layer::before {
+          background: #b45309;
+        }
+        .fill-btn:hover .fill-layer {
+          height: 100%;
+        }
+        .fill-btn:hover .fill-layer::before {
+          opacity: 1;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .fill-btn:hover .fill-layer { transition: none; height: 100%; }
+          .fill-btn:hover .fill-layer::before { opacity: 1; }
+        }
+      `}</style>
       {/* ═══════════════ BREADCRUMBS ═══════════════ */}
       <div className="border-b border-stone-200">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
@@ -561,32 +606,45 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                </div>
              )}
 
-             {/* ── Bulb Options ── */}
-             {product.bulbEnabled && bulbOptions.length > 0 && (
+             {/* ── Bulb Option: With / Without ── */}
+             {(product.bulbEnabled || bulbOptions.length > 0) && (
                <div className="mt-5 border-t border-stone-200 pt-5">
                  <p className="text-[13px] font-semibold text-stone-800">
-                   Bulb: <span className="font-normal text-stone-500">{selectedBulbOption || bulbOptions[0]}</span>
+                   Bulb Option
                  </p>
-                 <div className="mt-3 flex items-center gap-2">
-                   {bulbOptions.map((opt) => {
-                     const active = selectedBulbOption ? selectedBulbOption === opt : opt === bulbOptions[0]
-                     const isWith = String(opt).toLowerCase().includes('with') && !String(opt).toLowerCase().includes('without')
-                     return (
-                       <button
-                         key={opt}
-                         type="button"
-                         onClick={() => setSelectedBulbOption(opt)}
-                         className={classNames(
-                           'px-4 py-2.5 border text-[13px] transition-all duration-200',
-                           active
-                             ? 'border-stone-900 bg-stone-900 text-white font-semibold'
-                             : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
-                         )}
-                       >
-                         {opt} {isWith ? `(+Rs.${bulbPrice.toLocaleString()})` : `(-Rs.${bulbPrice.toLocaleString()})`}
-                       </button>
-                     )
-                   })}
+                 <div className="mt-3 flex items-center gap-4">
+                   <label className={classNames(
+                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
+                     selectedBulbOption === 'with'
+                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
+                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
+                   )}>
+                     <input
+                       type="radio"
+                       name="bulbOption"
+                       value="with"
+                       checked={selectedBulbOption === 'with'}
+                       onChange={() => setSelectedBulbOption('with')}
+                       className="sr-only"
+                     />
+                     With Bulb (+Rs.{bulbPrice.toLocaleString()})
+                   </label>
+                   <label className={classNames(
+                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
+                     selectedBulbOption === 'without'
+                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
+                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
+                   )}>
+                     <input
+                       type="radio"
+                       name="bulbOption"
+                       value="without"
+                       checked={selectedBulbOption === 'without'}
+                       onChange={() => setSelectedBulbOption('without')}
+                       className="sr-only"
+                     />
+                     Without Bulb (-Rs.{bulbPrice.toLocaleString()})
+                   </label>
                  </div>
                </div>
              )}
@@ -629,12 +687,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   type="button"
                   onClick={addQuantityToCart}
                   className={classNames(
-                    'relative h-12 flex-1 overflow-hidden bg-[#5A2D0C] text-white text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200 hover:bg-[#FFD400] hover:text-[#222222] active:scale-[0.99]',
+                    'fill-btn fill-dark group relative h-12 flex-1 overflow-hidden bg-[#5A2D0C] text-white text-[13px] font-semibold tracking-wide uppercase',
                     !inStock && 'opacity-50 cursor-not-allowed',
                   )}
                   disabled={!inStock}
                 >
-                  Add To Cart
+                  <span className="fill-layer" aria-hidden="true" />
+                  <span className="relative z-10 transition-colors group-hover:text-[#222222]">Add To Cart</span>
                 </button>
               </div>
 
@@ -647,12 +706,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   navigate('/checkout')
                 }}
                 className={classNames(
-                  'mt-3 h-12 w-full bg-[#FFD400] text-[#222222] text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200 hover:bg-[#FFE566] active:scale-[0.99]',
+                  'fill-btn fill-amber group relative mt-3 h-12 w-full overflow-hidden bg-[#FFD400] text-[#222222] text-[13px] font-semibold tracking-wide uppercase',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
               >
-                Buy It Now
+                <span className="fill-layer" aria-hidden="true" />
+                <span className="relative z-10 transition-colors group-hover:text-white">Buy It Now</span>
               </button>
 
               {/* Share row */}
