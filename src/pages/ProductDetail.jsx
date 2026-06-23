@@ -100,12 +100,24 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
   // ── Memos ──
   const images = useMemo(() => {
-    if (Array.isArray(product?.images) && product.images.length > 0) {
-      return product.images
+    const baseImages = Array.isArray(product?.images) && product.images.length > 0
+      ? product.images
+      : product?.image
+        ? [product.image, product.image, product.image]
+        : []
+
+    // Prepend selected color variant image so it shows as main image
+    const variants = Array.isArray(product?.productDetails?.colorVariants)
+      ? product.productDetails.colorVariants
+      : []
+    const safeIdx = Math.min(Math.max(selectedColorIndex, 0), Math.max(variants.length - 1, 0))
+    const selectedVariant = variants[safeIdx]
+    if (selectedVariant?.image) {
+      return [selectedVariant.image, ...baseImages]
     }
-    if (product?.image) return [product.image, product.image, product.image]
-    return []
-  }, [product?.image, product?.images])
+
+    return baseImages
+  }, [product?.image, product?.images, product?.productDetails?.colorVariants, selectedColorIndex])
 
   const productReviews = useMemo(
     () => reviews.filter((r) => r.productId === productId),
@@ -603,49 +615,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                      Compare Color
                    </button>
                  )}
-               </div>
-             )}
-
-             {/* ── Bulb Option: With / Without ── */}
-             {(product.bulbEnabled || bulbOptions.length > 0) && (
-               <div className="mt-5 border-t border-stone-200 pt-5">
-                 <p className="text-[13px] font-semibold text-stone-800">
-                   Bulb Option
-                 </p>
-                 <div className="mt-3 flex items-center gap-4">
-                   <label className={classNames(
-                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
-                     selectedBulbOption === 'with'
-                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
-                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
-                   )}>
-                     <input
-                       type="radio"
-                       name="bulbOption"
-                       value="with"
-                       checked={selectedBulbOption === 'with'}
-                       onChange={() => setSelectedBulbOption('with')}
-                       className="sr-only"
-                     />
-                     With Bulb (+Rs.{bulbPrice.toLocaleString()})
-                   </label>
-                   <label className={classNames(
-                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
-                     selectedBulbOption === 'without'
-                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
-                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
-                   )}>
-                     <input
-                       type="radio"
-                       name="bulbOption"
-                       value="without"
-                       checked={selectedBulbOption === 'without'}
-                       onChange={() => setSelectedBulbOption('without')}
-                       className="sr-only"
-                     />
-                     Without Bulb (-Rs.{bulbPrice.toLocaleString()})
-                   </label>
-                 </div>
                </div>
              )}
 
