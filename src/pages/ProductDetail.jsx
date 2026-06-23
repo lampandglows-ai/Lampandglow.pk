@@ -618,6 +618,49 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                </div>
              )}
 
+             {/* ── Bulb Option: With / Without ── */}
+             {(product.bulbEnabled || bulbOptions.length > 0) && (
+               <div className="mt-5 border-t border-stone-200 pt-5">
+                 <p className="text-[13px] font-semibold text-stone-800">
+                   Bulb Option
+                 </p>
+                 <div className="mt-3 flex items-center gap-4">
+                   <label className={classNames(
+                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
+                     selectedBulbOption === 'with'
+                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
+                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
+                   )}>
+                     <input
+                       type="radio"
+                       name="bulbOption"
+                       value="with"
+                       checked={selectedBulbOption === 'with'}
+                       onChange={() => setSelectedBulbOption('with')}
+                       className="sr-only"
+                     />
+                     With Bulb
+                   </label>
+                   <label className={classNames(
+                     'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
+                     selectedBulbOption === 'without'
+                       ? 'border-stone-900 bg-stone-900 text-white font-semibold'
+                       : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
+                   )}>
+                     <input
+                       type="radio"
+                       name="bulbOption"
+                       value="without"
+                       checked={selectedBulbOption === 'without'}
+                       onChange={() => setSelectedBulbOption('without')}
+                       className="sr-only"
+                     />
+                     Without Bulb
+                   </label>
+                 </div>
+               </div>
+             )}
+
             {/* ── Quantity + Add to Cart ── */}
             <div className="mt-6 border-t border-stone-200 pt-5">
               <p className="text-[13px] text-stone-600">
