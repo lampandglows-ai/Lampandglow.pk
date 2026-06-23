@@ -271,7 +271,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const pd = product.productDetails || {}
 
   return (
-    <section className="w-full pb-16 sm:pb-0">
+    <section className="w-full">
       <style>{`
         .fill-btn {
           overflow: hidden;
@@ -696,7 +696,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                </div>
              )}
 
-             {/* ── Quantity + Add to Cart ── */}
+            {/* ── Quantity + Add to Cart ── */}
             <div className="mt-6 border-t border-stone-200 pt-5">
               <p className="text-[13px] text-stone-600">
                 Subtotal:{' '}
@@ -730,12 +730,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </button>
                 </div>
 
-                {/* Desktop: Add To Cart */}
                 <button
                   type="button"
                   onClick={addQuantityToCart}
                   className={classNames(
-                    'hidden sm:flex fill-btn fill-dark group relative h-12 flex-1 overflow-hidden bg-[#5A2D0C] text-white text-[13px] font-semibold tracking-wide uppercase',
+                    'fill-btn fill-dark group relative h-12 flex-1 overflow-hidden bg-[#5A2D0C] text-white text-[13px] font-semibold tracking-wide uppercase',
                     !inStock && 'opacity-50 cursor-not-allowed',
                   )}
                   disabled={!inStock}
@@ -745,7 +744,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 </button>
               </div>
 
-              {/* Desktop: Buy It Now */}
+              {/* Buy It Now */}
               <button
                 type="button"
                 onClick={() => {
@@ -754,7 +753,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   navigate('/checkout')
                 }}
                 className={classNames(
-                  'hidden sm:flex fill-btn fill-amber group relative mt-3 h-12 w-full overflow-hidden bg-[#FFD400] text-[#222222] text-[13px] font-semibold tracking-wide uppercase',
+                  'fill-btn fill-amber group relative mt-3 h-12 w-full overflow-hidden bg-[#FFD400] text-[#222222] text-[13px] font-semibold tracking-wide uppercase',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
@@ -1208,59 +1207,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
           </div>
         </div>
       )}
-
-      {/* ═══ Mobile Fixed Bottom Cart Bar ═══ */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center gap-2 border-t border-stone-200 bg-white px-4 py-3 shadow-[0_-2px_10px_rgba(0,0,0,0.08)] sm:hidden">
-        <div className="flex flex-1 items-center gap-2">
-          <div className="flex items-center border border-stone-300 bg-white">
-            <button
-              type="button"
-              onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-              className="h-10 w-10 grid place-items-center text-stone-600 text-base transition-colors hover:bg-stone-50"
-              aria-label="Decrease quantity"
-            >
-              −
-            </button>
-            <div className="h-10 w-10 grid place-items-center text-xs font-semibold text-stone-900 border-x border-stone-300">
-              {quantity}
-            </div>
-            <button
-              type="button"
-              onClick={() => setQuantity((prev) => Math.min(Math.max(stock, 99), prev + 1))}
-              className="h-10 w-10 grid place-items-center text-stone-600 text-base transition-colors hover:bg-stone-50"
-              aria-label="Increase quantity"
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={addQuantityToCart}
-          className={classNames(
-            'flex-1 h-11 rounded-sm bg-[#5A2D0C] text-white text-[12px] font-semibold tracking-wide uppercase transition-colors',
-            !inStock && 'opacity-50 cursor-not-allowed',
-          )}
-          disabled={!inStock}
-        >
-          Add To Cart
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            addQuantityToCart()
-            if (!inStock) return
-            navigate('/checkout')
-          }}
-          className={classNames(
-            'flex-1 h-11 rounded-sm bg-[#FFD400] text-[#222222] text-[12px] font-semibold tracking-wide uppercase transition-colors',
-            !inStock && 'opacity-50 cursor-not-allowed',
-          )}
-          disabled={!inStock}
-        >
-          Buy Now
-        </button>
-      </div>
 
       {/* ═══════════════ RECENTLY VIEWED ═══════════════ */}
       {relatedProducts.length > 2 && (
