@@ -72,6 +72,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState('description')
   const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [touchStartX, setTouchStartX] = useState(null)
+  const [touchEndX, setTouchEndX] = useState(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
   const stock = typeof product?.stock === 'number' ? product.stock : 0
@@ -81,6 +83,34 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const colorVariants = Array.isArray(product?.productDetails?.colorVariants)
     ? product.productDetails.colorVariants
     : []
+
+  // ── Swipe handler ──
+  const handleTouchStart = (e) => {
+    setTouchEndX(null)
+    setTouchStartX(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartX === null || touchEndX === null) return
+    const diff = touchStartX - touchEndX
+    const minSwipeDistance = 50
+    if (Math.abs(diff) < minSwipeDistance) return
+    if (diff > 0) {
+      // swipe left → next image
+      setActiveImageIndex((prev) =>
+        prev === images.length - 1 ? 0 : prev + 1
+      )
+    } else {
+      // swipe right → previous image
+      setActiveImageIndex((prev) =>
+        prev === 0 ? images.length - 1 : prev - 1
+      )
+    }
+  }
 
   // ── Effects ──
   useEffect(() => {
@@ -374,7 +404,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 )}
 
                 {/* Main photo */}
-                <div className="aspect-[3/4] sm:aspect-[4/5]">
+                <div
+                  className="aspect-[3/4] sm:aspect-[4/5]"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
                   <img
                     src={selectedImage}
                     alt={product.name}
