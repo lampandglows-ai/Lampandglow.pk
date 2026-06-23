@@ -48,6 +48,10 @@ export default function AdminProductsPage() {
       'Avoid exposure to moisture or direct sunlight'
     ],
     noteText: 'Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.',
+    freeShippingContent: 'Free standard shipping on orders over 10,000 PKR\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
+    freeReturnsContent: 'At Lamp&Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.\n\nYou may return most new, unopened items within 7 days of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.\n\nHow to Initiate a Return:\n1. Log in to your account.\n2. Navigate to the "Complete Orders" section under My Account.\n3. Click the "Return Item(s)" button and follow the instructions.\n4. You will receive an email notification once your return has been processed.',
+    ourPromiseContent: 'Every product is handcrafted with premium-quality wood and materials. We ensure:\n\n- Built and shipped within 3-5 business days.\n- Quality check before every dispatch.\n- Dedicated customer support via WhatsApp and email.',
+    shippingReturnContent: 'Returns Policy:\nYou may return most new, unopened items within 7 days of delivery for a full refund. We\'ll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).\n\nYou should expect to receive your refund within four weeks of giving your package to the return shipper.\n\nShipping:\nWe can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
   })
 
   // Load products from Firebase
@@ -200,6 +204,10 @@ export default function AdminProductsPage() {
         whyLoveItems: formData.whyLoveItems || [],
         careInstructions: formData.careInstructions || [],
         noteText: formData.noteText || '',
+        freeShippingContent: formData.freeShippingContent || '',
+        freeReturnsContent: formData.freeReturnsContent || '',
+        ourPromiseContent: formData.ourPromiseContent || '',
+        shippingReturnContent: formData.shippingReturnContent || '',
       }
 
       if (editingId) {
@@ -327,6 +335,10 @@ export default function AdminProductsPage() {
         'Avoid exposure to moisture or direct sunlight'
       ],
       noteText: product.noteText || 'Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.',
+      freeShippingContent: product.freeShippingContent || 'Free standard shipping on orders over 10,000 PKR\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
+      freeReturnsContent: product.freeReturnsContent || 'At Lamp&Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.\n\nYou may return most new, unopened items within 7 days of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.\n\nHow to Initiate a Return:\n1. Log in to your account.\n2. Navigate to the "Complete Orders" section under My Account.\n3. Click the "Return Item(s)" button and follow the instructions.\n4. You will receive an email notification once your return has been processed.',
+      ourPromiseContent: product.ourPromiseContent || 'Every product is handcrafted with premium-quality wood and materials. We ensure:\n\n- Built and shipped within 3-5 business days.\n- Quality check before every dispatch.\n- Dedicated customer support via WhatsApp and email.',
+      shippingReturnContent: product.shippingReturnContent || 'Returns Policy:\nYou may return most new, unopened items within 7 days of delivery for a full refund. We\'ll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).\n\nYou should expect to receive your refund within four weeks of giving your package to the return shipper.\n\nShipping:\nWe can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
     })
     setEditingId(product.id)
     setShowForm(true)
@@ -1035,6 +1047,63 @@ export default function AdminProductsPage() {
                     value={formData.noteText}
                     onChange={(e) => setFormData((prev) => ({ ...prev, noteText: e.target.value }))}
                     rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                  />
+                </div>
+
+                {/* Accordion Content */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Free Shipping Accordion Content</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Content shown in the Free Shipping accordion on product detail page</p>
+                  </div>
+                  <textarea
+                    name="freeShippingContent"
+                    value={formData.freeShippingContent}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                  />
+                </div>
+
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Free Returns Accordion Content</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Content shown in the Free Returns accordion on product detail page</p>
+                  </div>
+                  <textarea
+                    name="freeReturnsContent"
+                    value={formData.freeReturnsContent}
+                    onChange={handleInputChange}
+                    rows={6}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                  />
+                </div>
+
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Our Promise Accordion Content</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Content shown in the Our Promise accordion on product detail page</p>
+                  </div>
+                  <textarea
+                    name="ourPromiseContent"
+                    value={formData.ourPromiseContent}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                  />
+                </div>
+
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Shipping & Return Tab Content</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Content shown in the Shipping & Return tab on product detail page</p>
+                  </div>
+                  <textarea
+                    name="shippingReturnContent"
+                    value={formData.shippingReturnContent}
+                    onChange={handleInputChange}
+                    rows={8}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
                   />
                 </div>

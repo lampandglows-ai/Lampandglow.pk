@@ -802,8 +802,16 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 }
                 title="Free Shipping"
               >
-                <p>Free standard shipping on orders over 10,000 PKR</p>
-                <p className="mt-2">All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.</p>
+                {product.freeShippingContent ? (
+                  product.freeShippingContent.split('\n').map((line, i) => (
+                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
+                  ))
+                ) : (
+                  <>
+                    <p>Free standard shipping on orders over 10,000 PKR</p>
+                    <p className="mt-2">All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.</p>
+                  </>
+                )}
               </Accordion>
 
               <Accordion
@@ -815,15 +823,23 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 }
                 title="Free Returns"
               >
-                <p>At Lamp&amp;Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.</p>
-                <p className="mt-2">You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.</p>
-                <h4 className="mt-3 font-semibold text-stone-700">How to Initiate a Return</h4>
-                <ol className="mt-1 list-decimal pl-5 space-y-1">
-                  <li>Log in to your account.</li>
-                  <li>Navigate to the "Complete Orders" section under My Account.</li>
-                  <li>Click the "Return Item(s)" button and follow the instructions.</li>
-                  <li>You will receive an email notification once your return has been processed.</li>
-                </ol>
+                {product.freeReturnsContent ? (
+                  product.freeReturnsContent.split('\n').map((line, i) => (
+                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
+                  ))
+                ) : (
+                  <>
+                    <p>At Lamp&Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.</p>
+                    <p className="mt-2">You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.</p>
+                    <h4 className="mt-3 font-semibold text-stone-700">How to Initiate a Return</h4>
+                    <ol className="mt-1 list-decimal pl-5 space-y-1">
+                      <li>Log in to your account.</li>
+                      <li>Navigate to the "Complete Orders" section under My Account.</li>
+                      <li>Click the "Return Item(s)" button and follow the instructions.</li>
+                      <li>You will receive an email notification once your return has been processed.</li>
+                    </ol>
+                  </>
+                )}
               </Accordion>
 
               <Accordion
@@ -835,12 +851,20 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 }
                 title="Our Promise"
               >
-                <p>Every product is handcrafted with premium-quality wood and materials. We ensure:</p>
-                <ul className="mt-2 list-disc pl-5 space-y-1">
-                  <li>Built and shipped within 3-5 business days.</li>
-                  <li>Quality check before every dispatch.</li>
-                  <li>Dedicated customer support via WhatsApp and email.</li>
-                </ul>
+                {product.ourPromiseContent ? (
+                  product.ourPromiseContent.split('\n').map((line, i) => (
+                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
+                  ))
+                ) : (
+                  <>
+                    <p>Every product is handcrafted with premium-quality wood and materials. We ensure:</p>
+                    <ul className="mt-2 list-disc pl-5 space-y-1">
+                      <li>Built and shipped within 3-5 business days.</li>
+                      <li>Quality check before every dispatch.</li>
+                      <li>Dedicated customer support via WhatsApp and email.</li>
+                    </ul>
+                  </>
+                )}
               </Accordion>
             </div>
           </div>
@@ -1012,34 +1036,46 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             ) : activeTab === 'shipping' ? (
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">
-                <div>
-                  <h3 className="text-base font-bold text-stone-900">Returns Policy</h3>
-                  <p className="mt-2">
-                    You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund.
-                    We'll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).
-                  </p>
-                  <p className="mt-2">
-                    You should expect to receive your refund within four weeks of giving your package to the return shipper.
-                    This time period includes the transit time for us to receive your return from the shipper (5 to 10 business days),
-                    the time it takes us to process your return once we receive it (3 to 5 business days),
-                    and the time it takes your bank to process our refund request (5 to 10 business days).
-                  </p>
-                  <p className="mt-2">
-                    If you need to return an item, simply login to your account, view the order using the "Complete Orders" link under the My Account menu and click the Return Item(s) button. We'll notify you via e-mail of your refund once we've received and processed the returned item.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-stone-900">Shipping</h3>
-                  <p className="mt-2">
-                    We can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.
-                  </p>
-                  <p className="mt-2">
-                    When you place an order, we will estimate shipping and delivery dates for you based on the availability of your items and the shipping options you choose.
-                  </p>
-                  <p className="mt-2">
-                    All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.
-                  </p>
-                </div>
+                {product.shippingReturnContent ? (
+                  product.shippingReturnContent.split('\n').map((line, i) => {
+                    if (!line.trim()) return <div key={i} className="h-2" />
+                    if (line.startsWith('Returns Policy:') || line.startsWith('Shipping:')) {
+                      return <h3 key={i} className="text-base font-bold text-stone-900">{line.replace(/:$/, '')}</h3>
+                    }
+                    return <p key={i} className="mt-2">{line}</p>
+                  })
+                ) : (
+                  <>
+                    <div>
+                      <h3 className="text-base font-bold text-stone-900">Returns Policy</h3>
+                      <p className="mt-2">
+                        You may return most new, unopened items within <strong>7 days</strong> of delivery for a full refund.
+                        We'll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).
+                      </p>
+                      <p className="mt-2">
+                        You should expect to receive your refund within four weeks of giving your package to the return shipper.
+                        This time period includes the transit time for us to receive your return from the shipper (5 to 10 business days),
+                        the time it takes us to process your return once we receive it (3 to 5 business days),
+                        and the time it takes your bank to process our refund request (5 to 10 business days).
+                      </p>
+                      <p className="mt-2">
+                        If you need to return an item, simply login to your account, view the order using the "Complete Orders" link under the My Account menu and click the Return Item(s) button. We'll notify you via e-mail of your refund once we've received and processed the returned item.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-stone-900">Shipping</h3>
+                      <p className="mt-2">
+                        We can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.
+                      </p>
+                      <p className="mt-2">
+                        When you place an order, we will estimate shipping and delivery dates for you based on the availability of your items and the shipping options you choose.
+                      </p>
+                      <p className="mt-2">
+                        All in-stock products will be delivered within <strong>3 to 5 days</strong>. Custom designs will take 8 to 12 days to complete and ship.
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="max-w-3xl space-y-8">
