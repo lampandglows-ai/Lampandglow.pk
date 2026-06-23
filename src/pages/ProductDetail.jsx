@@ -27,11 +27,11 @@ function ChevronDown({ open }) {
 function Accordion({ icon, title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border-b border-[#FFD400]/20">
+    <div className="border-b border-stone-200">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 py-4 text-left text-sm font-semibold text-white/90 transition-colors hover:text-white"
+        className="flex w-full items-center justify-between gap-3 py-4 text-left text-sm font-semibold text-stone-700 transition-colors hover:text-stone-900"
       >
         <span className="flex items-center gap-2.5">
           {icon}
@@ -45,7 +45,7 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
           open ? 'max-h-[600px] pb-5 opacity-100' : 'max-h-0 opacity-0',
         )}
       >
-        <div className="text-[13px] leading-relaxed text-white/70">{children}</div>
+        <div className="text-[13px] leading-relaxed text-stone-600">{children}</div>
       </div>
     </div>
   )
