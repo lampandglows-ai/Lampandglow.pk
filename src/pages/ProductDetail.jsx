@@ -979,28 +979,36 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </div>
                 )}
 
-                <div>
-                  <h4 className="text-base font-bold text-stone-900">Why You'll Love It</h4>
-                  <ul className="mt-3 space-y-2">
-                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Sculptural Simplicity</strong> – Smooth, rounded wood base in rich tones that ground your space</span></li>
-                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Soft Diffused Light</strong> – Wide shade offers an elegant glow, ideal for evening ambience</span></li>
-                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Handcrafted Quality</strong> – Each piece is individually made with care and attention to detail</span></li>
-                    <li className="flex gap-2"><span className="text-[#FFD400] mt-0.5">✦</span><span><strong>Versatile Placement</strong> – Perfect for living rooms, bedrooms, reading corners, and offices</span></li>
-                  </ul>
-                </div>
+                {Array.isArray(product.whyLoveItems) && product.whyLoveItems.length > 0 && product.whyLoveItems.some(item => item.trim()) && (
+                  <div>
+                    <h4 className="text-base font-bold text-stone-900">Why You'll Love It</h4>
+                    <ul className="mt-3 space-y-2">
+                      {product.whyLoveItems.filter(item => item.trim()).map((item, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="text-[#FFD400] mt-0.5">✦</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                <div>
-                  <h4 className="text-base font-bold text-stone-900">Care Instructions</h4>
-                  <ul className="mt-3 list-disc pl-5 space-y-1.5 text-stone-600">
-                    <li>Wipe wood with a dry or lightly damp cloth</li>
-                    <li>Dust shade gently with a soft brush or lint-free cloth</li>
-                    <li>Avoid exposure to moisture or direct sunlight</li>
-                  </ul>
-                </div>
+                {Array.isArray(product.careInstructions) && product.careInstructions.length > 0 && product.careInstructions.some(item => item.trim()) && (
+                  <div>
+                    <h4 className="text-base font-bold text-stone-900">Care Instructions</h4>
+                    <ul className="mt-3 list-disc pl-5 space-y-1.5 text-stone-600">
+                      {product.careInstructions.filter(item => item.trim()).map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                <p className="text-[12px] text-stone-400 italic mt-4">
-                  Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.
-                </p>
+                {product.noteText && product.noteText.trim() && (
+                  <p className="text-[12px] text-stone-400 italic mt-4">
+                    {product.noteText}
+                  </p>
+                )}
               </div>
             ) : activeTab === 'shipping' ? (
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">

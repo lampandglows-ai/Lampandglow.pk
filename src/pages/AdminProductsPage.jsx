@@ -36,6 +36,18 @@ export default function AdminProductsPage() {
     bulbEnabled: false,
     bulbPrice: '',
     colorVariants: [],
+    whyLoveItems: [
+      'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
+      'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
+      'Handcrafted Quality – Each piece is individually made with care and attention to detail',
+      'Versatile Placement – Perfect for living rooms, bedrooms, reading corners, and offices'
+    ],
+    careInstructions: [
+      'Wipe wood with a dry or lightly damp cloth',
+      'Dust shade gently with a soft brush or lint-free cloth',
+      'Avoid exposure to moisture or direct sunlight'
+    ],
+    noteText: 'Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.',
   })
 
   // Load products from Firebase
@@ -185,6 +197,9 @@ export default function AdminProductsPage() {
             ? { colorVariants: formData.colorVariants }
             : {}),
         },
+        whyLoveItems: formData.whyLoveItems || [],
+        careInstructions: formData.careInstructions || [],
+        noteText: formData.noteText || '',
       }
 
       if (editingId) {
@@ -300,6 +315,18 @@ export default function AdminProductsPage() {
       bulbEnabled: product.bulbEnabled === true,
       bulbPrice: product.bulbPrice != null ? String(product.bulbPrice) : '',
       colorVariants: existingColorVariants,
+      whyLoveItems: Array.isArray(product.whyLoveItems) ? product.whyLoveItems : [
+        'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
+        'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
+        'Handcrafted Quality – Each piece is individually made with care and attention to detail',
+        'Versatile Placement – Perfect for living rooms, bedrooms, reading corners, and offices'
+      ],
+      careInstructions: Array.isArray(product.careInstructions) ? product.careInstructions : [
+        'Wipe wood with a dry or lightly damp cloth',
+        'Dust shade gently with a soft brush or lint-free cloth',
+        'Avoid exposure to moisture or direct sunlight'
+      ],
+      noteText: product.noteText || 'Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.',
     })
     setEditingId(product.id)
     setShowForm(true)
@@ -902,6 +929,114 @@ export default function AdminProductsPage() {
                       </button>
                     </div>
                   </div>
+                </div>
+
+                {/* Why You'll Love It Items */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">"Why You'll Love It" Items</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Edit the list items shown on the product detail page</p>
+                  </div>
+                  <div className="space-y-2">
+                    {formData.whyLoveItems.map((item, idx) => (
+                      <div key={`whyLove-${idx}`} className="flex items-center gap-2">
+                        <span className="text-[#FFD400] text-xs shrink-0">✦</span>
+                        <input
+                          type="text"
+                          value={item}
+                          onChange={(e) => {
+                            const newItems = [...formData.whyLoveItems]
+                            newItems[idx] = e.target.value
+                            setFormData((prev) => ({ ...prev, whyLoveItems: newItems }))
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        {formData.whyLoveItems.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => setFormData((prev) => ({
+                              ...prev,
+                              whyLoveItems: prev.whyLoveItems.filter((_, i) => i !== idx),
+                            }))}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition shrink-0"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setFormData((prev) => ({
+                        ...prev,
+                        whyLoveItems: [...prev.whyLoveItems, ''],
+                      }))}
+                      className="text-sm text-orange-500 font-semibold hover:text-orange-600 transition"
+                    >
+                      + Add Item
+                    </button>
+                  </div>
+                </div>
+
+                {/* Care Instructions */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Care Instructions</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Edit the care instructions shown on the product detail page</p>
+                  </div>
+                  <div className="space-y-2">
+                    {formData.careInstructions.map((item, idx) => (
+                      <div key={`care-${idx}`} className="flex items-center gap-2">
+                        <span className="text-stone-600 text-xs shrink-0">•</span>
+                        <input
+                          type="text"
+                          value={item}
+                          onChange={(e) => {
+                            const newItems = [...formData.careInstructions]
+                            newItems[idx] = e.target.value
+                            setFormData((prev) => ({ ...prev, careInstructions: newItems }))
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        {formData.careInstructions.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => setFormData((prev) => ({
+                              ...prev,
+                              careInstructions: prev.careInstructions.filter((_, i) => i !== idx),
+                            }))}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition shrink-0"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setFormData((prev) => ({
+                        ...prev,
+                        careInstructions: [...prev.careInstructions, ''],
+                      }))}
+                      className="text-sm text-orange-500 font-semibold hover:text-orange-600 transition"
+                    >
+                      + Add Item
+                    </button>
+                  </div>
+                </div>
+
+                {/* Note Text */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Bottom Note Text</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">The italic note shown at the bottom of the Description tab</p>
+                  </div>
+                  <textarea
+                    value={formData.noteText}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, noteText: e.target.value }))}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                  />
                 </div>
 
                 {/* Action Buttons */}
