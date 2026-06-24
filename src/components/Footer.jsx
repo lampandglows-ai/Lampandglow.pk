@@ -381,14 +381,13 @@ export default function Footer({ theme = 'light' }) {
           href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
-          className="fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg"
+          className="fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center justify-center rounded-xl bg-emerald-500 p-3 text-white shadow-lg"
           aria-label="Chat on WhatsApp"
         >
           <span className="fill-layer" aria-hidden="true" />
           <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
             <FaWhatsapp className="h-5 w-5" />
           </span>
-          <span className="relative z-10">Chat on WhatsApp</span>
         </a>
       )}
     </footer>
