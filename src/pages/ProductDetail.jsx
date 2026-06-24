@@ -74,6 +74,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [touchStartX, setTouchStartX] = useState(null)
   const [touchEndX, setTouchEndX] = useState(null)
+  const [showFixedBar, setShowFixedBar] = useState(false)
+  const actionRef = useRef(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
   const stock = typeof product?.stock === 'number' ? product.stock : 0
@@ -111,6 +113,18 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       )
     }
   }
+
+  // ── Scroll listener for fixed bottom bar ──
+  useEffect(() => {
+    const handleScroll = () => {
+      if (actionRef.current) {
+        const rect = actionRef.current.getBoundingClientRect()
+        setShowFixedBar(rect.bottom < 0)
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // ── Effects ──
   useEffect(() => {
@@ -697,7 +711,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
              )}
 
             {/* ── Quantity + Add to Cart ── */}
-            <div className="mt-6 border-t border-stone-200 pt-5">
+            <div ref={actionRef} className="mt-6 border-t border-stone-200 pt-5">
               <p className="text-[13px] text-stone-600">
                 Subtotal:{' '}
                 <span className="font-bold text-stone-900">
@@ -1203,6 +1217,51 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </Link>
                 )
               })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════ FIXED BOTTOM BAR ═══════════════ */}
+      {showFixedBar && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-3">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-stone-900 truncate">{product.name}</p>
+                <p className="text-xs text-stone-500">Qty: {quantity}</p>
+              </div>
+              <p className="text-sm font-bold text-stone-900 whitespace-nowrap">
+                {formatPKR(effectivePrice * Math.max(1, quantity))}
+              </p>
+              <button
+                type="button"
+                onClick={addQuantityToCart}
+                className={classNames(
+                  'fill-btn fill-dark group relative h-11 px-6 overflow-hidden bg-[#5A2D0C] text-white text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
+                  !inStock && 'opacity-50 cursor-not-allowed',
+                )}
+                disabled={!inStock}
+              >
+                <span className="fill-layer" aria-hidden="true" />
+                <span className="relative z-10 transition-colors group-hover:text-[#222222]">Add To Cart</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  addQuantityToCart()
+                  if (!inStock) return
+                  navigate('/checkout')
+                }}
+                className={classNames(
+                  'fill-btn fill-amber group relative h-11 px-6 overflow-hidden bg-[#FFD400] text-[#222222] text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
+                  !inStock && 'opacity-50 cursor-not-allowed',
+                )}
+                disabled={!inStock}
+              >
+                <span className="fill-layer" aria-hidden="true" />
+                <span className="relative z-10 transition-colors group-hover:text-white">Buy It Now</span>
+              </button>
             </div>
           </div>
         </div>
