@@ -355,10 +355,10 @@ export default function ProductsSection({
                       </div>
                     </Link>
 
-                    <div className="relative z-20 mt-auto px-4 pb-4 flex items-center justify-between gap-2">
+                    <div className="relative z-20 mt-auto px-4 pb-4 flex items-center gap-2">
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="inline-flex items-center justify-center rounded-lg bg-[#5A2D0C] px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#FFD400] hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
+                        className="flex-1 inline-flex items-center justify-center rounded-lg bg-[#5A2D0C] px-3 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#FFD400] hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
                       >
                         Add to Cart
                       </button>
@@ -367,7 +367,7 @@ export default function ProductsSection({
                           setReviewForm((prev) => ({ ...prev, productId: product.id }))
                           handleNavigate('reviews')
                         }}
-                        className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-1.5 text-[11px] font-medium text-stone-700 transition-all duration-200 hover:bg-stone-50 hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
+                        className="flex-1 inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition-all duration-200 hover:bg-stone-50 hover:shadow-sm active:scale-[0.98] motion-reduce:transform-none"
                       >
                         Reviews
                       </button>
