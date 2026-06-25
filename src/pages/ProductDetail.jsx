@@ -341,7 +341,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       product,
       bulbOption: selectedBulb || null,
       colorVariant: selectedColor || null,
-      unitPrice: effectivePrice
+      unitPrice: basePrice
     }
     for (let i = 0; i < count; i += 1) {
       onAddToCart(payload)
