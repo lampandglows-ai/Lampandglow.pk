@@ -1155,7 +1155,33 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 {isLoggedIn && !hasUserReviewed && (
                   <div className="mt-8 p-6 rounded-2xl border border-stone-200 bg-white">
                     <h3 className="text-lg font-bold text-stone-900 mb-4">Write a Review</h3>
-                    <form onSubmit={(e) => handleSubmitReview(e, productId)} className="space-y-4">
+                    <form onSubmit={(e) => {
+                      e.preventDefault()
+                      if (!localReviewForm.comment.trim() || !user) return
+                      
+                      // Check if user already reviewed this product
+                      const hasAlreadyReviewed = reviews.some(
+                        (r) => r.productId === productId && r.userId === user.uid
+                      )
+                      
+                      if (hasAlreadyReviewed) {
+                        alert('You have already reviewed this product.')
+                        return
+                      }
+                      
+                      const newReview = {
+                        id: Date.now(),
+                        productId: productId,
+                        userId: user.uid,
+                        name: user.displayName || user.email || 'Anonymous',
+                        rating: Number(localReviewForm.rating),
+                        comment: localReviewForm.comment.trim(),
+                        createdAt: new Date().toISOString(),
+                      }
+                      
+                      handleSubmitReview(newReview)
+                      setLocalReviewForm({ rating: 5, comment: '' })
+                    }} className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Your Rating</label>
                         <div className="flex items-center gap-2">

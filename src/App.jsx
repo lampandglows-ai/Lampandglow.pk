@@ -319,37 +319,21 @@ function AppContent() {
     }
   }
 
-  function handleSubmitReview(e, productId) {
-    e.preventDefault()
-    if (!reviewForm.comment.trim() || !user) return
+  function handleSubmitReview(newReview) {
+    if (!newReview || !newReview.comment || !user) return
 
     // Check if user already reviewed this product
     const hasAlreadyReviewed = reviews.some(
-      (r) => r.productId === productId && r.userId === user.uid
+      (r) => r.productId === newReview.productId && r.userId === user.uid
     )
 
     if (hasAlreadyReviewed) {
       alert('You have already reviewed this product.')
-      return
-    }
-
-    const newReview = {
-      id: Date.now(), // Use timestamp for unique ID
-      productId: productId,
-      userId: user.uid,
-      name: user.displayName || user.email || 'Anonymous',
-      rating: Number(reviewForm.rating),
-      comment: reviewForm.comment.trim(),
-      createdAt: new Date().toISOString(),
+      return false
     }
 
     setReviews((prev) => [newReview, ...prev])
-    setReviewForm((prev) => ({
-      ...prev,
-      productId: productId,
-      comment: '',
-      rating: 5,
-    }))
+    return true
   }
 
   function handleNavigate(section) {
