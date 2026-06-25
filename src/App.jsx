@@ -85,6 +85,8 @@ function AppContent() {
   const { categories: dynamicCategories, loading: categoriesLoading } = useCategories()
   
   const [activeSection, setActiveSection] = useState('home')
+  const [loading, setLoading] = useState(true)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [theme, setTheme] = useState(() => {
     const saved = window.localStorage.getItem('lg-theme')
     return saved === 'dark' ? 'dark' : 'light'
@@ -382,6 +384,31 @@ function AppContent() {
   const headerRef = useRef(null)
   const [headerHeight, setHeaderHeight] = useState(120)
 
+  // ── Global Loading Progress Bar ──
+  useEffect(() => {
+    if (!loading) return
+
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 90) {
+          clearInterval(interval)
+          return prev
+        }
+        return prev + Math.random() * 30
+      })
+    }, 200)
+
+    return () => clearInterval(interval)
+  }, [loading])
+
+  useEffect(() => {
+    if (!productsLoading && !categoriesLoading) {
+      setLoadingProgress(100)
+      const timer = setTimeout(() => setLoading(false), 2000) // Minimum 2 seconds
+      return () => clearTimeout(timer)
+    }
+  }, [productsLoading, categoriesLoading])
+
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
@@ -447,6 +474,27 @@ function AppContent() {
   const isAdminRoute = location.pathname.startsWith('/admin')
   const isDarkContentPage = ['/', '/blogs', '/blog', '/reels'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
   const isPublicPageRoute = !location.pathname.startsWith('/admin') && !['/', '/blogs', '/blog', '/reels', '/about', '/about-us', '/contact', '/login', '/signin', '/signup', '/profile', '/wishlist', '/orders', '/checkout', '/products', '/shipping-policy'].some(path => location.pathname === path || location.pathname.startsWith(path + '/'))
+
+  // ── Loading Progress Bar ──
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
+        <div className="w-full max-w-md px-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-stone-900">Loading</h2>
+            <p className="text-sm text-stone-500 mt-1">Please wait while we prepare your experience...</p>
+          </div>
+          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#5A2D0C] to-[#FFD400] rounded-full transition-all duration-300"
+              style={{ width: `${Math.min(100, loadingProgress)}%` }}
+            />
+          </div>
+          <p className="text-xs text-stone-400 mt-2 text-right">{Math.round(Math.min(100, loadingProgress))}%</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
