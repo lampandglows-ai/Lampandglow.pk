@@ -480,17 +480,28 @@ function AppContent() {
     return (
       <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
         <div className="w-full max-w-md px-8">
-          <div className="mb-4">
-            <h2 className="text-xl font-bold text-stone-900">Loading</h2>
-            <p className="text-sm text-stone-500 mt-1">Please wait while we prepare your experience...</p>
+          {/* Glowing Bulb Icon */}
+          <div className="mb-6 flex justify-center">
+            <div className="relative">
+              <svg viewBox="0 0 24 24" className="w-20 h-20 text-[#FFD400]" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zM9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z"/>
+              </svg>
+              <div className="absolute inset-0 bg-[#FFD400] rounded-full blur-xl opacity-60 animate-pulse"></div>
+            </div>
           </div>
-          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+
+          <div className="mb-4 text-center">
+            <h2 className="text-2xl font-bold text-stone-900">Lamp & Glow</h2>
+            <p className="text-sm text-stone-500 mt-2">Illuminating your space with elegance...</p>
+          </div>
+          
+          <div className="h-2 bg-stone-200 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-[#5A2D0C] to-[#FFD400] rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#5A2D0C] via-[#FFD400] to-[#5A2D0C] rounded-full transition-all duration-300"
               style={{ width: `${Math.min(100, loadingProgress)}%` }}
             />
           </div>
-          <p className="text-xs text-stone-400 mt-2 text-right">{Math.round(Math.min(100, loadingProgress))}%</p>
+          <p className="text-xs text-stone-500 mt-3 text-center font-medium">{Math.round(Math.min(100, loadingProgress))}%</p>
         </div>
       </div>
     )
