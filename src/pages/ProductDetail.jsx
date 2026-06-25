@@ -127,6 +127,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // ── Scroll to top when component mounts ──
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [])
+
   // ── Effects ──
   useEffect(() => {
     if (isCompareOpen) {
