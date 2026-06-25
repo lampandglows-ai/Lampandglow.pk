@@ -51,7 +51,7 @@ function Accordion({ icon, title, children, defaultOpen = false }) {
   )
 }
 
-export default function ProductDetail({ products, onAddToCart, reviews, handleToggleWishlist, isInWishlist }) {
+export default function ProductDetail({ products, onAddToCart, reviews, handleToggleWishlist, isInWishlist, theme = 'light', user, isLoggedIn, handleSubmitReview }) {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { categories } = useCategories()
@@ -75,6 +75,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [touchStartX, setTouchStartX] = useState(null)
   const [touchEndX, setTouchEndX] = useState(null)
   const [showFixedBar, setShowFixedBar] = useState(false)
+  const [localReviewForm, setLocalReviewForm] = useState({ rating: 5, comment: '' })
   const actionRef = useRef(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
@@ -175,6 +176,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         : productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length,
     [productReviews],
   )
+
+  const hasUserReviewed = useMemo(() => {
+    if (!user?.uid || !productId) return false
+    return reviews.some((r) => r.productId === productId && r.userId === user.uid)
+  }, [reviews, productId, user?.uid])
 
   /* ─────────────────────────────────────────────────────────────
      SAFE TO EARLY-RETURN AFTER ALL HOOKS
@@ -1143,6 +1149,78 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         <p className="mt-3 text-[13px] text-stone-600 leading-relaxed">{review.comment}</p>
                       </div>
                     ))}
+                  </div>
+                )}
+
+                {isLoggedIn && !hasUserReviewed && (
+                  <div className="mt-8 p-6 rounded-2xl border border-stone-200 bg-white">
+                    <h3 className="text-lg font-bold text-stone-900 mb-4">Write a Review</h3>
+                    <form onSubmit={(e) => handleSubmitReview(e, productId)} className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Your Rating</label>
+                        <div className="flex items-center gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setLocalReviewForm((prev) => ({ ...prev, rating: star }))}
+                              className="focus:outline-none"
+                            >
+                              <svg
+                                viewBox="0 0 24 24"
+                                className={classNames(
+                                  'h-8 w-8 transition-colors',
+                                  star <= localReviewForm.rating ? 'text-[#FFD400] fill-current' : 'text-stone-300 fill-transparent'
+                                )}
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              >
+                                <path d="M12 17.27l-5.18 3.04 1.4-5.81-4.52-3.92 5.95-.5L12 4.5l2.35 5.58 5.95.5-4.52 3.92 1.4 5.81L12 17.27z" />
+                              </svg>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Your Review</label>
+                        <textarea
+                          value={localReviewForm.comment}
+                          onChange={(e) => setLocalReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
+                          rows={4}
+                          required
+                          className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
+                          placeholder="Share your experience with this product..."
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={!localReviewForm.comment.trim()}
+                        className="inline-flex items-center justify-center rounded-full bg-[#5A2D0C] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#FFD400] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Submit Review
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                {!isLoggedIn && (
+                  <div className="mt-8 p-6 rounded-2xl border border-stone-200 bg-white text-center">
+                    <p className="text-stone-600 mb-3">Please log in to write a review</p>
+                    <button
+                      onClick={() => navigate('/login')}
+                      className="inline-flex items-center justify-center rounded-full bg-[#5A2D0C] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#FFD400] transition-colors"
+                    >
+                      Log In to Review
+                    </button>
+                  </div>
+                )}
+
+                {hasUserReviewed && (
+                  <div className="mt-8 p-6 rounded-2xl border border-[#FFD400]/30 bg-[#F5F1EA]/50 text-center">
+                    <p className="text-stone-700 font-medium">You have already reviewed this product</p>
+                    <p className="text-sm text-stone-500 mt-1">Thank you for your feedback!</p>
                   </div>
                 )}
               </div>
