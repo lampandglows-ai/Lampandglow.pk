@@ -228,15 +228,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const bulbPrice = typeof product?.bulbPrice === 'number' ? product.bulbPrice : 500
   const bulbAddon = isWithBulb ? bulbPrice : 0
 
-  const colorAddon =
-    selectedColor &&
-      (selectedColor.toLowerCase().includes('black') ||
-        selectedColor.toLowerCase().includes('blue'))
-      ? 250
-      : 0
-
-  const effectivePrice = basePrice + bulbAddon + colorAddon
-  const effectiveOriginalPrice = baseOriginalPrice + bulbAddon + colorAddon
+  const effectivePrice = basePrice + bulbAddon
+  const effectiveOriginalPrice = baseOriginalPrice + bulbAddon
 
   const hasDiscount = discountInfo.hasDiscount
   const discountPercent = hasDiscount
