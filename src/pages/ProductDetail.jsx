@@ -1468,6 +1468,29 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-3">
             <div className="flex items-center justify-center gap-3">
+              {/* Quantity Selector */}
+              <div className="flex items-center border border-stone-300 bg-white">
+                <button
+                  type="button"
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  className="h-11 w-11 grid place-items-center text-stone-600 text-lg transition-colors hover:bg-stone-50"
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <div className="h-11 w-12 grid place-items-center text-sm font-semibold text-stone-900 border-x border-stone-300">
+                  {quantity}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((prev) => Math.min(Math.max(stock, 99), prev + 1))}
+                  className="h-11 w-11 grid place-items-center text-stone-600 text-lg transition-colors hover:bg-stone-50"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+
               <button
                 type="button"
                 onClick={addQuantityToCart}
