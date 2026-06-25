@@ -557,15 +557,15 @@ function AppContent() {
               </>
             )}
           />
-          <Route path="/blogs" element={<BlogsList />} />
-          <Route path="/blog/:slug" element={<BlogDetail />} />
-          <Route path="/reels" element={<ReelsPage />} />
-          <Route path="/reels/:reelId" element={<ReelsPage />} />
+          <Route path="/blogs" element={<BlogsList theme={theme} />} />
+          <Route path="/blog/:slug" element={<BlogDetail theme={theme} />} />
+          <Route path="/reels" element={<ReelsPage theme={theme} />} />
+          <Route path="/reels/:reelId" element={<ReelsPage theme={theme} />} />
           <Route path="/about" element={<AboutPage theme={theme} />} />
           <Route path="/about-us" element={<AboutPage theme={theme} />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signin" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage theme={theme} />} />
+          <Route path="/signin" element={<LoginPage theme={theme} />} />
+          <Route path="/signup" element={<SignupPage theme={theme} />} />
           <Route
             path="/profile"
             element={
@@ -582,8 +582,8 @@ function AppContent() {
             }
           />
           <Route path="/contact" element={<ContactPage theme={theme} />} />
-          <Route path="/contact-us" element={<ContactUsPage />} />
-          <Route path="/collections" element={<CollectionsPage />} />
+          <Route path="/contact-us" element={<ContactUsPage theme={theme} />} />
+          <Route path="/collections" element={<CollectionsPage theme={theme} />} />
           <Route
             path="/collections/:slug"
             element={
@@ -601,12 +601,13 @@ function AppContent() {
                 wishlist={wishlist}
                 handleToggleWishlist={handleToggleWishlist}
                 handleAddToCart={handleAddToCart}
+                theme={theme}
               />
             }
           />
-          <Route path="/products" element={<ProductsPage categories={dynamicCategories} filteredProducts={filteredProducts} productAverageRating={productAverageRating} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleAddToCart={handleAddToCart} setReviewForm={setReviewForm} handleToggleWishlist={handleToggleWishlist} isInWishlist={isInWishlist} />} />
-          <Route path="/cart" element={<CartPage cart={cart} cartItemsCount={cartItemsCount} cartTotal={cartTotal} handleRemoveFromCart={handleRemoveFromCart} handleUpdateCartQuantity={handleUpdateCartQuantity} onCheckout={() => navigate('/checkout')} />} />
-          <Route path="/orders" element={<OrdersPage orders={orders} />} />
+          <Route path="/products" element={<ProductsPage theme={theme} categories={dynamicCategories} filteredProducts={filteredProducts} productAverageRating={productAverageRating} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} handleAddToCart={handleAddToCart} setReviewForm={setReviewForm} handleToggleWishlist={handleToggleWishlist} isInWishlist={isInWishlist} />} />
+          <Route path="/cart" element={<CartPage cart={cart} cartItemsCount={cartItemsCount} cartTotal={cartTotal} handleRemoveFromCart={handleRemoveFromCart} handleUpdateCartQuantity={handleUpdateCartQuantity} onCheckout={() => navigate('/checkout')} theme={theme} />} />
+          <Route path="/orders" element={<OrdersPage orders={orders} theme={theme} />} />
           <Route
             path="/checkout"
             element={(

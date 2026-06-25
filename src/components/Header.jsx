@@ -206,8 +206,12 @@ const Header = forwardRef(function Header({
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                     isNavActive(key)
-                      ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
-                      : 'text-[#222222] hover:bg-[#F5F1EA]',
+                      ? theme === 'dark'
+                        ? 'bg-[#FFD400]/25 text-[#FFD400]'
+                        : 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                      : theme === 'dark'
+                        ? 'text-stone-200 hover:bg-white/10'
+                        : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   {mobileLabel}
@@ -220,8 +224,12 @@ const Header = forwardRef(function Header({
                 className={classNames(
                   'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                   activeSection === 'cart'
-                    ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
-                    : 'text-[#222222] hover:bg-[#F5F1EA]',
+                    ? theme === 'dark'
+                      ? 'bg-[#FFD400]/25 text-[#FFD400]'
+                      : 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                    : theme === 'dark'
+                      ? 'text-stone-200 hover:bg-white/10'
+                      : 'text-[#222222] hover:bg-[#F5F1EA]',
                 )}
               >
                 Cart
@@ -239,8 +247,12 @@ const Header = forwardRef(function Header({
                   className={classNames(
                     'w-full text-right rounded-xl px-4 py-3.5 text-sm font-bold transition-colors',
                     activeSection === 'profile'
-                      ? 'bg-[#FFD400]/25 text-[#5A2D0C]'
-                      : 'text-[#222222] hover:bg-[#F5F1EA]',
+                      ? theme === 'dark'
+                        ? 'bg-[#FFD400]/25 text-[#FFD400]'
+                        : 'bg-[#FFD400]/25 text-[#5A2D0C]'
+                      : theme === 'dark'
+                        ? 'text-stone-200 hover:bg-white/10'
+                        : 'text-[#222222] hover:bg-[#F5F1EA]',
                   )}
                 >
                   Profile

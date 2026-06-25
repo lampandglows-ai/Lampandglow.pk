@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { orderAPI } from '../utils/api';
 import { User, Mail, Phone, MapPin, AlertCircle, Loader, CheckCircle } from 'lucide-react';
 
-export default function ProfilePage() {
+export default function ProfilePage({ theme = 'light' }) {
   const { user, updateProfile, logout } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -77,14 +77,14 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-stone-500">Please log in to view your profile</p>
+      <div className={theme === 'dark' ? 'flex items-center justify-center min-h-screen bg-[#1F1F1F]' : 'flex items-center justify-center min-h-screen'}>
+        <p className={theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}>Please log in to view your profile</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className={theme === 'dark' ? 'min-h-screen py-12 px-4 bg-[#1F1F1F]' : 'min-h-screen py-12 px-4'}>
       <div className="max-w-6xl mx-auto">
         {message && (
           <div className="bg-green-900/30 border border-green-700/50 rounded-lg p-4 mb-6 flex items-start gap-3">
@@ -96,9 +96,9 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Section */}
           <div className="lg:col-span-1">
-            <div className="bg-[#7A4A20] rounded-lg shadow p-6">
+            <div className={theme === 'dark' ? 'bg-[#2A2A2A] rounded-lg shadow p-6' : 'bg-[#7A4A20] rounded-lg shadow p-6'}>
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className={theme === 'dark' ? 'w-20 h-20 bg-[#5A2D0C] rounded-full flex items-center justify-center mx-auto mb-4' : 'w-20 h-20 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4'}>
                   <User size={40} className="text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-white">{user.name}</h2>
@@ -121,13 +121,13 @@ export default function ProfilePage() {
 
           {/* Profile Information Section */}
           <div className="lg:col-span-2">
-            <div className="bg-[#7A4A20] rounded-lg shadow p-6 mb-8">
+            <div className={theme === 'dark' ? 'bg-[#2A2A2A] rounded-lg shadow p-6 mb-8' : 'bg-[#7A4A20] rounded-lg shadow p-6 mb-8'}>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-white">Profile Information</h3>
                 {!editing && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition duration-200"
+                    className={theme === 'dark' ? 'px-4 py-2 bg-[#5A2D0C] hover:bg-[#7A4A20] text-white rounded-lg transition duration-200' : 'px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition duration-200'}
                   >
                     Edit Profile
                   </button>
@@ -151,7 +151,7 @@ export default function ProfilePage() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                     <div>
@@ -161,7 +161,7 @@ export default function ProfilePage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                     <div className="md:col-span-2">
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                     <div>
@@ -181,7 +181,7 @@ export default function ProfilePage() {
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                     <div>
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                     <div>
@@ -201,7 +201,7 @@ export default function ProfilePage() {
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white"
+                        className={theme === 'dark' ? 'w-full px-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100' : 'w-full px-4 py-2 border border-[#FFD400]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#5A2D0C] text-white'}
                       />
                     </div>
                   </div>
