@@ -68,6 +68,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [selectedBulbOption, setSelectedBulbOption] = useState('without')
   const [selectedColorIndex, setSelectedColorIndex] = useState(0)
   const [activeColorIndex, setActiveColorIndex] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [isCompareOpen, setIsCompareOpen] = useState(false)
   const [compareVisibleIndices, setCompareVisibleIndices] = useState([])
   const [quantity, setQuantity] = useState(1)
@@ -133,6 +135,32 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [])
+
+  // ── Simulate loading progress ──
+  useEffect(() => {
+    if (!loading) return
+
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 90) {
+          clearInterval(interval)
+          return prev
+        }
+        return prev + Math.random() * 30
+      })
+    }, 200)
+
+    return () => clearInterval(interval)
+  }, [loading])
+
+  // ── Mark as loaded when product is available ──
+  useEffect(() => {
+    if (product) {
+      setLoadingProgress(100)
+      const timer = setTimeout(() => setLoading(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [product])
 
   // ── Effects ──
   useEffect(() => {
@@ -343,6 +371,27 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
   const relatedProducts = products.filter((p) => p.id !== productId).slice(0, 6)
   const pd = product.productDetails || {}
+
+  // ── Loading Progress Bar ──
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
+        <div className="w-full max-w-md px-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-stone-900">Loading Product</h2>
+            <p className="text-sm text-stone-500 mt-1">Please wait while we prepare your experience...</p>
+          </div>
+          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#5A2D0C] to-[#FFD400] rounded-full transition-all duration-300"
+              style={{ width: `${Math.min(100, loadingProgress)}%` }}
+            />
+          </div>
+          <p className="text-xs text-stone-400 mt-2 text-right">{Math.round(Math.min(100, loadingProgress))}%</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <section className="w-full">
