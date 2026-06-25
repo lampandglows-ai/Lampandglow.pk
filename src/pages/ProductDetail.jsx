@@ -67,6 +67,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   // ── State ──
   const [selectedBulbOption, setSelectedBulbOption] = useState('without')
   const [selectedColorIndex, setSelectedColorIndex] = useState(0)
+  const [activeColorIndex, setActiveColorIndex] = useState(null)
   const [isCompareOpen, setIsCompareOpen] = useState(false)
   const [compareVisibleIndices, setCompareVisibleIndices] = useState([])
   const [quantity, setQuantity] = useState(1)
@@ -157,18 +158,17 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         ? [product.image, product.image, product.image]
         : []
 
-    // Prepend selected color variant image so it shows as main image
+    // Only prepend color variant image if user has actively selected a color
     const variants = Array.isArray(product?.productDetails?.colorVariants)
       ? product.productDetails.colorVariants
       : []
-    const safeIdx = Math.min(Math.max(selectedColorIndex, 0), Math.max(variants.length - 1, 0))
-    const selectedVariant = variants[safeIdx]
-    if (selectedVariant?.image) {
-      return [selectedVariant.image, ...baseImages]
+    
+    if (activeColorIndex !== null && variants[activeColorIndex]?.image) {
+      return [variants[activeColorIndex].image, ...baseImages]
     }
 
     return baseImages
-  }, [product?.image, product?.images, product?.productDetails?.colorVariants, selectedColorIndex])
+  }, [product?.image, product?.images, product?.productDetails?.colorVariants, activeColorIndex])
 
   const productReviews = useMemo(
     () => reviews.filter((r) => r.productId === productId),
@@ -684,6 +684,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                          type="button"
                          onClick={() => {
                            setSelectedColorIndex(idx)
+                           setActiveColorIndex(idx)
                            setActiveImageIndex(0)
                          }}
                          className={classNames(
