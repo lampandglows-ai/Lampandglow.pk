@@ -1473,6 +1473,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <Link
                     key={rp.id}
                     to={`/products/${slugify(rp.name)}`}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
                     className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-stone-300"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
@@ -1577,7 +1578,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               {relatedProducts.slice(0, 5).map((rp) => {
                 const rpInfo = getDiscountInfo(rp)
                 return (
-                  <Link key={`rv-${rp.id}`} to={`/products/${slugify(rp.name)}`} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                  <Link key={`rv-${rp.id}`} to={`/products/${slugify(rp.name)}`} onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })} className="group block overflow-hidden bg-white border border-stone-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                     <div className="relative aspect-square overflow-hidden bg-stone-100">
                       {rp.isNewArrival && (
                         <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-1.5 py-0.5 text-[9px] font-bold text-white tracking-wide">New</span>
