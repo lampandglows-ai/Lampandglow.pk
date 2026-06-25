@@ -403,7 +403,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       `}</style>
       {/* ═══════════════ BREADCRUMBS ═══════════════ */}
       <div className="border-b border-stone-200">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-1.5 py-4 text-[12px] text-stone-500">
             <button
               type="button"
@@ -427,8 +427,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       </div>
 
       {/* ═══════════════ MAIN PRODUCT AREA ═══════════════ */}
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
@@ -1069,7 +1069,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
       {/* ═══════════════ TABS ═══════════════ */}
       <div className="border-t border-stone-200 bg-stone-50/60">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-0 border-b border-stone-200">
             {['description', 'dimension', 'shipping', 'reviews'].map((tab) => (
               <button
@@ -1394,7 +1394,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
       {/* ═══════════════ TRUST BADGES ═══════════════ */}
       <div className="border-t border-stone-200 bg-white">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center gap-2">
               <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M3 3h7l2 3h9v13H3z" /><path d="M3 8h18" /></svg>
@@ -1419,7 +1419,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ RELATED PRODUCTS ═══════════════ */}
       {relatedProducts.length > 0 && (
         <div className="border-t border-stone-200 bg-white">
-          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Related Products</h2>
             <p className="mt-1 text-sm text-stone-500">You may also like</p>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -1504,7 +1504,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ RECENTLY VIEWED ═══════════════ */}
       {relatedProducts.length > 2 && (
         <div className="border-t border-stone-200 bg-stone-50/40">
-          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">Recently Viewed Products</h2>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {relatedProducts.slice(0, 5).map((rp) => {
