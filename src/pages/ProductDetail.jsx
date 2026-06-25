@@ -76,6 +76,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [touchEndX, setTouchEndX] = useState(null)
   const [showFixedBar, setShowFixedBar] = useState(false)
   const [localReviewForm, setLocalReviewForm] = useState({ rating: 5, comment: '' })
+  const [copied, setCopied] = useState(false)
   const actionRef = useRef(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
@@ -254,6 +255,61 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     product.productType || (product.category === 'Lamps' ? 'Floor lamp' : 'Wood decor')
   const categoryName = resolveCategoryName(categories, product.category)
 
+  /* ─────────────────────────────────────────────────────────────
+     SHARE HANDLER — opens the correct share dialog per platform.
+     Uses the live page URL plus the product name/image.
+  ───────────────────────────────────────────────────────────── */
+  const shareUrl =
+    typeof window !== 'undefined' ? window.location.href : ''
+
+  const handleShare = (platform) => {
+    const url = encodeURIComponent(shareUrl)
+    const text = encodeURIComponent(`${product.name} — ${formatPKR(effectivePrice)}`)
+    const media = encodeURIComponent(selectedImage || product.image || '')
+
+    let shareLink = ''
+    switch (platform) {
+      case 'facebook':
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`
+        break
+      case 'twitter':
+        shareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`
+        break
+      case 'pinterest':
+        shareLink = `https://pinterest.com/pin/create/button/?url=${url}&media=${media}&description=${text}`
+        break
+      case 'email':
+        window.location.href = `mailto:?subject=${text}&body=${decodeURIComponent(url)}`
+        return
+      default:
+        return
+    }
+    window.open(
+      shareLink,
+      '_blank',
+      'noopener,noreferrer,width=600,height=550',
+    )
+  }
+
+  // Optional: native share / copy-link fallback when the Web Share API exists
+  const handleNativeOrCopy = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.name, url: shareUrl })
+        return
+      } catch {
+        /* user cancelled — fall through to copy */
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      /* clipboard unavailable */
+    }
+  }
+
   const renderStars = (rating) => {
     const value = Math.round(rating)
     return (
@@ -281,11 +337,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const addQuantityToCart = () => {
     if (!inStock) return
     const count = Math.max(1, Math.min(quantity, Math.max(stock, 1)))
-    const payload = { 
-      product, 
-      bulbOption: selectedBulb || null, 
+    const payload = {
+      product,
+      bulbOption: selectedBulb || null,
       colorVariant: selectedColor || null,
-      unitPrice: effectivePrice 
+      unitPrice: effectivePrice
     }
     for (let i = 0; i < count; i += 1) {
       onAddToCart(payload)
@@ -409,8 +465,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 ))}
               </div>
 
-              {/* ── Main Image ── */}
-              <div className="relative flex-1 overflow-hidden bg-stone-100 group rounded-sm">
+              {/* ── Main Image ──
+                  CHANGED: added h-full so the container is the full 600px tall,
+                  and the photo wrapper is now absolute inset-0 so the image
+                  COVERS the entire container (no empty/free space) while the
+                  outer dimensions stay exactly the same. */}
+              <div className="relative flex-1 h-full overflow-hidden bg-stone-100 group rounded-sm">
                 {/* Badges */}
                 {product.isNewArrival && (
                   <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
@@ -428,9 +488,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </span>
                 )}
 
-                {/* Main photo */}
+                {/* Main photo — fills the whole container */}
                 <div
-                  className="h-full min-h-[400px] sm:min-h-[500px]"
+                  className="absolute inset-0"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
@@ -787,21 +847,57 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 <span className="relative z-10 transition-colors group-hover:text-white">Buy It Now</span>
               </button>
 
-              {/* Share row */}
+              {/* Share row — buttons are now wired to handleShare() */}
               <div className="mt-4 flex items-center gap-4">
                 <span className="text-[12px] text-stone-500 uppercase tracking-wide font-semibold">Share</span>
                 <div className="flex items-center gap-2">
-                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-blue-600 transition-colors" aria-label="Share on Facebook">
+                  <button
+                    type="button"
+                    onClick={() => handleShare('facebook')}
+                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-blue-600 transition-colors"
+                    aria-label="Share on Facebook"
+                  >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
                   </button>
-                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-900 transition-colors" aria-label="Share on Twitter">
+                  <button
+                    type="button"
+                    onClick={() => handleShare('twitter')}
+                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-900 transition-colors"
+                    aria-label="Share on Twitter"
+                  >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                   </button>
-                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-[#E53935] transition-colors" aria-label="Share on Pinterest">
+                  <button
+                    type="button"
+                    onClick={() => handleShare('pinterest')}
+                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-[#E53935] transition-colors"
+                    aria-label="Share on Pinterest"
+                  >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M12 0a12 12 0 0 0-4.37 23.17c-.02-.94-.004-2.07.24-3.09l1.73-7.33s-.43-.86-.43-2.13c0-2 1.16-3.5 2.6-3.5 1.23 0 1.82.92 1.82 2.02 0 1.23-.78 3.07-1.18 4.78-.34 1.42.71 2.58 2.1 2.58 2.52 0 4.21-3.24 4.21-7.07 0-2.92-1.97-5.1-5.55-5.1a6.4 6.4 0 0 0-6.63 6.45c0 1.17.35 2 .89 2.63.25.3.28.41.19.75l-.27 1.07c-.09.35-.36.47-.66.34-1.84-.75-2.7-2.77-2.7-5.04 0-3.75 3.16-8.24 9.42-8.24 5.04 0 8.34 3.64 8.34 7.55 0 5.17-2.88 9.04-7.12 9.04-1.42 0-2.76-.77-3.22-1.64l-.92 3.58c-.3 1.1-.89 2.2-1.43 3.07A12 12 0 1 0 12 0z" /></svg>
                   </button>
-                  <button type="button" className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-700 transition-colors" aria-label="Share via email">
+                  <button
+                    type="button"
+                    onClick={() => handleShare('email')}
+                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-stone-700 transition-colors"
+                    aria-label="Share via email"
+                  >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNativeOrCopy}
+                    className="h-8 w-8 grid place-items-center text-stone-400 hover:text-[#5A2D0C] transition-colors relative"
+                    aria-label="Copy link or share"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    {copied && (
+                      <span className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-stone-900 px-2 py-0.5 text-[10px] font-medium text-white">
+                        Link copied
+                      </span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -1010,8 +1106,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}
                 </p>
 
-            
-
                 {Array.isArray(product.whyLoveItems) && product.whyLoveItems.length > 0 && product.whyLoveItems.some(item => item.trim()) && (
                   <div>
                     <h4 className="text-base font-bold text-stone-900">Why You'll Love It</h4>
@@ -1051,7 +1145,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       <h3 className="text-lg font-bold text-stone-900">Product Dimensions</h3>
                       <p className="mt-2 text-stone-600">Here are the detailed measurements of this product:</p>
                     </div>
-                    
+
                     <div className="bg-stone-50 rounded-xl p-6 border border-stone-200">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {product.dimensions.width && (
@@ -1083,7 +1177,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                           </div>
                         )}
                       </div>
-                      
+
                       {product.dimensions.notes && (
                         <div className="mt-6 pt-6 border-t border-stone-200">
                           <p className="text-sm text-stone-600">{product.dimensions.notes}</p>
@@ -1204,17 +1298,17 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     <form onSubmit={(e) => {
                       e.preventDefault()
                       if (!localReviewForm.comment.trim() || !user) return
-                      
+
                       // Check if user already reviewed this product
                       const hasAlreadyReviewed = reviews.some(
                         (r) => r.productId === productId && r.userId === user.uid
                       )
-                      
+
                       if (hasAlreadyReviewed) {
                         alert('You have already reviewed this product.')
                         return
                       }
-                      
+
                       const newReview = {
                         id: Date.now(),
                         productId: productId,
@@ -1224,7 +1318,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         comment: localReviewForm.comment.trim(),
                         createdAt: new Date().toISOString(),
                       }
-                      
+
                       handleSubmitReview(newReview)
                       setLocalReviewForm({ rating: 5, comment: '' })
                     }} className="space-y-4">
