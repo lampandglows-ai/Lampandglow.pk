@@ -477,23 +477,72 @@ function AppContent() {
 
   // ── Loading Progress Bar ──
   if (loading) {
+    const isBulbAnimating = loadingProgress >= 70
+    
     return (
-      <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
+      <>
+        <style>{`
+          @keyframes bulb-glow {
+            0% {
+              transform: translateY(-30px);
+              opacity: 0.3;
+            }
+            50% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .animate-bulb-glow {
+            animation: bulb-glow 1.5s ease-out forwards;
+          }
+          
+          .animate-fade-in {
+            animation: fade-in 0.5s ease-out;
+          }
+        `}</style>
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
         <div className="w-full max-w-md px-8">
           {/* Glowing Bulb Icon */}
-          <div className="mb-6 flex justify-center">
-            <div className="relative">
+          <div className="mb-6 flex justify-center h-24">
+            <div className={`relative transition-all duration-1000 ${isBulbAnimating ? 'animate-bulb-glow' : ''}`}>
               <svg viewBox="0 0 24 24" className="w-20 h-20 text-[#FFD400]" fill="currentColor">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zM9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z"/>
               </svg>
-              <div className="absolute inset-0 bg-[#FFD400] rounded-full blur-xl opacity-60 animate-pulse"></div>
+              {isBulbAnimating && (
+                <div className="absolute inset-0 bg-[#FFD400] rounded-full blur-2xl opacity-80 animate-pulse"></div>
+              )}
             </div>
           </div>
 
-          <div className="mb-4 text-center">
-            <h2 className="text-2xl font-bold text-stone-900">Lamp & Glow</h2>
-            <p className="text-sm text-stone-500 mt-2">Illuminating your space with elegance...</p>
-          </div>
+          {/* Ready to Glow Text */}
+          {isBulbAnimating && (
+            <div className="mb-4 text-center animate-fade-in">
+              <p className="text-lg font-semibold text-[#5A2D0C]">Ready to Glow</p>
+            </div>
+          )}
+
+          {!isBulbAnimating && (
+            <div className="mb-4 text-center">
+              <h2 className="text-2xl font-bold text-stone-900">Lamp & Glow</h2>
+              <p className="text-sm text-stone-500 mt-2">Illuminating your space with elegance...</p>
+            </div>
+          )}
           
           <div className="h-2 bg-stone-200 rounded-full overflow-hidden shadow-inner">
             <div
@@ -504,6 +553,7 @@ function AppContent() {
           <p className="text-xs text-stone-500 mt-3 text-center font-medium">{Math.round(Math.min(100, loadingProgress))}%</p>
         </div>
       </div>
+      </>
     )
   }
 
