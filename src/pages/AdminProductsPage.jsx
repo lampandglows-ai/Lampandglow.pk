@@ -36,6 +36,15 @@ export default function AdminProductsPage() {
     bulbEnabled: false,
     bulbPrice: '',
     colorVariants: [],
+    dimensions: {
+      width: '',
+      height: '',
+      depth: '',
+      weight: '',
+      unit: 'cm',
+      weightUnit: 'kg',
+      notes: ''
+    },
     whyLoveItems: [
       'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
       'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -208,6 +217,7 @@ export default function AdminProductsPage() {
         freeReturnsContent: formData.freeReturnsContent || '',
         ourPromiseContent: formData.ourPromiseContent || '',
         shippingReturnContent: formData.shippingReturnContent || '',
+        dimensions: formData.dimensions || {},
       }
 
       if (editingId) {
@@ -271,6 +281,15 @@ export default function AdminProductsPage() {
       bulbEnabled: false,
       bulbPrice: '',
       colorVariants: [],
+      dimensions: {
+        width: '',
+        height: '',
+        depth: '',
+        weight: '',
+        unit: 'cm',
+        weightUnit: 'kg',
+        notes: ''
+      },
     })
     setShowForm(false)
   }
@@ -323,6 +342,15 @@ export default function AdminProductsPage() {
       bulbEnabled: product.bulbEnabled === true,
       bulbPrice: product.bulbPrice != null ? String(product.bulbPrice) : '',
       colorVariants: existingColorVariants,
+      dimensions: product.dimensions || {
+        width: '',
+        height: '',
+        depth: '',
+        weight: '',
+        unit: 'cm',
+        weightUnit: 'kg',
+        notes: ''
+      },
       whyLoveItems: Array.isArray(product.whyLoveItems) ? product.whyLoveItems : [
         'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
         'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -1034,6 +1062,113 @@ export default function AdminProductsPage() {
                     >
                       + Add Item
                     </button>
+                  </div>
+                </div>
+
+                {/* Dimensions */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800">Product Dimensions</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Add product measurements (shown in Dimension tab)</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Width</label>
+                      <input
+                        type="text"
+                        value={formData.dimensions.width}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, width: e.target.value }
+                        }))}
+                        placeholder="e.g. 30"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Height</label>
+                      <input
+                        type="text"
+                        value={formData.dimensions.height}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, height: e.target.value }
+                        }))}
+                        placeholder="e.g. 45"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Depth</label>
+                      <input
+                        type="text"
+                        value={formData.dimensions.depth}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, depth: e.target.value }
+                        }))}
+                        placeholder="e.g. 30"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Weight</label>
+                      <input
+                        type="text"
+                        value={formData.dimensions.weight}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, weight: e.target.value }
+                        }))}
+                        placeholder="e.g. 2.5"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Dimension Unit</label>
+                      <select
+                        value={formData.dimensions.unit}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, unit: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="inch">Inches (in)</option>
+                        <option value="mm">Millimeters (mm)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Weight Unit</label>
+                      <select
+                        value={formData.dimensions.weightUnit}
+                        onChange={(e) => setFormData((prev) => ({
+                          ...prev,
+                          dimensions: { ...prev.dimensions, weightUnit: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="lb">Pounds (lb)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Additional Notes (optional)</label>
+                    <textarea
+                      value={formData.dimensions.notes}
+                      onChange={(e) => setFormData((prev) => ({
+                        ...prev,
+                        dimensions: { ...prev.dimensions, notes: e.target.value }
+                      }))}
+                      placeholder="e.g. Dimensions may vary slightly due to handcrafted nature"
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                    />
                   </div>
                 </div>
 

@@ -973,7 +973,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       <div className="border-t border-stone-200 bg-stone-50/60">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10">
           <div className="flex items-center gap-0 border-b border-stone-200">
-            {['description', 'shipping', 'reviews'].map((tab) => (
+            {['description', 'dimension', 'shipping', 'reviews'].map((tab) => (
               <button
                 key={tab}
                 type="button"
@@ -985,7 +985,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     : 'text-stone-400 hover:text-stone-600',
                 )}
               >
-                {tab === 'description' ? 'Description' : tab === 'shipping' ? 'Shipping & Return' : `Reviews (${productReviews.length})`}
+                {tab === 'description' ? 'Description' : tab === 'dimension' ? 'Dimension' : tab === 'shipping' ? 'Shipping & Return' : `Reviews (${productReviews.length})`}
               </button>
             ))}
           </div>
@@ -1052,6 +1052,63 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <p className="text-[12px] text-stone-400 italic mt-4">
                     {product.noteText}
                   </p>
+                )}
+              </div>
+            ) : activeTab === 'dimension' ? (
+              <div className="max-w-3xl">
+                {product.dimensions ? (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-bold text-stone-900">Product Dimensions</h3>
+                      <p className="mt-2 text-stone-600">Here are the detailed measurements of this product:</p>
+                    </div>
+                    
+                    <div className="bg-stone-50 rounded-xl p-6 border border-stone-200">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {product.dimensions.width && (
+                          <div className="text-center">
+                            <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">Width</p>
+                            <p className="text-2xl font-bold text-stone-900">{product.dimensions.width}</p>
+                            <p className="text-xs text-stone-500 mt-0.5">{product.dimensions.unit || 'cm'}</p>
+                          </div>
+                        )}
+                        {product.dimensions.height && (
+                          <div className="text-center">
+                            <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">Height</p>
+                            <p className="text-2xl font-bold text-stone-900">{product.dimensions.height}</p>
+                            <p className="text-xs text-stone-500 mt-0.5">{product.dimensions.unit || 'cm'}</p>
+                          </div>
+                        )}
+                        {product.dimensions.depth && (
+                          <div className="text-center">
+                            <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">Depth</p>
+                            <p className="text-2xl font-bold text-stone-900">{product.dimensions.depth}</p>
+                            <p className="text-xs text-stone-500 mt-0.5">{product.dimensions.unit || 'cm'}</p>
+                          </div>
+                        )}
+                        {product.dimensions.weight && (
+                          <div className="text-center">
+                            <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">Weight</p>
+                            <p className="text-2xl font-bold text-stone-900">{product.dimensions.weight}</p>
+                            <p className="text-xs text-stone-500 mt-0.5">{product.dimensions.weightUnit || 'kg'}</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {product.dimensions.notes && (
+                        <div className="mt-6 pt-6 border-t border-stone-200">
+                          <p className="text-sm text-stone-600">{product.dimensions.notes}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <svg viewBox="0 0 24 24" className="w-16 h-16 mx-auto text-stone-300 mb-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                    </svg>
+                    <p className="text-stone-500">No dimensions specified for this product</p>
+                  </div>
                 )}
               </div>
             ) : activeTab === 'shipping' ? (
