@@ -65,7 +65,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   ───────────────────────────────────────────────────────────── */
 
   // ── State ──
-  const [selectedBulbOption, setSelectedBulbOption] = useState('')
+  const [selectedBulbOption, setSelectedBulbOption] = useState('without')
   const [selectedColorIndex, setSelectedColorIndex] = useState(0)
   const [isCompareOpen, setIsCompareOpen] = useState(false)
   const [compareVisibleIndices, setCompareVisibleIndices] = useState([])
