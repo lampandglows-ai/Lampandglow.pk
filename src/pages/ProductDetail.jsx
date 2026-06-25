@@ -1001,7 +1001,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">{product.name}</h3>
                   <p className="mt-1 text-stone-500 italic">
-                    {product.description?.split('\n')[1] || 'A grounded silhouette with elevated simplicity.'}
+                    {product.description?.split('\n')[1] }
                   </p>
                 </div>
 
@@ -1010,23 +1010,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}
                 </p>
 
-                {Object.keys(pd).length > 0 && (
-                  <div>
-                    <h4 className="text-base font-bold text-stone-900 mt-2">Product Details</h4>
-                    <div className="mt-3 space-y-0">
-                      {Object.entries(pd).map(([key, value]) => (
-                        <div key={key} className="flex border-b border-stone-100 py-2.5">
-                          <span className="w-48 text-stone-500 capitalize text-[13px]">
-                            {key.replace(/([A-Z])/g, ' $1').trim()}
-                          </span>
-                          <span className="text-[13px] font-medium text-stone-800">
-                            {Array.isArray(value) ? value.join(', ') : value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+            
 
                 {Array.isArray(product.whyLoveItems) && product.whyLoveItems.length > 0 && product.whyLoveItems.some(item => item.trim()) && (
                   <div>
