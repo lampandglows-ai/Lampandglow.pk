@@ -432,7 +432,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
-            <div className="flex gap-3">
+            <div className="flex gap-3 h-full">
 
               {/* ── Vertical Thumbnail Strip (desktop) ── */}
               <div
@@ -466,7 +466,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
 
               {/* ── Main Image ── */}
-              <div className="relative flex-1 overflow-hidden bg-stone-100 group rounded-sm">
+              <div className="relative flex-1 h-full overflow-hidden bg-stone-100 group rounded-sm">
                 {/* Badges */}
                 {product.isNewArrival && (
                   <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
