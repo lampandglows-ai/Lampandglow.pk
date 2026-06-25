@@ -80,6 +80,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [showFixedBar, setShowFixedBar] = useState(false)
   const [localReviewForm, setLocalReviewForm] = useState({ rating: 5, comment: '' })
   const [copied, setCopied] = useState(false)
+  const [viewerCount, setViewerCount] = useState(22)
   const actionRef = useRef(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
@@ -134,6 +135,14 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   // ── Scroll to top when component mounts ──
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [])
+
+  // ── Update viewer count every 5 seconds ──
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setViewerCount(Math.floor(Math.random() * 31) + 20) // Random between 20-50
+    }, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   // ── Simulate loading progress ──
@@ -950,7 +959,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span>{Math.floor(Math.random() * 20) + 10} customers are viewing this product</span>
+              <span>{viewerCount} customers are viewing this product</span>
             </div>
 
             {/* ═══ Accordions ═══ */}
