@@ -432,7 +432,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
-            <div className="flex gap-3 h-[600px]">
+            <div className="flex gap-3">
 
               {/* ── Vertical Thumbnail Strip (desktop) ── */}
               <div
@@ -465,12 +465,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 ))}
               </div>
 
-              {/* ── Main Image ──
-                  CHANGED: added h-full so the container is the full 600px tall,
-                  and the photo wrapper is now absolute inset-0 so the image
-                  COVERS the entire container (no empty/free space) while the
-                  outer dimensions stay exactly the same. */}
-              <div className="relative flex-1 h-full overflow-hidden bg-stone-100 group rounded-sm">
+              {/* ── Main Image ── */}
+              <div className="relative flex-1 overflow-hidden bg-stone-100 group rounded-sm">
                 {/* Badges */}
                 {product.isNewArrival && (
                   <span className="absolute left-0 top-0 z-10 bg-[#F5F1EA]0 px-3 py-1.5 text-[11px] font-bold text-white tracking-wide uppercase">
@@ -488,9 +484,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </span>
                 )}
 
-                {/* Main photo — fills the whole container */}
+                {/* Main photo — covers the full width */}
                 <div
-                  className="absolute inset-0"
+                  className="w-full h-full"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
@@ -498,7 +494,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   <img
                     src={selectedImage}
                     alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    style={{ minHeight: '500px' }}
                   />
                 </div>
 
