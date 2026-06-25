@@ -376,7 +376,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
           {/* ─── LEFT: Image Gallery ─── */}
           <div className="flex flex-col gap-4">
-            <div className="flex gap-3">
+            <div className="flex gap-3 h-[600px]">
 
               {/* ── Vertical Thumbnail Strip (desktop) ── */}
               <div
@@ -430,7 +430,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
                 {/* Main photo */}
                 <div
-                  className="aspect-[3/4] sm:aspect-[4/5]"
+                  className="h-full min-h-[400px] sm:min-h-[500px]"
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
