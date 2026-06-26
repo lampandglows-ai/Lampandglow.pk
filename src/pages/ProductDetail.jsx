@@ -682,10 +682,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             </div>
 
             {/* Short Description */}
-            <p className="mt-4 text-[13px] text-stone-600 leading-relaxed">
-              {product.description?.split('\n')[0] ||
-                `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations.`}
-            </p>
+            {product.shortDescription && (
+              <p className="mt-4 text-[13px] text-stone-600 leading-relaxed">
+                {product.shortDescription}
+              </p>
+            )}
 
             {/* Price */}
             <div className="mt-5 flex items-end gap-3">
@@ -1300,17 +1301,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </>
                 )}
               </div>
-            ) : (
-              <div className="max-w-3xl space-y-8">
-                {/* Short Description - shown at start of reviews section */}
-                {product.shortDescription && (
-                  <div className="p-6 bg-stone-50 rounded-xl border border-stone-200">
-                    <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-                      {product.shortDescription}
-                    </p>
-                  </div>
-                )}
-
+              ) : (
+                <div className="max-w-3xl space-y-8">
                 <div className="flex items-center gap-6">
                   <div className="text-center">
                     <p className="text-5xl font-bold text-stone-900">{avgRating ? avgRating.toFixed(1) : '0.0'}</p>
