@@ -178,7 +178,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       ? product.shadeColors
       : []
     
-    if (activeColorIndex !== null && shades[activeColorIndex]?.image) {
+    // Only use shade if activeColorIndex is within shades array range
+    if (activeColorIndex !== null && activeColorIndex < shades.length && shades[activeColorIndex]?.image) {
       return [shades[activeColorIndex].image, ...baseImages]
     }
 
@@ -187,12 +188,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       ? product.productDetails.colorVariants
       : []
     
-    if (activeColorIndex !== null && variants[activeColorIndex]?.image) {
-      return [variants[activeColorIndex].image, ...baseImages]
+    // Only use color if selectedColorIndex is within variants array range
+    if (selectedColorIndex !== null && selectedColorIndex < variants.length && variants[selectedColorIndex]?.image) {
+      return [variants[selectedColorIndex].image, ...baseImages]
     }
 
     return baseImages
-  }, [product?.image, product?.images, product?.productDetails?.colorVariants, product?.shadeColors, activeColorIndex])
+  }, [product?.image, product?.images, product?.productDetails?.colorVariants, product?.shadeColors, selectedColorIndex, activeColorIndex])
 
   const productReviews = useMemo(
     () => reviews.filter((r) => r.productId === productId),
@@ -773,7 +775,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                                key={`color-${variant.name}-${idx}`}
                                type="button"
                                onClick={() => {
-                                 setSelectedColorIndex(idx)
+                                 // Toggle: if clicking the same color, deselect it
+                                 if (active) {
+                                   setSelectedColorIndex(null)
+                                 } else {
+                                   setSelectedColorIndex(idx)
+                                 }
                                  setActiveImageIndex(0)
                                }}
                                className={classNames(
