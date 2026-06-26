@@ -567,7 +567,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               <div className="mt-4">
                 <div className="grid grid-cols-3 gap-4">
                   {product.videos.map((videoUrl, idx) => (
-                    <div key={idx} className="rounded-lg overflow-hidden bg-stone-100" style={{ height: '420px' }}>
+                    <div key={idx} className="aspect-square rounded-lg overflow-hidden bg-stone-100">
                       {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
                         <iframe
                           src={videoUrl}
@@ -599,7 +599,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             {(!product.videos || product.videos.length === 0) && product.videoUrl && (
               <div className="mt-4">
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="rounded-lg overflow-hidden bg-stone-100" style={{ height: '420px' }}>
+                  <div className="aspect-square rounded-lg overflow-hidden bg-stone-100">
                     {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
                       <iframe
                         src={product.videoUrl}
