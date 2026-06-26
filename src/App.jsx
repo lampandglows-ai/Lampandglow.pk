@@ -409,6 +409,23 @@ function AppContent() {
     }
   }, [productsLoading, categoriesLoading])
 
+  // ── Trigger loading on route change ──
+  useEffect(() => {
+    setLoading(true)
+    setLoadingProgress(0)
+    
+    // Ensure minimum loading time of 2 seconds on navigation
+    const minLoadTimer = setTimeout(() => {
+      if (!productsLoading && !categoriesLoading) {
+        setLoadingProgress(100)
+        const completeTimer = setTimeout(() => setLoading(false), 500)
+        return () => clearTimeout(completeTimer)
+      }
+    }, 2000)
+    
+    return () => clearTimeout(minLoadTimer)
+  }, [location.pathname, productsLoading, categoriesLoading])
+
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
@@ -499,7 +516,7 @@ function AppContent() {
               filter: brightness(1) drop-shadow(0 0 0 rgba(255, 212, 0, 0));
             }
             100% {
-              filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 212, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 212, 0, 0.4));
+              filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 212, 0, 0.9)) drop-shadow(0 0 60px rgba(255, 212, 0, 0.5));
             }
           }
           
@@ -526,11 +543,11 @@ function AppContent() {
           }
           
           .animate-bulb-light {
-            animation: bulb-light-up 0.8s ease-out forwards;
+            animation: bulb-light-up 1.2s ease-out forwards;
           }
           
           .animate-fade-out {
-            animation: fade-out 0.5s ease-out forwards;
+            animation: fade-out 0.8s ease-out forwards;
           }
           
           .animate-pulse-glow {
