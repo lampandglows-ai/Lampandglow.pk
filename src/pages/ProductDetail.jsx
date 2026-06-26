@@ -567,7 +567,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               <div className="mt-4">
                 <div className="grid grid-cols-3 gap-4">
                   {product.videos.map((videoUrl, idx) => (
-                    <div key={idx} className="aspect-video rounded-lg overflow-hidden bg-stone-100">
+                    <div key={idx} className="rounded-lg overflow-hidden bg-stone-100" style={{ height: '420px' }}>
                       {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
                         <iframe
                           src={videoUrl}
@@ -591,10 +591,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       )}
                     </div>
                   ))}
-                  {/* Empty placeholders to maintain 3-column layout */}
-                  {Array.from({ length: 3 - product.videos.length }).map((_, idx) => (
-                    <div key={`empty-${idx}`} className="aspect-video rounded-lg bg-stone-50 border-2 border-dashed border-stone-200" />
-                  ))}
                 </div>
               </div>
             )}
@@ -603,7 +599,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             {(!product.videos || product.videos.length === 0) && product.videoUrl && (
               <div className="mt-4">
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="aspect-video rounded-lg overflow-hidden bg-stone-100">
+                  <div className="rounded-lg overflow-hidden bg-stone-100" style={{ height: '420px' }}>
                     {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
                       <iframe
                         src={product.videoUrl}
@@ -626,10 +622,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       </video>
                     )}
                   </div>
-                  {/* Empty placeholders to maintain 3-column layout */}
-                  {Array.from({ length: 2 }).map((_, idx) => (
-                    <div key={`empty-legacy-${idx}`} className="aspect-video rounded-lg bg-stone-50 border-2 border-dashed border-stone-200" />
-                  ))}
                 </div>
               </div>
             )}
