@@ -562,6 +562,21 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
+            {/* ── Product Video ── */}
+            {product.videoUrl && (
+              <div className="mt-4">
+                <div className="aspect-video w-full rounded-lg overflow-hidden bg-stone-100">
+                  <iframe
+                    src={product.videoUrl}
+                    title={`${product.name} video`}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
             {/* ── Mobile horizontal thumbnail strip ── */}
             <div className="flex sm:hidden gap-2 overflow-x-auto pb-1">
               {images.map((src, idx) => (

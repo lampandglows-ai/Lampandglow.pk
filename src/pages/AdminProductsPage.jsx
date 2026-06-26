@@ -45,6 +45,7 @@ export default function AdminProductsPage() {
       weightUnit: 'kg',
       notes: ''
     },
+    videoUrl: '',
     whyLoveItems: [
       'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
       'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -218,6 +219,7 @@ export default function AdminProductsPage() {
         ourPromiseContent: formData.ourPromiseContent || '',
         shippingReturnContent: formData.shippingReturnContent || '',
         dimensions: formData.dimensions || {},
+        videoUrl: formData.videoUrl || '',
       }
 
       if (editingId) {
@@ -290,6 +292,7 @@ export default function AdminProductsPage() {
         weightUnit: 'kg',
         notes: ''
       },
+      videoUrl: '',
     })
     setShowForm(false)
   }
@@ -351,6 +354,7 @@ export default function AdminProductsPage() {
         weightUnit: 'kg',
         notes: ''
       },
+      videoUrl: product.videoUrl || '',
       whyLoveItems: Array.isArray(product.whyLoveItems) ? product.whyLoveItems : [
         'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
         'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -746,6 +750,22 @@ export default function AdminProductsPage() {
                     rows={5}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
                   />
+                </div>
+
+                {/* Video URL */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Video URL (optional)
+                  </label>
+                  <input
+                    type="url"
+                    name="videoUrl"
+                    value={formData.videoUrl}
+                    onChange={handleInputChange}
+                    placeholder="https://www.youtube.com/watch?v=... or https://vimeo.com/..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Add a YouTube or Vimeo video link to showcase your product</p>
                 </div>
 
                 {/* Multiple Images Upload */}
