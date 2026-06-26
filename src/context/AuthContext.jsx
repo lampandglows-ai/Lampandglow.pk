@@ -48,10 +48,11 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signup = async (name, email, password) => {
+  const signup = async (email, password, name) => {
     try {
       setError(null);
-      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const trimmedEmail = email?.trim();
+      const result = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const firebaseUser = result.user;
 
       // Update profile with display name
@@ -87,6 +88,8 @@ export const AuthProvider = ({ children }) => {
         message = 'Password should be at least 6 characters';
       } else if (err.code === 'auth/invalid-api-key') {
         message = 'Invalid Firebase API key. Check your .env configuration.';
+      } else if (err.code === 'auth/invalid-email') {
+        message = 'Invalid email format. Please enter a valid email address.';
       } else if (err.message) {
         message = err.message;
       }
@@ -98,7 +101,8 @@ export const AuthProvider = ({ children }) => {
   const signin = async (email, password) => {
     try {
       setError(null);
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const trimmedEmail = email?.trim();
+      const result = await signInWithEmailAndPassword(auth, trimmedEmail, password);
       const firebaseUser = result.user;
 
       // Get user data from Firestore
