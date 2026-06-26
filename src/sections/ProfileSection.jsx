@@ -88,7 +88,7 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
 
   // Desktop View
   const DesktopView = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-0 border border-stone-200 rounded-xl overflow-hidden min-h-[600px] bg-white shadow-lg">
+    <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-0 border border-stone-200 rounded-xl overflow-hidden min-h-[600px] bg-white shadow-lg">
       {/* Sidebar */}
       <div className="bg-[#412402] p-6 flex flex-col">
         <div className="text-xs font-medium text-[#FAC775] tracking-widest mb-6 flex items-center gap-2">
