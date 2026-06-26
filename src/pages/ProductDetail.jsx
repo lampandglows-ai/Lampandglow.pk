@@ -149,9 +149,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   // ── Effects ──
   useEffect(() => {
     if (isCompareOpen) {
-      setCompareVisibleIndices(colorVariants.map((_, i) => i))
+      // Initialize with all color variants and shade colors visible
+      const colorIndices = colorVariants.map((_, i) => `color-${i}`)
+      const shadeIndices = shadeColors.map((_, i) => `shade-${i}`)
+      setCompareVisibleIndices([...colorIndices, ...shadeIndices])
     }
-  }, [isCompareOpen, colorVariants])
+  }, [isCompareOpen, colorVariants, shadeColors])
 
   useEffect(() => {
     if (!isCompareOpen) return
