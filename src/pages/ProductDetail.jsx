@@ -774,8 +774,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                                type="button"
                                onClick={() => {
                                  setSelectedColorIndex(idx)
-                                 // Toggle: if clicking the same color, deselect it
-                                 setActiveColorIndex(prev => prev === idx ? null : idx)
                                  setActiveImageIndex(0)
                                }}
                                className={classNames(
