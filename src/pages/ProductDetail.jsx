@@ -563,7 +563,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             </div>
 
             {/* ── Product Videos (up to 3, left-aligned in 3-column grid) ── */}
-            {product.videos && product.videos.length > 0 && (
+            {(product.videos && product.videos.length > 0) && (
               <div className="mt-4">
                 <div className="grid grid-cols-3 gap-4">
                   {product.videos.map((videoUrl, idx) => (
@@ -594,6 +594,41 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   {/* Empty placeholders to maintain 3-column layout */}
                   {Array.from({ length: 3 - product.videos.length }).map((_, idx) => (
                     <div key={`empty-${idx}`} className="aspect-video rounded-lg bg-stone-50 border-2 border-dashed border-stone-200" />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Legacy support for single videoUrl field */}
+            {(!product.videos || product.videos.length === 0) && product.videoUrl && (
+              <div className="mt-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="aspect-video rounded-lg overflow-hidden bg-stone-100">
+                    {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
+                      <iframe
+                        src={product.videoUrl}
+                        title={`${product.name} video`}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={product.videoUrl}
+                        title={`${product.name} video`}
+                        className="w-full h-full"
+                        controls
+                        autoPlay
+                        muted
+                        playsInline
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                  </div>
+                  {/* Empty placeholders to maintain 3-column layout */}
+                  {Array.from({ length: 2 }).map((_, idx) => (
+                    <div key={`empty-legacy-${idx}`} className="aspect-video rounded-lg bg-stone-50 border-2 border-dashed border-stone-200" />
                   ))}
                 </div>
               </div>
