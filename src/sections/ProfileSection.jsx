@@ -147,7 +147,7 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
       </div>
 
       {/* Main Content */}
-      <div className="p-8 overflow-y-auto">
+      <div className="overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-stone-900">My orders</h2>
           <Link 
@@ -327,7 +327,7 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
 
   return (
     <div className="min-h-screen bg-stone-50">
-      <div className="max-w-7xl mx-auto">
+      <div>
         {message && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 flex items-start gap-3">
             <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
@@ -354,7 +354,7 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
 
         {/* Profile Edit Section (Desktop Only) */}
         {typeof window !== 'undefined' && window.innerWidth >= 1024 && (
-          <div className="mt-8 bg-white rounded-lg shadow p-6 border border-stone-200">
+          <div className="mt-8 bg-white rounded-lg shadow border border-stone-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-stone-900">Profile Information</h3>
               {!editing && (
