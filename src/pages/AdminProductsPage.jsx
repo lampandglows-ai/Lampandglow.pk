@@ -24,6 +24,7 @@ export default function AdminProductsPage() {
     category: '',
     price: '',
     description: '',
+    shortDescription: '',
     images: [],
     stock: '',
     status: 'active',
@@ -247,6 +248,7 @@ export default function AdminProductsPage() {
         discountType: discountType || null,
         discountValue: discountType && !Number.isNaN(discountValue) ? discountValue : null,
         description: formData.description.trim(),
+        shortDescription: formData.shortDescription.trim(),
         stock: parseInt(formData.stock, 10),
         status: statusOverride || formData.status,
         sku: formData.sku.trim() || null,
@@ -322,6 +324,7 @@ export default function AdminProductsPage() {
       category: '',
       price: '',
       description: '',
+      shortDescription: '',
       images: [],
       stock: '',
       status: 'active',
@@ -386,6 +389,7 @@ export default function AdminProductsPage() {
       discountValue: String(discountValue),
       finalPrice: String(finalPrice || basePrice),
       description: product.description || '',
+      shortDescription: product.shortDescription || '',
       stock: String(product.stock ?? ''),
       status: product.status || 'active',
       sku: product.sku || '',
@@ -801,6 +805,22 @@ export default function AdminProductsPage() {
                     rows={5}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
                   />
+                </div>
+
+                {/* Short Description */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Short Description (optional)
+                  </label>
+                  <textarea
+                    name="shortDescription"
+                    value={formData.shortDescription}
+                    onChange={handleInputChange}
+                    placeholder="Enter a brief product summary (shown below reviews)..."
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">This will appear at the top of the reviews section</p>
                 </div>
 
                 {/* Video Upload */}
