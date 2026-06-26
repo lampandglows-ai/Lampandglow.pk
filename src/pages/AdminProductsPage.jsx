@@ -151,6 +151,44 @@ export default function AdminProductsPage() {
     }))
   }
 
+  // Upload video to Firebase Storage
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    const validTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/mov']
+    if (!validTypes.includes(file.type)) {
+      setMessage({ type: 'error', text: 'Please upload a valid video file (MP4, WebM, OGG, MOV)' })
+      return
+    }
+
+    // Validate file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024
+    if (file.size > maxSize) {
+      setMessage({ type: 'error', text: 'Video file size must be less than 50MB' })
+      return
+    }
+
+    setImageUploading(true)
+    try {
+      const storageRef = ref(storage, `product-videos/${Date.now()}_${file.name}`)
+      await uploadBytes(storageRef, file)
+      const url = await getDownloadURL(storageRef)
+      setFormData((prev) => ({
+        ...prev,
+        videoUrl: url,
+      }))
+      setMessage({ type: 'success', text: 'Video uploaded successfully!' })
+    } catch (err) {
+      console.error('Error uploading video:', err)
+      setMessage({ type: 'error', text: `Video upload failed: ${err.message}` })
+    } finally {
+      setImageUploading(false)
+      e.target.value = ''
+    }
+  }
+
   // Helper: upload a base64/data URL image to Firebase Storage
   const uploadBase64Image = async (dataUrl) => {
     const response = await fetch(dataUrl)
@@ -752,20 +790,41 @@ export default function AdminProductsPage() {
                   />
                 </div>
 
-                {/* Video URL */}
+                {/* Video Upload */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Product Video URL (optional)
+                    Product Video (optional)
                   </label>
+                  
+                  {/* Video URL Input */}
                   <input
                     type="url"
                     name="videoUrl"
                     value={formData.videoUrl}
                     onChange={handleInputChange}
-                    placeholder="https://www.youtube.com/watch?v=... or https://vimeo.com/..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    placeholder="Or paste YouTube/Vimeo URL here..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 mb-2"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Add a YouTube or Vimeo video link to showcase your product</p>
+                  
+                  {/* File Upload Button */}
+                  <div className="flex items-center gap-3">
+                    <label className="flex-1 cursor-pointer">
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleVideoUpload}
+                        className="hidden"
+                        disabled={imageUploading}
+                      />
+                      <div className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 transition">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span className="text-sm text-gray-600">Upload Video from PC</span>
+                      </div>
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Upload a video file (MP4, WebM) or paste a YouTube/Vimeo URL</p>
                 </div>
 
                 {/* Multiple Images Upload */}

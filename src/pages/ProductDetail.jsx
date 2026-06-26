@@ -566,13 +566,27 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             {product.videoUrl && (
               <div className="mt-4">
                 <div className="aspect-video w-full rounded-lg overflow-hidden bg-stone-100">
-                  <iframe
-                    src={product.videoUrl}
-                    title={`${product.name} video`}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
+                    <iframe
+                      src={product.videoUrl}
+                      title={`${product.name} video`}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video
+                      src={product.videoUrl}
+                      title={`${product.name} video`}
+                      className="w-full h-full"
+                      controls
+                      autoPlay
+                      muted
+                      playsInline
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
                 </div>
               </div>
             )}
