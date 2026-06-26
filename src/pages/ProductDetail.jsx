@@ -1136,7 +1136,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ TABS ═══════════════ */}
       <div className="border-t border-stone-200 bg-stone-50/60">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-0 border-b border-stone-200">
+          <div className="flex items-center justify-center gap-0 border-b border-stone-200">
             {['description', 'dimension', 'shipping', 'reviews'].map((tab) => (
               <button
                 key={tab}
