@@ -705,9 +705,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               )}
             </div>
 
-            {/* Tax note */}
-            <p className="mt-1.5 text-[11px] text-stone-400">Tax included.</p>
-
             {/* Stock indicator */}
             {inStock && (
               <div className="mt-4">

@@ -1174,7 +1174,7 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
 
-                {/* Care Instructions */}
+                {/* Care to Instructions */}
                 <div className="border border-gray-200 rounded-xl p-5 space-y-4">
                   <div>
                     <h4 className="text-sm font-bold text-gray-800">Care Instructions</h4>
