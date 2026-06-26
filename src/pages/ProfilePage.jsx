@@ -339,7 +339,7 @@ export default function ProfilePage({ theme = 'light' }) {
   );
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-stone-50">
+    <div className="min-h-screen bg-stone-50">
       <div className="max-w-7xl mx-auto">
         {message && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 flex items-start gap-3">
