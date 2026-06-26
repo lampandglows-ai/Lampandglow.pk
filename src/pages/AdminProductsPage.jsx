@@ -45,7 +45,7 @@ export default function AdminProductsPage() {
       weightUnit: 'kg',
       notes: ''
     },
-    videoUrl: '',
+    videos: [],
     whyLoveItems: [
       'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
       'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -170,6 +170,12 @@ export default function AdminProductsPage() {
       return
     }
 
+    // Check if already have 3 videos
+    if (formData.videos.length >= 3) {
+      setMessage({ type: 'error', text: 'Maximum 3 videos allowed per product' })
+      return
+    }
+
     setImageUploading(true)
     try {
       const storageRef = ref(storage, `product-videos/${Date.now()}_${file.name}`)
@@ -177,7 +183,7 @@ export default function AdminProductsPage() {
       const url = await getDownloadURL(storageRef)
       setFormData((prev) => ({
         ...prev,
-        videoUrl: url,
+        videos: [...prev.videos, url],
       }))
       setMessage({ type: 'success', text: 'Video uploaded successfully!' })
     } catch (err) {
@@ -187,6 +193,13 @@ export default function AdminProductsPage() {
       setImageUploading(false)
       e.target.value = ''
     }
+  }
+
+  const handleRemoveVideo = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      videos: prev.videos.filter((_, i) => i !== index),
+    }))
   }
 
   // Helper: upload a base64/data URL image to Firebase Storage
@@ -257,7 +270,7 @@ export default function AdminProductsPage() {
         ourPromiseContent: formData.ourPromiseContent || '',
         shippingReturnContent: formData.shippingReturnContent || '',
         dimensions: formData.dimensions || {},
-        videoUrl: formData.videoUrl || '',
+        videos: formData.videos || [],
       }
 
       if (editingId) {
@@ -330,7 +343,7 @@ export default function AdminProductsPage() {
         weightUnit: 'kg',
         notes: ''
       },
-      videoUrl: '',
+      videos: [],
     })
     setShowForm(false)
   }
@@ -392,7 +405,7 @@ export default function AdminProductsPage() {
         weightUnit: 'kg',
         notes: ''
       },
-      videoUrl: product.videoUrl || '',
+      videos: Array.isArray(product.videos) ? product.videos : (product.videoUrl ? [product.videoUrl] : []),
       whyLoveItems: Array.isArray(product.whyLoveItems) ? product.whyLoveItems : [
         'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
         'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
@@ -793,38 +806,82 @@ export default function AdminProductsPage() {
                 {/* Video Upload */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Product Video (optional)
+                    Product Videos (optional) - Max 3
                   </label>
                   
                   {/* Video URL Input */}
-                  <input
-                    type="url"
-                    name="videoUrl"
-                    value={formData.videoUrl}
-                    onChange={handleInputChange}
-                    placeholder="Or paste YouTube/Vimeo URL here..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 mb-2"
-                  />
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="url"
+                      name="videoUrl"
+                      value={formData.videoUrl}
+                      onChange={handleInputChange}
+                      placeholder="Paste YouTube/Vimeo URL here..."
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (formData.videoUrl && formData.videos.length < 3) {
+                          setFormData((prev) => ({
+                            ...prev,
+                            videos: [...prev.videos, prev.videoUrl],
+                            videoUrl: '',
+                          }))
+                        }
+                      }}
+                      disabled={!formData.videoUrl || formData.videos.length >= 3}
+                      className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Add URL
+                    </button>
+                  </div>
                   
                   {/* File Upload Button */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 mb-3">
                     <label className="flex-1 cursor-pointer">
                       <input
                         type="file"
                         accept="video/*"
                         onChange={handleVideoUpload}
                         className="hidden"
-                        disabled={imageUploading}
+                        disabled={imageUploading || formData.videos.length >= 3}
                       />
-                      <div className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 transition">
+                      <div className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
                         <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
-                        <span className="text-sm text-gray-600">Upload Video from PC</span>
+                        <span className="text-sm text-gray-600">Upload Video from PC ({formData.videos.length}/3)</span>
                       </div>
                     </label>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Upload a video file (MP4, WebM) or paste a YouTube/Vimeo URL</p>
+
+                  {/* Video List */}
+                  {formData.videos.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-gray-600">Added Videos:</p>
+                      {formData.videos.map((video, idx) => (
+                        <div key={idx} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                          <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-xs text-gray-600 flex-1 truncate">
+                            {video.includes('youtube') || video.includes('vimeo') ? 'Embedded Video' : `Video ${idx + 1}`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveVideo(idx)}
+                            className="p-1 text-red-500 hover:bg-red-50 rounded transition"
+                            title="Remove video"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <p className="text-xs text-gray-500 mt-1">Upload up to 3 videos (MP4, WebM) or add YouTube/Vimeo URLs</p>
                 </div>
 
                 {/* Multiple Images Upload */}

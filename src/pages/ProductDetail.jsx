@@ -562,31 +562,35 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
-            {/* ── Product Video ── */}
-            {product.videoUrl && (
+            {/* ── Product Videos (up to 3 in a row) ── */}
+            {product.videos && product.videos.length > 0 && (
               <div className="mt-4">
-                <div className="aspect-video w-full rounded-lg overflow-hidden bg-stone-100">
-                  {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
-                    <iframe
-                      src={product.videoUrl}
-                      title={`${product.name} video`}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <video
-                      src={product.videoUrl}
-                      title={`${product.name} video`}
-                      className="w-full h-full"
-                      controls
-                      autoPlay
-                      muted
-                      playsInline
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                  )}
+                <div className={`grid gap-4 ${product.videos.length === 1 ? 'grid-cols-1' : product.videos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  {product.videos.map((videoUrl, idx) => (
+                    <div key={idx} className="aspect-video rounded-lg overflow-hidden bg-stone-100">
+                      {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
+                        <iframe
+                          src={videoUrl}
+                          title={`${product.name} video ${idx + 1}`}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <video
+                          src={videoUrl}
+                          title={`${product.name} video ${idx + 1}`}
+                          className="w-full h-full"
+                          controls
+                          autoPlay={idx === 0}
+                          muted
+                          playsInline
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
