@@ -1154,7 +1154,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             ))}
           </div>
 
-          <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div className="px-4 sm:px-6 lg:px-12 py-8 sm:py-10">
             {activeTab === 'description' ? (
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">
                 <div>
