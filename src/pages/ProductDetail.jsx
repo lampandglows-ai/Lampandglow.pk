@@ -138,7 +138,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   // ── Update viewer count every 5 seconds ──
   useEffect(() => {
     const interval = setInterval(() => {
-      setViewerCount(Math.floor(Math.random() * 31) + 20) // Random between 20-50
+      setViewerCount(Math.floor(Math.random() * 100) + 1) // Random between 20-50
     }, 5000)
     return () => clearInterval(interval)
   }, [])
