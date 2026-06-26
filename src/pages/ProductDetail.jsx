@@ -582,7 +582,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                           title={`${product.name} video ${idx + 1}`}
                           className="w-full h-full"
                           controls
-                          autoPlay={idx === 0}
                           muted
                           playsInline
                         >
@@ -614,7 +613,6 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         title={`${product.name} video`}
                         className="w-full h-full"
                         controls
-                        autoPlay
                         muted
                         playsInline
                       >
