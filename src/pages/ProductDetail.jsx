@@ -170,6 +170,15 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         ? [product.image, product.image, product.image]
         : []
 
+    // Check if shade color is selected (takes priority)
+    const shades = Array.isArray(product?.shadeColors)
+      ? product.shadeColors
+      : []
+    
+    if (activeColorIndex !== null && shades[activeColorIndex]?.image) {
+      return [shades[activeColorIndex].image, ...baseImages]
+    }
+
     // Only prepend color variant image if user has actively selected a color
     const variants = Array.isArray(product?.productDetails?.colorVariants)
       ? product.productDetails.colorVariants
@@ -180,7 +189,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     }
 
     return baseImages
-  }, [product?.image, product?.images, product?.productDetails?.colorVariants, activeColorIndex])
+  }, [product?.image, product?.images, product?.productDetails?.colorVariants, product?.shadeColors, activeColorIndex])
 
   const productReviews = useMemo(
     () => reviews.filter((r) => r.productId === productId),
