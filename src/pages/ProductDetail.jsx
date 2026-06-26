@@ -562,10 +562,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
-            {/* ── Product Videos (up to 3 in a row) ── */}
+            {/* ── Product Videos (up to 3, left-aligned in 3-column grid) ── */}
             {product.videos && product.videos.length > 0 && (
               <div className="mt-4">
-                <div className={`grid gap-4 ${product.videos.length === 1 ? 'grid-cols-1' : product.videos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                <div className="grid grid-cols-3 gap-4">
                   {product.videos.map((videoUrl, idx) => (
                     <div key={idx} className="aspect-video rounded-lg overflow-hidden bg-stone-100">
                       {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
@@ -590,6 +590,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         </video>
                       )}
                     </div>
+                  ))}
+                  {/* Empty placeholders to maintain 3-column layout */}
+                  {Array.from({ length: 3 - product.videos.length }).map((_, idx) => (
+                    <div key={`empty-${idx}`} className="aspect-video rounded-lg bg-stone-50 border-2 border-dashed border-stone-200" />
                   ))}
                 </div>
               </div>
