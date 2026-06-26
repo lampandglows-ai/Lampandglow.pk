@@ -649,7 +649,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
           </div>
 
           {/* ─── RIGHT: Product Info ─── */}
-          <div className="lg:sticky lg:top-24 max-h-screen overflow-y-auto">
+          <div className="lg:sticky lg:top-24">
             {/* Title + Wishlist */}
             <div className="flex items-start justify-between gap-4">
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#222222] leading-tight">
