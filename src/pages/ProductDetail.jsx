@@ -724,20 +724,22 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             )}
 
             {/* Metadata */}
-            <div className="mt-5 border-t border-stone-200 pt-5 space-y-2 text-[13px] text-stone-700">
-              <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">SKU:</span>
-                <span className="font-medium">{sku}</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">Availability:</span>
-                <span className={inStock ? 'text-emerald-600 font-semibold' : 'text-[#E53935] font-semibold'}>
-                  {inStock ? 'In Stock' : 'Out of Stock'}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <span className="w-28 text-stone-400 uppercase tracking-wide text-[11px]">Product Type:</span>
-                <span className="font-medium">{productType}</span>
+            <div className="mt-5 border-t border-stone-200 pt-5">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-stone-700">
+                <div className="flex items-center gap-2">
+                  <span className="text-stone-400 uppercase tracking-wide text-[11px]">SKU:</span>
+                  <span className="font-medium">{sku}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-stone-400 uppercase tracking-wide text-[11px]">Availability:</span>
+                  <span className={inStock ? 'text-emerald-600 font-semibold' : 'text-[#E53935] font-semibold'}>
+                    {inStock ? 'In Stock' : 'Out of Stock'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-stone-400 uppercase tracking-wide text-[11px]">Product Type:</span>
+                  <span className="font-medium">{productType}</span>
+                </div>
               </div>
             </div>
 
