@@ -65,8 +65,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   ───────────────────────────────────────────────────────────── */
 
   // ── State ──
-  const [selectedBulbOption, setSelectedBulbOption] = useState('without')
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0)
+  const [selectedBulbOption, setSelectedBulbOption] = useState(null)
+  const [selectedColorIndex, setSelectedColorIndex] = useState(null)
   const [activeColorIndex, setActiveColorIndex] = useState(null)
   const [isCompareOpen, setIsCompareOpen] = useState(false)
   const [compareVisibleIndices, setCompareVisibleIndices] = useState([])
@@ -235,11 +235,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   }
 
   /* ── Remaining derived data (product is guaranteed defined below) ── */
-  const safeColorIndex = Math.min(
+  const safeColorIndex = selectedColorIndex !== null ? Math.min(
     Math.max(selectedColorIndex, 0),
     Math.max(colorVariants.length - 1, 0),
-  )
-  const selectedColor = colorVariants[safeColorIndex]?.name || ''
+  ) : null
+  const selectedColor = safeColorIndex !== null ? colorVariants[safeColorIndex]?.name || '' : ''
   const selectedImage = images[Math.min(activeImageIndex, images.length - 1)]
 
   // ── Price Calculation ──
@@ -247,7 +247,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const basePrice = discountInfo.discountedPrice
   const baseOriginalPrice = discountInfo.originalPrice
 
-  const selectedBulb = selectedBulbOption || 'with'
+  const selectedBulb = selectedBulbOption || 'without'
   const isWithBulb = selectedBulb === 'with'
   const bulbPrice = typeof product?.bulbPrice === 'number' ? product.bulbPrice : 500
   const bulbAddon = isWithBulb ? bulbPrice : 0
@@ -763,19 +763,18 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                    {colorVariants.length > 0 && (
                      <div>
                        <p className="text-[13px] font-semibold text-stone-800">
-                         Color: <span className="font-normal text-stone-500">{selectedColor}</span>
+                         Color: <span className="font-normal text-stone-500">{selectedColor || 'Select color'}</span>
                        </p>
                        <div className="mt-3 flex items-center gap-3">
                          {colorVariants.map((variant, idx) => {
-                           const active = idx === safeColorIndex
+                           const active = safeColorIndex !== null && idx === safeColorIndex
                            return (
                              <button
                                key={`color-${variant.name}-${idx}`}
                                type="button"
                                onClick={() => {
                                  setSelectedColorIndex(idx)
-                                 // Toggle: if clicking the same color, deselect it
-                                 setActiveColorIndex(prev => prev === idx ? null : idx)
+                                 setActiveColorIndex(idx)
                                  setActiveImageIndex(0)
                                }}
                                className={classNames(
@@ -801,12 +800,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                      <div>
                        <p className="text-[13px] font-semibold text-stone-800">
                          Shade: <span className="font-normal text-stone-500">
-                           {shadeColors.find((_, i) => i === activeColorIndex)?.name || 'Select shade'}
+                           {activeColorIndex !== null ? shadeColors[activeColorIndex]?.name : 'Select shade'}
                          </span>
                        </p>
                        <div className="mt-3 flex items-center gap-3">
                          {shadeColors.map((shade, idx) => {
-                           const active = idx === activeColorIndex
+                           const active = activeColorIndex !== null && idx === activeColorIndex
                            return (
                              <button
                                key={`shade-${shade.name}-${idx}`}
@@ -885,7 +884,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                    </label>
                    <label className={classNames(
                      'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
-                     selectedBulbOption === 'without'
+                     selectedBulbOption === null || selectedBulbOption === 'without'
                        ? 'border-stone-900 bg-stone-900 text-white font-semibold'
                        : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
                    )}>
@@ -893,8 +892,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                        type="radio"
                        name="bulbOption"
                        value="without"
-                       checked={selectedBulbOption === 'without'}
-                       onChange={() => setSelectedBulbOption('without')}
+                       checked={selectedBulbOption === null || selectedBulbOption === 'without'}
+                       onChange={() => setSelectedBulbOption(null)}
                        className="sr-only"
                      />
                      Without Bulb
