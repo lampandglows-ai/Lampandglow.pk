@@ -1122,7 +1122,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
           role="presentation"
         >
           <div
-            className="relative w-full max-w-4xl bg-white shadow-2xl"
+            className="relative w-full max-w-4xl bg-white shadow-2xl max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -1139,7 +1139,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </svg>
             </button>
 
-            <div className="p-8 sm:p-12">
+            <div className="p-8 sm:p-12 overflow-y-auto">
               <h3 className="mb-6 text-base font-bold text-stone-900">Compare Color & Shade</h3>
 
               {/* Shade Colors Row */}
