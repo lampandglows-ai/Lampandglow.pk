@@ -763,18 +763,19 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                    {colorVariants.length > 0 && (
                      <div>
                        <p className="text-[13px] font-semibold text-stone-800">
-                         Color: <span className="font-normal text-stone-500">{selectedColor || 'Select color'}</span>
+                         Color: <span className="font-normal text-stone-500">{selectedColor}</span>
                        </p>
                        <div className="mt-3 flex items-center gap-3">
                          {colorVariants.map((variant, idx) => {
-                           const active = safeColorIndex !== null && idx === safeColorIndex
+                           const active = idx === safeColorIndex
                            return (
                              <button
                                key={`color-${variant.name}-${idx}`}
                                type="button"
                                onClick={() => {
                                  setSelectedColorIndex(idx)
-                                 setActiveColorIndex(idx)
+                                 // Toggle: if clicking the same color, deselect it
+                                 setActiveColorIndex(prev => prev === idx ? null : idx)
                                  setActiveImageIndex(0)
                                }}
                                className={classNames(
@@ -800,12 +801,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                      <div>
                        <p className="text-[13px] font-semibold text-stone-800">
                          Shade: <span className="font-normal text-stone-500">
-                           {activeColorIndex !== null ? shadeColors[activeColorIndex]?.name : 'Select shade'}
+                           {shadeColors.find((_, i) => i === activeColorIndex)?.name || 'Select shade'}
                          </span>
                        </p>
                        <div className="mt-3 flex items-center gap-3">
                          {shadeColors.map((shade, idx) => {
-                           const active = activeColorIndex !== null && idx === activeColorIndex
+                           const active = idx === activeColorIndex
                            return (
                              <button
                                key={`shade-${shade.name}-${idx}`}
@@ -884,7 +885,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                    </label>
                    <label className={classNames(
                      'flex items-center gap-2 px-4 py-2.5 border text-[13px] cursor-pointer transition-all duration-200',
-                     selectedBulbOption === null || selectedBulbOption === 'without'
+                     selectedBulbOption === 'without'
                        ? 'border-stone-900 bg-stone-900 text-white font-semibold'
                        : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500',
                    )}>
@@ -892,8 +893,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                        type="radio"
                        name="bulbOption"
                        value="without"
-                       checked={selectedBulbOption === null || selectedBulbOption === 'without'}
-                       onChange={() => setSelectedBulbOption(null)}
+                       checked={selectedBulbOption === 'without'}
+                       onChange={() => setSelectedBulbOption('without')}
                        className="sr-only"
                      />
                      Without Bulb
