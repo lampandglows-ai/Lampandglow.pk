@@ -7,7 +7,6 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [viewMode, setViewMode] = useState('desktop');
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
@@ -86,34 +85,6 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
       default: return status;
     }
   };
-
-  // Toggle Bar Component
-  const ToggleBar = () => (
-    <div className="flex gap-2 mb-6 items-center justify-center">
-      <button
-        onClick={() => setViewMode('desktop')}
-        className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
-          viewMode === 'desktop'
-            ? 'bg-[#FAEEDA] border-[#EF9F27] text-[#633806]'
-            : 'bg-transparent border-stone-300 text-stone-600 hover:border-stone-400'
-        }`}
-      >
-        <Home size={16} className="inline mr-2" />
-        Desktop
-      </button>
-      <button
-        onClick={() => setViewMode('mobile')}
-        className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
-          viewMode === 'mobile'
-            ? 'bg-[#FAEEDA] border-[#EF9F27] text-[#633806]'
-            : 'bg-transparent border-stone-300 text-stone-600 hover:border-stone-400'
-        }`}
-      >
-        <UserIcon size={16} className="inline mr-2" />
-        Mobile
-      </button>
-    </div>
-  );
 
   // Desktop View
   const DesktopView = () => (
@@ -371,12 +342,18 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
           </div>
         )}
 
-        <ToggleBar />
+        {/* Desktop Layout */}
+        <div className="hidden lg:block">
+          <DesktopView />
+        </div>
 
-        {viewMode === 'desktop' ? <DesktopView /> : <MobileView />}
+        {/* Mobile Layout */}
+        <div className="lg:hidden">
+          <MobileView />
+        </div>
 
         {/* Profile Edit Section (Desktop Only) */}
-        {viewMode === 'desktop' && (
+        {typeof window !== 'undefined' && window.innerWidth >= 1024 && (
           <div className="mt-8 bg-white rounded-lg shadow p-6 border border-stone-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-stone-900">Profile Information</h3>
