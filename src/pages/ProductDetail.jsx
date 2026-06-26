@@ -89,6 +89,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const colorVariants = Array.isArray(product?.productDetails?.colorVariants)
     ? product.productDetails.colorVariants
     : []
+  const shadeColors = Array.isArray(product?.shadeColors)
+    ? product.shadeColors
+    : []
 
   // ── Swipe handler ──
   const handleTouchStart = (e) => {
@@ -740,39 +743,83 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
-             {/* ── Color Selector ── */}
-             {colorVariants.length > 0 && (
+             {/* ── Color & Shade Selector ── */}
+             {(colorVariants.length > 0 || shadeColors.length > 0) && (
                <div className="mt-5 border-t border-stone-200 pt-5">
-                 <p className="text-[13px] font-semibold text-stone-800">
-                   Color: <span className="font-normal text-stone-500">{selectedColor}</span>
-                 </p>
-                 <div className="mt-3 flex items-center gap-3">
-                   {colorVariants.map((variant, idx) => {
-                     const active = idx === safeColorIndex
-                     return (
-                       <button
-                         key={`${variant.name}-${idx}`}
-                         type="button"
-                         onClick={() => {
-                           setSelectedColorIndex(idx)
-                           // Toggle: if clicking the same color, deselect it
-                           setActiveColorIndex(prev => prev === idx ? null : idx)
-                           setActiveImageIndex(0)
-                         }}
-                         className={classNames(
-                           'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
-                           active
-                             ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
-                             : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
-                         )}
-                         aria-label={`Select color ${variant.name}`}
-                       >
-                         <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
-                           <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
-                         </div>
-                       </button>
-                     )
-                   })}
+                 <div className="flex items-start gap-8">
+                   {/* Color Variants */}
+                   {colorVariants.length > 0 && (
+                     <div>
+                       <p className="text-[13px] font-semibold text-stone-800">
+                         Color: <span className="font-normal text-stone-500">{selectedColor}</span>
+                       </p>
+                       <div className="mt-3 flex items-center gap-3">
+                         {colorVariants.map((variant, idx) => {
+                           const active = idx === safeColorIndex
+                           return (
+                             <button
+                               key={`color-${variant.name}-${idx}`}
+                               type="button"
+                               onClick={() => {
+                                 setSelectedColorIndex(idx)
+                                 // Toggle: if clicking the same color, deselect it
+                                 setActiveColorIndex(prev => prev === idx ? null : idx)
+                                 setActiveImageIndex(0)
+                               }}
+                               className={classNames(
+                                 'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
+                                 active
+                                   ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
+                                   : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
+                               )}
+                               aria-label={`Select color ${variant.name}`}
+                             >
+                               <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                                 <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
+                               </div>
+                             </button>
+                           )
+                         })}
+                       </div>
+                     </div>
+                   )}
+
+                   {/* Shade Colors */}
+                   {shadeColors.length > 0 && (
+                     <div>
+                       <p className="text-[13px] font-semibold text-stone-800">
+                         Shade: <span className="font-normal text-stone-500">
+                           {shadeColors.find((_, i) => i === activeColorIndex)?.name || 'Select shade'}
+                         </span>
+                       </p>
+                       <div className="mt-3 flex items-center gap-3">
+                         {shadeColors.map((shade, idx) => {
+                           const active = idx === activeColorIndex
+                           return (
+                             <button
+                               key={`shade-${shade.name}-${idx}`}
+                               type="button"
+                               onClick={() => {
+                                 setActiveColorIndex(prev => prev === idx ? null : idx)
+                                 setActiveImageIndex(0)
+                               }}
+                               className={classNames(
+                                 'rounded-full p-0.5 transition-all duration-200 hover:scale-110',
+                                 active
+                                   ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-white'
+                                   : 'ring-1 ring-stone-200 ring-offset-1 ring-offset-white hover:ring-stone-400',
+                               )}
+                               aria-label={`Select shade ${shade.name}`}
+                             >
+                               <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                                 <img src={shade.image} alt={shade.name} className="h-full w-full object-cover" />
+                               </div>
+                             </button>
+                           )
+                         })}
+                       </div>
+                     </div>
+                   )}
                  </div>
 
                  {/* Compare Color Button */}

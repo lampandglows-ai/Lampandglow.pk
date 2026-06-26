@@ -37,6 +37,7 @@ export default function AdminProductsPage() {
     bulbEnabled: false,
     bulbPrice: '',
     colorVariants: [],
+    shadeColors: [],
     dimensions: {
       width: '',
       height: '',
@@ -272,6 +273,7 @@ export default function AdminProductsPage() {
         ourPromiseContent: formData.ourPromiseContent || '',
         shippingReturnContent: formData.shippingReturnContent || '',
         dimensions: formData.dimensions || {},
+        shadeColors: formData.shadeColors || [],
         videos: formData.videos || [],
       }
 
@@ -337,6 +339,7 @@ export default function AdminProductsPage() {
       bulbEnabled: false,
       bulbPrice: '',
       colorVariants: [],
+      shadeColors: [],
       dimensions: {
         width: '',
         height: '',
@@ -400,6 +403,7 @@ export default function AdminProductsPage() {
       bulbEnabled: product.bulbEnabled === true,
       bulbPrice: product.bulbPrice != null ? String(product.bulbPrice) : '',
       colorVariants: existingColorVariants,
+      shadeColors: Array.isArray(product.shadeColors) ? product.shadeColors : [],
       dimensions: product.dimensions || {
         width: '',
         height: '',
@@ -1122,6 +1126,117 @@ export default function AdminProductsPage() {
                         className="px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition"
                       >
                         Add Color
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Shade Colors */}
+                <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-800">Shade Colors</h4>
+                      <p className="text-xs text-gray-500 mt-0.5">Add shade/light color options (shown with color variants)</p>
+                    </div>
+                  </div>
+
+                  {/* Existing Shade Colors List */}
+                  {formData.shadeColors.length > 0 && (
+                    <div className="space-y-2">
+                      {formData.shadeColors.map((shade, idx) => (
+                        <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="h-12 w-12 rounded-lg overflow-hidden border border-gray-200 shrink-0">
+                            <img src={shade.image} alt={shade.name} className="h-full w-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-900 truncate">{shade.name}</p>
+                            <p className="text-xs text-gray-500 truncate">{shade.image}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setFormData((prev) => ({
+                              ...prev,
+                              shadeColors: prev.shadeColors.filter((_, i) => i !== idx),
+                            }))}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition"
+                            title="Remove shade color"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add New Shade Color */}
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Add New Shade Color</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Shade Name</label>
+                        <input
+                          type="text"
+                          id="newShadeName"
+                          placeholder="e.g. Warm White, Cool White, Natural"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Shade Image URL</label>
+                        <input
+                          type="text"
+                          id="newShadeImage"
+                          placeholder="https://... or upload below"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-3">
+                      <label className={`flex-1 h-20 border-2 border-dashed rounded-lg transition flex flex-col items-center justify-center text-center cursor-pointer border-gray-300 hover:border-orange-500`}>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id="newShadeImageUpload"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            try {
+                              const storageRef = ref(storage, `shade-colors/${Date.now()}_${file.name}`)
+                              await uploadBytes(storageRef, file)
+                              const url = await getDownloadURL(storageRef)
+                              document.getElementById('newShadeImage').value = url
+                            } catch (err) {
+                              setMessage({ type: 'error', text: `Image upload failed: ${err.message}` })
+                            }
+                            e.target.value = ''
+                          }}
+                        />
+                        <ImagePlus className="w-5 h-5 text-gray-400 mb-1" />
+                        <span className="text-xs text-gray-500">Upload Image</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nameInput = document.getElementById('newShadeName')
+                          const imageInput = document.getElementById('newShadeImage')
+                          const name = nameInput.value.trim()
+                          const image = imageInput.value.trim()
+                          if (!name || !image) {
+                            setMessage({ type: 'error', text: 'Please enter both shade name and image URL' })
+                            return
+                          }
+                          setFormData((prev) => ({
+                            ...prev,
+                            shadeColors: [...prev.shadeColors, { name, image }],
+                          }))
+                          nameInput.value = ''
+                          imageInput.value = ''
+                          setMessage({ type: '', text: '' })
+                        }}
+                        className="px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition"
+                      >
+                        Add Shade
                       </button>
                     </div>
                   </div>
