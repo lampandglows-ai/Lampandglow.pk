@@ -591,7 +591,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         Your browser does not support the video tag.
                       </video>
 
-                      {/* Custom play/pause button at bottom-right corner */}
+                      {/* Custom play/pause button at bottom-left corner */}
                       <button
                         type="button"
                         onClick={() => {
@@ -601,7 +601,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                             videoRef.current?.pause()
                           }
                         }}
-                        className="absolute bottom-4 right-4 z-10 w-12 h-12 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                        className="absolute bottom-4 left-4 z-10 w-12 h-12 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
                         aria-label={isPlayingVideo ? 'Pause video' : 'Play video'}
                       >
                         {isPlayingVideo ? (
@@ -614,6 +614,27 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                             <path d="M8 5v14l11-7z" />
                           </svg>
                         )}
+                      </button>
+
+                      {/* Fullscreen button at bottom-right corner */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (document.fullscreenElement) {
+                            document.exitFullscreen()
+                          } else {
+                            videoRef.current?.requestFullscreen?.()
+                          }
+                        }}
+                        className="absolute bottom-4 right-4 z-10 w-12 h-12 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                        aria-label={document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen'}
+                      >
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                          <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                          <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                          <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                        </svg>
                       </button>
                     </div>
                   ) : (
