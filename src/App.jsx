@@ -634,7 +634,7 @@ function AppContent() {
       )}
 
       {/* Main content */}
-      <main className={`flex-1 ${!isAdminRoute ? '' : ''}`} style={{ paddingTop: !isAdminRoute ? `${headerHeight}px` : undefined }}>
+      <main className={`flex-1 ${!isAdminRoute ? 'px-0' : ''}`} style={{ paddingTop: !isAdminRoute ? `${headerHeight}px` : undefined }}>
         <Routes>
           <Route
             path="/"
