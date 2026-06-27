@@ -581,8 +581,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
             {/* ── Product Videos (up to 3, left-aligned in 3-column grid) ── */}
             {(product.videos && product.videos.length > 0) && (
-              <div className="mt-4">
-                <div className="grid grid-cols-3 gap-4">
+              <>
+                {/* Desktop: Grid layout */}
+                <div className="hidden sm:grid grid-cols-3 gap-4 mt-4">
                   {product.videos.map((videoUrl, idx) => (
                     <div key={idx} className="aspect-square rounded-lg overflow-hidden bg-stone-100">
                       {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
@@ -608,37 +609,158 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     </div>
                   ))}
                 </div>
-              </div>
+
+                {/* Mobile: Horizontal scroll with play button overlay */}
+                <div className="flex sm:hidden gap-2 overflow-x-auto pb-1 mt-4">
+                  {product.videos.map((videoUrl, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        // Create a modal to play the video
+                        const modal = document.createElement('div')
+                        modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
+                        modal.onclick = () => modal.remove()
+                        
+                        const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')
+                        
+                        modal.innerHTML = `
+                          <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
+                            <button 
+                              class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
+                              onclick="this.parentElement.parentElement.remove()"
+                            >
+                              ✕
+                            </button>
+                            ${isYouTube ? `
+                              <iframe
+                                src="${videoUrl}?autoplay=1"
+                                class="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              ></iframe>
+                            ` : `
+                              <video
+                                src="${videoUrl}"
+                                class="w-full h-full"
+                                controls
+                                autoplay
+                                playsInline
+                              ></video>
+                            `}
+                          </div>
+                        `
+                        
+                        document.body.appendChild(modal)
+                      }}
+                      className="relative shrink-0 w-32 aspect-square rounded-lg overflow-hidden bg-stone-100"
+                    >
+                      <img
+                        src={product.image}
+                        alt={`${product.name} video ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                          <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900 ml-1" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
             
             {/* Legacy support for single videoUrl field */}
             {(!product.videos || product.videos.length === 0) && product.videoUrl && (
-              <div className="mt-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="aspect-square rounded-lg overflow-hidden bg-stone-100">
-                    {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
-                      <iframe
-                        src={product.videoUrl}
-                        title={`${product.name} video`}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    ) : (
-                      <video
-                        src={product.videoUrl}
-                        title={`${product.name} video`}
-                        className="w-full h-full"
-                        controls
-                        muted
-                        playsInline
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                    )}
+              <>
+                {/* Desktop */}
+                <div className="hidden sm:block mt-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="aspect-square rounded-lg overflow-hidden bg-stone-100">
+                      {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
+                        <iframe
+                          src={product.videoUrl}
+                          title={`${product.name} video`}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <video
+                          src={product.videoUrl}
+                          title={`${product.name} video`}
+                          className="w-full h-full"
+                          controls
+                          muted
+                          playsInline
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+
+                {/* Mobile: Horizontal scroll with play button */}
+                <div className="flex sm:hidden gap-2 overflow-x-auto pb-1 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const modal = document.createElement('div')
+                      modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
+                      modal.onclick = () => modal.remove()
+                      
+                      const isYouTube = product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com')
+                      
+                      modal.innerHTML = `
+                        <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
+                          <button 
+                            class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
+                            onclick="this.parentElement.parentElement.remove()"
+                          >
+                            ✕
+                          </button>
+                          ${isYouTube ? `
+                            <iframe
+                              src="${product.videoUrl}?autoplay=1"
+                              class="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            ></iframe>
+                          ` : `
+                            <video
+                              src="${product.videoUrl}"
+                              class="w-full h-full"
+                              controls
+                              autoplay
+                              playsInline
+                            ></video>
+                          `}
+                        </div>
+                      `
+                      
+                      document.body.appendChild(modal)
+                    }}
+                    className="relative shrink-0 w-32 aspect-square rounded-lg overflow-hidden bg-stone-100"
+                  >
+                    <img
+                      src={product.image}
+                      alt={`${product.name} video`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900 ml-1" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </>
             )}
 
             {/* ── Mobile horizontal thumbnail strip ── */}
