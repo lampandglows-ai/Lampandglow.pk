@@ -3,8 +3,12 @@ import { Trash2, Star, Search, AlertCircle, CheckCircle, Loader2, MessageSquare,
 import AdminLayout from '../components/AdminLayout'
 import reviewsService from '../utils/reviewsService.js'
 import productsService from '../utils/productsService.js'
+import { useAuth } from '../context/AuthContext.jsx'
+
 
 export default function AdminReviewsPage() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [reviews, setReviews] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -46,7 +50,10 @@ export default function AdminReviewsPage() {
         }, 3000)
       } catch (error) {
         console.error('Error deleting review:', error)
-        setMessage({ type: 'error', text: 'Failed to delete review. Please try again.' })
+        const reason = error?.code === 'permission-denied'
+          ? 'Firebase permission denied. Your Firestore Security Rules may not allow deleting reviews.'
+          : error?.message || 'Please try again.'
+        setMessage({ type: 'error', text: 'Failed to delete review. ' + reason })
         setTimeout(() => {
           setMessage({ type: '', text: '' })
         }, 3000)
@@ -73,7 +80,10 @@ export default function AdminReviewsPage() {
       }, 3000)
     } catch (error) {
       console.error('Error adding reply:', error)
-      setMessage({ type: 'error', text: 'Failed to add reply. Please try again.' })
+      const reason = error?.code === 'permission-denied'
+          ? 'Firebase permission denied. Your Firestore Security Rules may not allow replying to reviews.'
+          : error?.message || 'Please try again.'
+        setMessage({ type: 'error', text: 'Failed to add reply. ' + reason })
       setTimeout(() => {
         setMessage({ type: '', text: '' })
       }, 3000)
