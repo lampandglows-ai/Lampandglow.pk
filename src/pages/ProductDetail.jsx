@@ -1150,67 +1150,69 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               {/* Color & Shade Selection Buttons - Same Row */}
               {(colorVariants.length > 0 || shadeColors.length > 0) && (
                 <div className="mb-8">
-                  {/* Color Variants */}
-                  {colorVariants.length > 0 && (
-                    <div className="mb-4">
-                      <p className="text-sm font-semibold text-stone-700 mb-3">Color Variants</p>
-                      <div className="flex items-center gap-4 flex-wrap">
-                        {colorVariants.map((variant, idx) => (
-                          <button
-                            key={`compare-color-${variant.name}-${idx}`}
-                            type="button"
-                            onClick={() => {
-                              setCompareVisibleIndices((prev) =>
-                                prev.includes(`color-${idx}`) ? prev.filter((i) => !i.startsWith('color-')) : [...prev.filter((i) => !i.startsWith('color-')), `color-${idx}`],
-                              )
-                            }}
-                            className={classNames(
-                              'rounded-full p-[3px] transition-all duration-200',
-                              compareVisibleIndices.includes(`color-${idx}`)
-                                ? 'ring-1 ring-black opacity-100'
-                                : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
-                            )}
-                            aria-label={`Toggle visibility for ${variant.name}`}
-                          >
-                            <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
-                              <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
-                            </div>
-                          </button>
-                        ))}
+                  <div className="flex items-center gap-8 flex-wrap">
+                    {/* Color Variants */}
+                    {colorVariants.length > 0 && (
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm font-semibold text-stone-700">Colors:</p>
+                        <div className="flex items-center gap-3">
+                          {colorVariants.map((variant, idx) => (
+                            <button
+                              key={`compare-color-${variant.name}-${idx}`}
+                              type="button"
+                              onClick={() => {
+                                setCompareVisibleIndices((prev) =>
+                                  prev.includes(`color-${idx}`) ? prev.filter((i) => !i.startsWith('color-')) : [...prev.filter((i) => !i.startsWith('color-')), `color-${idx}`],
+                                )
+                              }}
+                              className={classNames(
+                                'rounded-full p-[3px] transition-all duration-200',
+                                compareVisibleIndices.includes(`color-${idx}`)
+                                  ? 'ring-1 ring-black opacity-100'
+                                  : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
+                              )}
+                              aria-label={`Toggle visibility for ${variant.name}`}
+                            >
+                              <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                                <img src={variant.image} alt={variant.name} className="h-full w-full object-cover" />
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Shade Colors */}
-                  {shadeColors.length > 0 && (
-                    <div>
-                      <p className="text-sm font-semibold text-stone-700 mb-3">Shade Colors</p>
-                      <div className="flex items-center gap-4 flex-wrap">
-                        {shadeColors.map((shade, idx) => (
-                          <button
-                            key={`compare-shade-${shade.name}-${idx}`}
-                            type="button"
-                            onClick={() => {
-                              setCompareVisibleIndices((prev) =>
-                                prev.includes(`shade-${idx}`) ? prev.filter((i) => !i.startsWith('shade-')) : [...prev.filter((i) => !i.startsWith('shade-')), `shade-${idx}`],
-                              )
-                            }}
-                            className={classNames(
-                              'rounded-full p-[3px] transition-all duration-200',
-                              compareVisibleIndices.includes(`shade-${idx}`)
-                                ? 'ring-1 ring-black opacity-100'
-                                : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
-                            )}
-                            aria-label={`Toggle visibility for ${shade.name}`}
-                          >
-                            <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
-                              <img src={shade.image} alt={shade.name} className="h-full w-full object-cover" />
-                            </div>
-                          </button>
-                        ))}
+                    {/* Shade Colors */}
+                    {shadeColors.length > 0 && (
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm font-semibold text-stone-700">Shades:</p>
+                        <div className="flex items-center gap-3">
+                          {shadeColors.map((shade, idx) => (
+                            <button
+                              key={`compare-shade-${shade.name}-${idx}`}
+                              type="button"
+                              onClick={() => {
+                                setCompareVisibleIndices((prev) =>
+                                  prev.includes(`shade-${idx}`) ? prev.filter((i) => !i.startsWith('shade-')) : [...prev.filter((i) => !i.startsWith('shade-')), `shade-${idx}`],
+                                )
+                              }}
+                              className={classNames(
+                                'rounded-full p-[3px] transition-all duration-200',
+                                compareVisibleIndices.includes(`shade-${idx}`)
+                                  ? 'ring-1 ring-black opacity-100'
+                                  : 'ring-1 ring-stone-200 opacity-40 grayscale hover:opacity-70',
+                              )}
+                              aria-label={`Toggle visibility for ${shade.name}`}
+                            >
+                              <div className="h-10 w-10 rounded-full overflow-hidden border border-stone-200">
+                                <img src={shade.image} alt={shade.name} className="h-full w-full object-cover" />
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               )}
 
