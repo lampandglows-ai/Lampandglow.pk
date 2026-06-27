@@ -482,30 +482,66 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 className="hidden sm:flex flex-col gap-2.5 overflow-y-auto"
                 style={{ maxHeight: '600px' }}
               >
-                {images.map((src, idx) => (
-                  <button
-                    key={`thumb-${idx}`}
-                    type="button"
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={classNames(
-                      'relative shrink-0 overflow-hidden transition-all duration-200 rounded-sm',
-                      'w-[70px] h-[86px]',
-                      idx === activeImageIndex
-                        ? 'border-2 border-stone-800 opacity-100 shadow-md scale-[1.03]'
-                        : 'border-2 border-transparent opacity-50 hover:opacity-80 hover:border-stone-300 hover:scale-[1.01]',
-                    )}
-                    aria-label={`View image ${idx + 1}`}
-                  >
-                    <img
-                      src={src}
-                      alt={`${product.name} thumbnail ${idx + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                    {idx === activeImageIndex && (
-                      <span className="absolute left-0 top-0 h-full w-0.5 bg-stone-800" />
-                    )}
-                  </button>
-                ))}
+                {mobileSlides.map((slide, idx) => {
+                  if (slide.type === 'video') {
+                    const isActive = activeImageIndex === idx
+                    return (
+                      <button
+                        key={`desk-video-${idx}`}
+                        type="button"
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={classNames(
+                          'relative shrink-0 overflow-hidden transition-all duration-200 rounded-sm',
+                          'w-[70px] h-[86px]',
+                          isActive
+                            ? 'border-2 border-stone-800 opacity-100 shadow-md scale-[1.03]'
+                            : 'border-2 border-transparent opacity-50 hover:opacity-80 hover:border-stone-300 hover:scale-[1.01]',
+                        )}
+                        aria-label={`View video ${idx + 1}`}
+                      >
+                        <img
+                          src={product.image}
+                          alt={`${product.name} video ${idx + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                          <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" className="w-4 h-4 text-stone-900 ml-0.5" fill="currentColor">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                        {isActive && (
+                          <span className="absolute left-0 top-0 h-full w-0.5 bg-stone-800" />
+                        )}
+                      </button>
+                    )
+                  }
+                  return (
+                    <button
+                      key={`thumb-${idx}`}
+                      type="button"
+                      onClick={() => setActiveImageIndex(idx)}
+                      className={classNames(
+                        'relative shrink-0 overflow-hidden transition-all duration-200 rounded-sm',
+                        'w-[70px] h-[86px]',
+                        idx === activeImageIndex
+                          ? 'border-2 border-stone-800 opacity-100 shadow-md scale-[1.03]'
+                          : 'border-2 border-transparent opacity-50 hover:opacity-80 hover:border-stone-300 hover:scale-[1.01]',
+                      )}
+                      aria-label={`View image ${idx + 1}`}
+                    >
+                      <img
+                        src={slide.src}
+                        alt={`${product.name} thumbnail ${idx + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                      {idx === activeImageIndex && (
+                        <span className="absolute left-0 top-0 h-full w-0.5 bg-stone-800" />
+                      )}
+                    </button>
+                  )
+                })}
               </div>
 
               {/* ── Main Image ── */}
@@ -536,19 +572,17 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 >
                   {mobileSlides[activeImageIndex]?.type === 'video' ? (
                     <div className="relative w-full h-full">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
+                      <video
+                        key={mobileSlides[activeImageIndex].url}
+                        src={mobileSlides[activeImageIndex].url}
+                        className="w-full h-full object-contain"
                         style={{ minHeight: '500px' }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" className="w-10 h-10 text-stone-900 ml-1" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
+                        controls
+                        autoPlay
+                        playsInline
+                      >
+                        Your browser does not support the video tag.
+                      </video>
                     </div>
                   ) : (
                     <img
