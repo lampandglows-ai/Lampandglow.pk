@@ -112,14 +112,14 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
     const minSwipeDistance = 50
     if (Math.abs(diff) < minSwipeDistance) return
     if (diff > 0) {
-      // swipe left → next image
+      // swipe left → next slide
       setActiveImageIndex((prev) =>
-        prev === images.length - 1 ? 0 : prev + 1
+        prev === mobileSlides.length - 1 ? 0 : prev + 1
       )
     } else {
-      // swipe right → previous image
+      // swipe right → previous slide
       setActiveImageIndex((prev) =>
-        prev === 0 ? images.length - 1 : prev - 1
+        prev === 0 ? mobileSlides.length - 1 : prev - 1
       )
     }
   }
@@ -552,7 +552,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     </div>
                   ) : (
                     <img
-                      src={selectedImage}
+                      src={mobileSlides[activeImageIndex]?.src || selectedImage}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                       style={{ minHeight: '500px' }}
@@ -632,7 +632,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   onClick={() => setActiveImageIndex(idx)}
                   className={classNames(
                     'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200 rounded-sm',
-                    idx === activeImageIndex && !product.videos?.length
+                    idx === activeImageIndex
                       ? 'border-stone-800 opacity-100 scale-[1.04] shadow'
                       : 'border-transparent opacity-50 hover:opacity-80',
                   )}
@@ -648,48 +648,15 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               {/* Videos (added at the end) */}
               {product.videos && product.videos.map((videoUrl, idx) => {
                 const videoSlideIndex = images.length + idx
-                const isActive = activeVideoIndex === idx
+                const isActive = activeImageIndex === videoSlideIndex
                 
                 return (
                   <button
                     key={`mobile-video-${idx}`}
                     type="button"
                     onClick={() => {
-                      // Create a modal to play the video
-                      const modal = document.createElement('div')
-                      modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
-                      modal.onclick = () => modal.remove()
-                      
-                      const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')
-                      
-                      modal.innerHTML = `
-                        <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
-                          <button 
-                            class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
-                            onclick="this.parentElement.parentElement.remove()"
-                          >
-                            ✕
-                          </button>
-                          ${isYouTube ? `
-                            <iframe
-                              src="${videoUrl}?autoplay=1"
-                              class="w-full h-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                            ></iframe>
-                          ` : `
-                            <video
-                              src="${videoUrl}"
-                              class="w-full h-full"
-                              controls
-                              autoplay
-                              playsInline
-                            ></video>
-                          `}
-                        </div>
-                      `
-                      
-                      document.body.appendChild(modal)
+                      // Just set the active index to show the video slide in main view
+                      setActiveImageIndex(videoSlideIndex)
                     }}
                     className={classNames(
                       'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200 rounded-sm',
