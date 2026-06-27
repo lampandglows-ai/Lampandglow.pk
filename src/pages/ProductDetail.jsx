@@ -1136,7 +1136,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             <button
               type="button"
               onClick={() => setIsCompareOpen(false)}
-              className="absolute right-0 top-0 z-10 flex h-10 w-10 items-center justify-center bg-black text-white hover:bg-stone-800 transition-colors"
+              className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center bg-black text-white hover:bg-stone-800 transition-colors rounded-full"
               aria-label="Close compare"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
