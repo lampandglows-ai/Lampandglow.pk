@@ -83,6 +83,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [copied, setCopied] = useState(false)
   const [viewerCount, setViewerCount] = useState(22)
   const actionRef = useRef(null)
+  const videoRef = useRef(null)
 
   // ── Derived data (safe with optional chaining so they work even when product is undefined) ──
   const stock = typeof product?.stock === 'number' ? product.stock : 0
@@ -574,15 +575,31 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                     <div className="relative w-full h-full">
                       <video
                         key={mobileSlides[activeImageIndex].url}
+                        ref={videoRef}
                         src={mobileSlides[activeImageIndex].url}
                         className="w-full h-full object-contain"
                         style={{ minHeight: '500px' }}
-                        controls
-                        autoPlay
                         playsInline
+                        onPlay={() => setIsPlayingVideo(true)}
+                        onPause={() => setIsPlayingVideo(false)}
+                        onEnded={() => setIsPlayingVideo(false)}
                       >
                         Your browser does not support the video tag.
                       </video>
+
+                      {/* Custom play button at bottom-right corner when paused */}
+                      {!isPlayingVideo && (
+                        <button
+                          type="button"
+                          onClick={() => videoRef.current?.play()}
+                          className="absolute bottom-4 right-4 z-10 w-12 h-12 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                          aria-label="Play video"
+                        >
+                          <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900 ml-0.5" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   ) : (
                     <img
