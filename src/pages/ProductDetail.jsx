@@ -1271,14 +1271,14 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ TABS ═══════════════ */}
       <div className="border-t border-stone-200 bg-stone-50/60">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center gap-0 border-b border-stone-200">
+          <div className="flex items-center gap-0 border-b border-stone-200 overflow-x-auto scrollbar-hide">
             {['description', 'dimension', 'shipping', 'reviews'].map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
                 className={classNames(
-                  'relative px-6 py-4 text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200',
+                  'relative px-6 py-4 text-[13px] font-semibold tracking-wide uppercase transition-colors duration-200 whitespace-nowrap flex-shrink-0',
                   activeTab === tab
                     ? 'text-stone-900 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-stone-900'
                     : 'text-stone-400 hover:text-stone-600',
