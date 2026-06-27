@@ -61,6 +61,7 @@ import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import heroBannersService from './utils/heroBannersService.js'
 import wishlistService from './utils/wishlistService.js'
+import reviewsService from './utils/reviewsService.js'
 import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
@@ -96,24 +97,8 @@ function AppContent() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [orders, setOrders] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(false)
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      productId: products[0]?.id || 1,
-      name: 'Hassan',
-      rating: 5,
-      comment: 'Perfect bedside light, warm and not too bright.',
-      createdAt: new Date('2025-10-15').toISOString(),
-    },
-    {
-      id: 2,
-      productId: products[1]?.id || 2,
-      name: 'Maria',
-      rating: 4,
-      comment: 'Love the rustic look of the coffee table.',
-      createdAt: new Date('2025-09-21').toISOString(),
-    },
-  ])
+  const [reviews, setReviews] = useState([])
+  const [reviewsLoading, setReviewsLoading] = useState(true)
   const [reviewForm, setReviewForm] = useState({
     productId: products[0]?.id ?? 1,
     name: '',
@@ -123,11 +108,27 @@ function AppContent() {
   const [reviewSortBy, setReviewSortBy] = useState('recent')
 
   useEffect(() => {
+    loadReviews()
+  }, [])
+
+  useEffect(() => {
     if (user?.uid) {
       loadUserOrders()
       loadWishlist()
     }
   }, [user?.uid])
+
+  const loadReviews = async () => {
+    try {
+      setReviewsLoading(true)
+      const allReviews = await reviewsService.getAllReviews()
+      setReviews(allReviews)
+    } catch (error) {
+      console.error('Error loading reviews:', error)
+    } finally {
+      setReviewsLoading(false)
+    }
+  }
 
   const loadWishlist = async () => {
     if (!user?.uid) return
@@ -289,8 +290,9 @@ function AppContent() {
     }
   }
 
-  function handleSubmitReview(newReview) {
-    if (!newReview || !newReview.comment || !user) return
+  const handleSubmitReview = async (newReview) => {
+    if (!newReview || !newReview.comment || !user) return false
+    
     const hasAlreadyReviewed = reviews.some(
       (r) => r.productId === newReview.productId && r.userId === user.uid
     )
@@ -298,8 +300,16 @@ function AppContent() {
       alert('You have already reviewed this product.')
       return false
     }
-    setReviews((prev) => [newReview, ...prev])
-    return true
+
+    try {
+      const savedReview = await reviewsService.addReview(newReview)
+      setReviews((prev) => [savedReview, ...prev])
+      return true
+    } catch (error) {
+      console.error('Error submitting review:', error)
+      alert('Failed to submit review. Please try again.')
+      return false
+    }
   }
 
   function handleNavigate(section) {

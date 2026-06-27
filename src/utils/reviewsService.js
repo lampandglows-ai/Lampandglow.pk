@@ -1,0 +1,96 @@
+import { db } from './firebase';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+  orderBy,
+} from 'firebase/firestore';
+
+export const reviewsService = {
+  // Get all reviews
+  getAllReviews: async () => {
+    try {
+      const q = query(collection(db, 'reviews'), orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const reviews = [];
+      querySnapshot.forEach((doc) => {
+        reviews.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return reviews;
+    } catch (error) {
+      console.error('Error getting reviews:', error);
+      throw error;
+    }
+  },
+
+  // Get reviews by product ID
+  getReviewsByProductId: async (productId) => {
+    try {
+      const q = query(
+        collection(db, 'reviews'),
+        where('productId', '==', productId),
+        orderBy('createdAt', 'desc')
+      );
+      const querySnapshot = await getDocs(q);
+      const reviews = [];
+      querySnapshot.forEach((doc) => {
+        reviews.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return reviews;
+    } catch (error) {
+      console.error('Error getting reviews by product:', error);
+      throw error;
+    }
+  },
+
+  // Get reviews by user ID
+  getReviewsByUserId: async (userId) => {
+    try {
+      const q = query(
+        collection(db, 'reviews'),
+        where('userId', '==', userId),
+        orderBy('createdAt', 'desc')
+      );
+      const querySnapshot = await getDocs(q);
+      const reviews = [];
+      querySnapshot.forEach((doc) => {
+        reviews.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return reviews;
+    } catch (error) {
+      console.error('Error getting reviews by user:', error);
+      throw error;
+    }
+  },
+
+  // Add a new review
+  addReview: async (reviewData) => {
+    try {
+      const docRef = await addDoc(collection(db, 'reviews'), {
+        ...reviewData,
+        createdAt: new Date().toISOString(),
+      });
+      return {
+        id: docRef.id,
+        ...reviewData,
+        createdAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Error adding review:', error);
+      throw error;
+    }
+  },
+};
+
+export default reviewsService;
