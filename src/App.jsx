@@ -45,6 +45,7 @@ import AdminContactPage from './pages/AdminContactPage.jsx'
 import AdminNewsletterPage from './pages/AdminNewsletterPage.jsx'
 import AdminBankDetailsPage from './pages/AdminBankDetailsPage.jsx'
 import AdminAboutPage from './pages/AdminAboutPage.jsx'
+import AdminReviewsPage from './pages/AdminReviewsPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -731,6 +732,7 @@ function AppContent() {
           <Route path="/admin/newsletter" element={<ProtectedAdminRoute><AdminNewsletterPage /></ProtectedAdminRoute>} />
           <Route path="/admin/about" element={<ProtectedAdminRoute><AdminAboutPage /></ProtectedAdminRoute>} />
           <Route path="/admin/bank-details" element={<ProtectedAdminRoute><AdminBankDetailsPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/reviews" element={<ProtectedAdminRoute><AdminReviewsPage /></ProtectedAdminRoute>} />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
 
           {/* Public Pages Route */}

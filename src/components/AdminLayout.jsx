@@ -28,6 +28,7 @@ import {
   Contact,
   Building2,
   Info,
+  MessageSquare,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -147,6 +148,11 @@ export default function AdminLayout({ children }) {
       label: 'Bank Details',
       icon: Building2,
       path: '/admin/bank-details',
+    },
+    {
+      label: 'Reviews',
+      icon: MessageSquare,
+      path: '/admin/reviews',
     },
   ]
 

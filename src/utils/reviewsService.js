@@ -3,6 +3,7 @@ import {
   collection,
   getDocs,
   addDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -88,6 +89,17 @@ export const reviewsService = {
       };
     } catch (error) {
       console.error('Error adding review:', error);
+      throw error;
+    }
+  },
+
+  // Delete a review
+  deleteReview: async (reviewId) => {
+    try {
+      await deleteDoc(doc(db, 'reviews', reviewId));
+      return true;
+    } catch (error) {
+      console.error('Error deleting review:', error);
       throw error;
     }
   },
