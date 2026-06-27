@@ -755,7 +755,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
             {/* Metadata */}
             <div className="mt-5 border-t border-stone-200 pt-5">
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-stone-700">
+              <div className="flex flex-col items-center gap-3 text-[13px] text-stone-700">
                 <div className="flex items-center gap-2">
                   <span className="text-stone-400 uppercase tracking-wide text-[11px]">SKU:</span>
                   <span className="font-medium">{sku}</span>
@@ -1651,7 +1651,28 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ TRUST BADGES ═══════════════ */}
       <div className="border-t border-stone-200 bg-white">
         <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+          {/* Mobile: Horizontal scroll - 1 at a time */}
+          <div className="flex sm:hidden gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+            <div className="flex flex-col items-center gap-2 min-w-[calc(100vw-4rem)] snap-center">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M3 3h7l2 3h9v13H3z" /><path d="M3 8h18" /></svg>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Dedicated Support</p>
+            </div>
+            <div className="flex flex-col items-center gap-2 min-w-[calc(100vw-4rem)] snap-center">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M9 14l-4-4 4-4" /><path d="M5 10h11a4 4 0 0 1 0 8h-1" /></svg>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">7 Days Free Returns</p>
+            </div>
+            <div className="flex flex-col items-center gap-2 min-w-[calc(100vw-4rem)] snap-center">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Safe Payment</p>
+            </div>
+            <div className="flex flex-col items-center gap-2 min-w-[calc(100vw-4rem)] snap-center">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
+              <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Online Discounts</p>
+            </div>
+          </div>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center gap-2">
               <svg viewBox="0 0 24 24" className="h-8 w-8 text-stone-700" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M3 3h7l2 3h9v13H3z" /><path d="M3 8h18" /></svg>
               <p className="text-[12px] font-bold text-stone-800 uppercase tracking-wide">Dedicated Support</p>
