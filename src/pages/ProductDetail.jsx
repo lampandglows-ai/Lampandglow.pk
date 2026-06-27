@@ -76,6 +76,9 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
   const [touchStartX, setTouchStartX] = useState(null)
   const [touchEndX, setTouchEndX] = useState(null)
   const [showFixedBar, setShowFixedBar] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640)
+  const [activeVideoIndex, setActiveVideoIndex] = useState(null)
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false)
   const [localReviewForm, setLocalReviewForm] = useState({ rating: 5, comment: '' })
   const [copied, setCopied] = useState(false)
   const [viewerCount, setViewerCount] = useState(22)
@@ -195,6 +198,27 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
     return baseImages
   }, [product?.image, product?.images, product?.productDetails?.colorVariants, product?.shadeColors, selectedColorIndex, activeColorIndex])
+
+  // Combined slides for mobile (images + videos)
+  const mobileSlides = useMemo(() => {
+    const slides = []
+    
+    // Add images
+    images.forEach((img, idx) => {
+      slides.push({ type: 'image', src: img, index: idx })
+    })
+    
+    // Add videos at the end
+    if (product.videos && product.videos.length > 0) {
+      product.videos.forEach((videoUrl, idx) => {
+        slides.push({ type: 'video', url: videoUrl, index: idx })
+      })
+    } else if (product.videoUrl) {
+      slides.push({ type: 'video', url: product.videoUrl, index: 0 })
+    }
+    
+    return slides
+  }, [images, product?.videos, product?.videoUrl])
 
   const productReviews = useMemo(
     () => reviews.filter((r) => r.productId === productId),
@@ -510,26 +534,44 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
                 >
-                  <img
-                    src={selectedImage}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    style={{ minHeight: '500px' }}
-                  />
+                  {mobileSlides[activeImageIndex]?.type === 'video' ? (
+                    <div className="relative w-full h-full">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        style={{ minHeight: '500px' }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center">
+                          <svg viewBox="0 0 24 24" className="w-10 h-10 text-stone-900 ml-1" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={selectedImage}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      style={{ minHeight: '500px' }}
+                    />
+                  )}
                 </div>
 
                 {/* Arrow nav (hover) */}
-                {images.length > 1 && (
+                {mobileSlides.length > 1 && (
                   <>
                     <button
                       type="button"
                       onClick={() =>
                         setActiveImageIndex((prev) =>
-                          prev === 0 ? images.length - 1 : prev - 1,
+                          prev === 0 ? mobileSlides.length - 1 : prev - 1,
                         )
                       }
                       className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center bg-white/85 hover:bg-white text-stone-700 rounded-full shadow transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                      aria-label="Previous image"
+                      aria-label="Previous"
                     >
                       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M15 18l-6-6 6-6" />
@@ -539,11 +581,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                       type="button"
                       onClick={() =>
                         setActiveImageIndex((prev) =>
-                          prev === images.length - 1 ? 0 : prev + 1,
+                          prev === mobileSlides.length - 1 ? 0 : prev + 1,
                         )
                       }
                       className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center bg-white/85 hover:bg-white text-stone-700 rounded-full shadow transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                      aria-label="Next image"
+                      aria-label="Next"
                     >
                       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M9 18l6-6-6-6" />
@@ -552,17 +594,17 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   </>
                 )}
 
-                {/* Image counter badge */}
-                {images.length > 1 && (
+                {/* Counter badge */}
+                {mobileSlides.length > 1 && (
                   <div className="absolute top-3 right-3 z-10 bg-black/40 backdrop-blur-sm text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
-                    {activeImageIndex + 1} / {images.length}
+                    {activeImageIndex + 1} / {mobileSlides.length}
                   </div>
                 )}
 
                 {/* Dot indicators (mobile only) */}
-                {images.length > 1 && (
+                {mobileSlides.length > 1 && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden z-10">
-                    {images.map((_, idx) => (
+                    {mobileSlides.map((slide, idx) => (
                       <button
                         key={`dot-${idx}`}
                         type="button"
@@ -571,7 +613,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                           'h-1.5 rounded-full transition-all duration-200',
                           idx === activeImageIndex ? 'w-5 bg-stone-900' : 'w-1.5 bg-stone-400/60',
                         )}
-                        aria-label={`Go to image ${idx + 1}`}
+                        aria-label={`Go to slide ${idx + 1}`}
                       />
                     ))}
                   </div>
@@ -579,192 +621,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               </div>
             </div>
 
-            {/* ── Product Videos (up to 3, left-aligned in 3-column grid) ── */}
-            {(product.videos && product.videos.length > 0) && (
-              <>
-                {/* Desktop: Grid layout */}
-                <div className="hidden sm:grid grid-cols-3 gap-4 mt-4">
-                  {product.videos.map((videoUrl, idx) => (
-                    <div key={idx} className="aspect-square rounded-lg overflow-hidden bg-stone-100">
-                      {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com') ? (
-                        <iframe
-                          src={videoUrl}
-                          title={`${product.name} video ${idx + 1}`}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <video
-                          src={videoUrl}
-                          title={`${product.name} video ${idx + 1}`}
-                          className="w-full h-full"
-                          controls
-                          muted
-                          playsInline
-                        >
-                          Your browser does not support the video tag.
-                        </video>
-                      )}
-                    </div>
-                  ))}
-                </div>
 
-                {/* Mobile: Horizontal scroll with play button overlay */}
-                <div className="flex sm:hidden gap-2 overflow-x-auto pb-1 mt-4">
-                  {product.videos.map((videoUrl, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => {
-                        // Create a modal to play the video
-                        const modal = document.createElement('div')
-                        modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
-                        modal.onclick = () => modal.remove()
-                        
-                        const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')
-                        
-                        modal.innerHTML = `
-                          <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
-                            <button 
-                              class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
-                              onclick="this.parentElement.parentElement.remove()"
-                            >
-                              ✕
-                            </button>
-                            ${isYouTube ? `
-                              <iframe
-                                src="${videoUrl}?autoplay=1"
-                                class="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              ></iframe>
-                            ` : `
-                              <video
-                                src="${videoUrl}"
-                                class="w-full h-full"
-                                controls
-                                autoplay
-                                playsInline
-                              ></video>
-                            `}
-                          </div>
-                        `
-                        
-                        document.body.appendChild(modal)
-                      }}
-                      className="relative shrink-0 w-32 aspect-square rounded-lg overflow-hidden bg-stone-100"
-                    >
-                      <img
-                        src={product.image}
-                        alt={`${product.name} video ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900 ml-1" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-            
-            {/* Legacy support for single videoUrl field */}
-            {(!product.videos || product.videos.length === 0) && product.videoUrl && (
-              <>
-                {/* Desktop */}
-                <div className="hidden sm:block mt-4">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="aspect-square rounded-lg overflow-hidden bg-stone-100">
-                      {product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com') ? (
-                        <iframe
-                          src={product.videoUrl}
-                          title={`${product.name} video`}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <video
-                          src={product.videoUrl}
-                          title={`${product.name} video`}
-                          className="w-full h-full"
-                          controls
-                          muted
-                          playsInline
-                        >
-                          Your browser does not support the video tag.
-                        </video>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mobile: Horizontal scroll with play button */}
-                <div className="flex sm:hidden gap-2 overflow-x-auto pb-1 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const modal = document.createElement('div')
-                      modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
-                      modal.onclick = () => modal.remove()
-                      
-                      const isYouTube = product.videoUrl.includes('youtube.com') || product.videoUrl.includes('youtu.be') || product.videoUrl.includes('vimeo.com')
-                      
-                      modal.innerHTML = `
-                        <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
-                          <button 
-                            class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
-                            onclick="this.parentElement.parentElement.remove()"
-                          >
-                            ✕
-                          </button>
-                          ${isYouTube ? `
-                            <iframe
-                              src="${product.videoUrl}?autoplay=1"
-                              class="w-full h-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                            ></iframe>
-                          ` : `
-                            <video
-                              src="${product.videoUrl}"
-                              class="w-full h-full"
-                              controls
-                              autoplay
-                              playsInline
-                            ></video>
-                          `}
-                        </div>
-                      `
-                      
-                      document.body.appendChild(modal)
-                    }}
-                    className="relative shrink-0 w-32 aspect-square rounded-lg overflow-hidden bg-stone-100"
-                  >
-                    <img
-                      src={product.image}
-                      alt={`${product.name} video`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                      <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
-                        <svg viewBox="0 0 24 24" className="w-6 h-6 text-stone-900 ml-1" fill="currentColor">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* ── Mobile horizontal thumbnail strip ── */}
+            {/* ── Mobile horizontal thumbnail strip with images and videos ── */}
             <div className="flex sm:hidden gap-2 overflow-x-auto pb-1">
+              {/* Images */}
               {images.map((src, idx) => (
                 <button
                   key={`mobile-thumb-${idx}`}
@@ -772,7 +632,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   onClick={() => setActiveImageIndex(idx)}
                   className={classNames(
                     'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200 rounded-sm',
-                    idx === activeImageIndex
+                    idx === activeImageIndex && !product.videos?.length
                       ? 'border-stone-800 opacity-100 scale-[1.04] shadow'
                       : 'border-transparent opacity-50 hover:opacity-80',
                   )}
@@ -784,6 +644,73 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   />
                 </button>
               ))}
+              
+              {/* Videos (added at the end) */}
+              {product.videos && product.videos.map((videoUrl, idx) => {
+                const videoSlideIndex = images.length + idx
+                const isActive = activeVideoIndex === idx
+                
+                return (
+                  <button
+                    key={`mobile-video-${idx}`}
+                    type="button"
+                    onClick={() => {
+                      // Create a modal to play the video
+                      const modal = document.createElement('div')
+                      modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 p-4'
+                      modal.onclick = () => modal.remove()
+                      
+                      const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('vimeo.com')
+                      
+                      modal.innerHTML = `
+                        <div class="relative w-full max-w-4xl aspect-video" onclick="event.stopPropagation()">
+                          <button 
+                            class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
+                            onclick="this.parentElement.parentElement.remove()"
+                          >
+                            ✕
+                          </button>
+                          ${isYouTube ? `
+                            <iframe
+                              src="${videoUrl}?autoplay=1"
+                              class="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            ></iframe>
+                          ` : `
+                            <video
+                              src="${videoUrl}"
+                              class="w-full h-full"
+                              controls
+                              autoplay
+                              playsInline
+                            ></video>
+                          `}
+                        </div>
+                      `
+                      
+                      document.body.appendChild(modal)
+                    }}
+                    className={classNames(
+                      'relative shrink-0 w-16 aspect-square overflow-hidden border-2 transition-all duration-200 rounded-sm',
+                      isActive ? 'border-stone-800 opacity-100 scale-[1.04] shadow' : 'border-transparent opacity-50 hover:opacity-80',
+                    )}
+                  >
+                    <img
+                      src={product.image}
+                      alt={`${product.name} video ${idx + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 text-stone-900 ml-0.5" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
           </div>
 
