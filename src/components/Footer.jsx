@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   FaEnvelope,
@@ -76,6 +76,18 @@ export default function Footer({ theme = 'light' }) {
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState('idle') // idle | submitting | success | error
   const [newsletterMsg, setNewsletterMsg] = useState('')
+
+  // ── Draggable WhatsApp ──
+  const [waPos, setWaPos] = useState(() => {
+    try {
+      const saved = localStorage.getItem('whatsappPos')
+      return saved ? JSON.parse(saved) : null
+    } catch {
+      return null
+    }
+  })
+  const waDrag = useRef({ dragging: false, startX: 0, startY: 0, posX: 0, posY: 0 })
+  const waWasDragged = useRef(false)
 
   useEffect(() => {
     const loadSocial = async () => {
@@ -381,8 +393,48 @@ export default function Footer({ theme = 'light' }) {
           href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
           target="_blank"
           rel="noreferrer"
-          className="fill-btn fixed bottom-6 right-6 z-40 inline-flex items-center justify-center rounded-xl bg-emerald-500 p-3 text-white shadow-lg"
+          className="fill-btn fixed z-40 inline-flex items-center justify-center rounded-xl bg-emerald-500 p-3 text-white shadow-lg cursor-grab active:cursor-grabbing select-none touch-none"
           aria-label="Chat on WhatsApp"
+          style={
+            waPos
+              ? { bottom: waPos.y + 'px', right: waPos.x + 'px' }
+              : { bottom: '24px', right: '24px' }
+          }
+          onTouchStart={(e) => {
+            const touch = e.touches[0]
+            waWasDragged.current = false
+            waDrag.current = {
+              dragging: false,
+              startX: touch.clientX,
+              startY: touch.clientY,
+              posX: waPos?.x ?? 24,
+              posY: waPos?.y ?? 24,
+            }
+          }}
+          onTouchMove={(e) => {
+            const touch = e.touches[0]
+            const dx = Math.abs(touch.clientX - waDrag.current.startX)
+            const dy = Math.abs(touch.clientY - waDrag.current.startY)
+            if (dx > 5 || dy > 5) {
+              waWasDragged.current = true
+              waDrag.current.dragging = true
+              const newX = Math.max(4, Math.min(window.innerWidth - 80, waDrag.current.posX - (touch.clientX - waDrag.current.startX)))
+              const newY = Math.max(4, Math.min(window.innerHeight - 120, waDrag.current.posY - (touch.clientY - waDrag.current.startY)))
+              setWaPos({ x: newX, y: newY })
+            }
+          }}
+          onTouchEnd={(e) => {
+            if (waWasDragged.current) {
+              e.preventDefault()
+              localStorage.setItem('whatsappPos', JSON.stringify(waPos))
+            }
+          }}
+          onClick={(e) => {
+            if (waWasDragged.current) {
+              e.preventDefault()
+              waWasDragged.current = false
+            }
+          }}
         >
           <span className="fill-layer" aria-hidden="true" />
           <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
