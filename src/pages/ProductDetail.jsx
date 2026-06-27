@@ -1485,6 +1485,32 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                           {renderStars(review.rating)}
                         </div>
                         <p className="mt-3 text-[13px] text-stone-600 leading-relaxed">{review.comment}</p>
+                        
+                        {/* Admin Reply */}
+                        {review.adminReply && (
+                          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                A
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="font-semibold text-blue-900 text-sm">Admin Response</p>
+                                  {review.adminReplyAt && (
+                                    <p className="text-xs text-blue-600">
+                                      {new Date(review.adminReplyAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric'
+                                      })}
+                                    </p>
+                                  )}
+                                </div>
+                                <p className="text-blue-800 text-sm leading-relaxed">{review.adminReply}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

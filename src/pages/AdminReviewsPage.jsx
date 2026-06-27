@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Trash2, Star, Search, AlertCircle, CheckCircle, Loader2, MessageSquare } from 'lucide-react'
+import { Trash2, Star, Search, AlertCircle, CheckCircle, Loader2, MessageSquare, Reply, X } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import reviewsService from '../utils/reviewsService.js'
 import productsService from '../utils/productsService.js'
@@ -11,6 +11,8 @@ export default function AdminReviewsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedProduct, setSelectedProduct] = useState('all')
   const [message, setMessage] = useState({ type: '', text: '' })
+  const [replyingTo, setReplyingTo] = useState(null)
+  const [replyText, setReplyText] = useState('')
 
   // Load reviews and products from Firebase
   useEffect(() => {
@@ -45,6 +47,53 @@ export default function AdminReviewsPage() {
       } catch (error) {
         console.error('Error deleting review:', error)
         setMessage({ type: 'error', text: 'Failed to delete review. Please try again.' })
+        setTimeout(() => {
+          setMessage({ type: '', text: '' })
+        }, 3000)
+      }
+    }
+  }
+
+  const handleReply = async (reviewId) => {
+    if (!replyText.trim()) {
+      setMessage({ type: 'error', text: 'Please enter a reply message' })
+      return
+    }
+
+    try {
+      const updatedReview = await reviewsService.addReply(reviewId, replyText.trim())
+      setReviews((prev) =>
+        prev.map((r) => (r.id === reviewId ? { ...r, adminReply: updatedReview.adminReply, adminReplyAt: updatedReview.adminReplyAt } : r))
+      )
+      setReplyingTo(null)
+      setReplyText('')
+      setMessage({ type: 'success', text: 'Reply added successfully!' })
+      setTimeout(() => {
+        setMessage({ type: '', text: '' })
+      }, 3000)
+    } catch (error) {
+      console.error('Error adding reply:', error)
+      setMessage({ type: 'error', text: 'Failed to add reply. Please try again.' })
+      setTimeout(() => {
+        setMessage({ type: '', text: '' })
+      }, 3000)
+    }
+  }
+
+  const handleRemoveReply = async (reviewId) => {
+    if (window.confirm('Are you sure you want to remove this reply?')) {
+      try {
+        await reviewsService.removeReply(reviewId)
+        setReviews((prev) =>
+          prev.map((r) => (r.id === reviewId ? { ...r, adminReply: null, adminReplyAt: null } : r))
+        )
+        setMessage({ type: 'success', text: 'Reply removed successfully!' })
+        setTimeout(() => {
+          setMessage({ type: '', text: '' })
+        }, 3000)
+      } catch (error) {
+        console.error('Error removing reply:', error)
+        setMessage({ type: 'error', text: 'Failed to remove reply. Please try again.' })
         setTimeout(() => {
           setMessage({ type: '', text: '' })
         }, 3000)
@@ -239,16 +288,96 @@ export default function AdminReviewsPage() {
 
                         {/* Comment */}
                         <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+
+                        {/* Admin Reply Section */}
+                        {review.adminReply && (
+                          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                A
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="font-semibold text-blue-900 text-sm">Admin Reply</p>
+                                  <p className="text-xs text-blue-600">
+                                    {review.adminReplyAt ? new Date(review.adminReplyAt).toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    }) : ''}
+                                  </p>
+                                </div>
+                                <p className="text-blue-800 text-sm leading-relaxed">{review.adminReply}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Reply Form */}
+                        {replyingTo === review.id && (
+                          <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Write your reply:
+                            </label>
+                            <textarea
+                              value={replyText}
+                              onChange={(e) => setReplyText(e.target.value)}
+                              placeholder="Type your response to this review..."
+                              rows={3}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                              autoFocus
+                            />
+                            <div className="flex items-center gap-2 mt-3">
+                              <button
+                                onClick={() => handleReply(review.id)}
+                                disabled={!replyText.trim()}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                              >
+                                Post Reply
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setReplyingTo(null)
+                                  setReplyText('')
+                                }}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Delete Button */}
-                      <button
-                        onClick={() => handleDelete(review.id)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition flex-shrink-0"
-                        title="Delete review"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {!review.adminReply ? (
+                          <button
+                            onClick={() => setReplyingTo(review.id)}
+                            className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition"
+                            title="Reply to review"
+                          >
+                            <Reply className="w-5 h-5" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleRemoveReply(review.id)}
+                            className="p-2 text-orange-500 hover:bg-orange-50 rounded-lg transition"
+                            title="Remove reply"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleDelete(review.id)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+                          title="Delete review"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

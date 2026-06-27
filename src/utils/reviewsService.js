@@ -4,6 +4,8 @@ import {
   getDocs,
   addDoc,
   deleteDoc,
+  updateDoc,
+  doc,
   query,
   where,
   orderBy,
@@ -96,11 +98,45 @@ export const reviewsService = {
   // Delete a review
   deleteReview: async (reviewId) => {
     try {
-      await deleteDoc(doc(db, 'reviews', reviewId));
-      return true;
+      await deleteDoc(doc(db, 'reviews', reviewId))
+      return true
     } catch (error) {
-      console.error('Error deleting review:', error);
-      throw error;
+      console.error('Error deleting review:', error)
+      throw error
+    }
+  },
+
+  // Add or update admin reply to a review
+  addReply: async (reviewId, replyText) => {
+    try {
+      const reviewRef = doc(db, 'reviews', reviewId)
+      await updateDoc(reviewRef, {
+        adminReply: replyText,
+        adminReplyAt: new Date().toISOString(),
+      })
+      return {
+        id: reviewId,
+        adminReply: replyText,
+        adminReplyAt: new Date().toISOString(),
+      }
+    } catch (error) {
+      console.error('Error adding reply:', error)
+      throw error
+    }
+  },
+
+  // Remove admin reply from a review
+  removeReply: async (reviewId) => {
+    try {
+      const reviewRef = doc(db, 'reviews', reviewId)
+      await updateDoc(reviewRef, {
+        adminReply: null,
+        adminReplyAt: null,
+      })
+      return true
+    } catch (error) {
+      console.error('Error removing reply:', error)
+      throw error
     }
   },
 };
