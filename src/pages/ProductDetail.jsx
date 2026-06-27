@@ -1898,8 +1898,8 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 py-3">
             <div className="flex items-center justify-center gap-3">
-              {/* Quantity Selector */}
-              <div className="flex items-center border border-stone-300 bg-white">
+              {/* Quantity Selector - hidden on mobile */}
+              <div className="hidden sm:flex items-center border border-stone-300 bg-white">
                 <button
                   type="button"
                   onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
@@ -1925,7 +1925,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 type="button"
                 onClick={addQuantityToCart}
                 className={classNames(
-                  'fill-btn fill-dark group relative h-11 px-8 overflow-hidden bg-[#5A2D0C] text-white text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
+                  'fill-btn fill-dark group relative h-11 flex-1 sm:flex-none px-8 overflow-hidden bg-[#5A2D0C] text-white text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
@@ -1941,7 +1941,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                   navigate('/checkout')
                 }}
                 className={classNames(
-                  'fill-btn fill-amber group relative h-11 px-8 overflow-hidden bg-[#FFD400] text-[#222222] text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
+                  'fill-btn fill-amber group relative h-11 flex-1 sm:flex-none px-8 overflow-hidden bg-[#FFD400] text-[#222222] text-[12px] font-semibold tracking-wide uppercase whitespace-nowrap',
                   !inStock && 'opacity-50 cursor-not-allowed',
                 )}
                 disabled={!inStock}
