@@ -1122,12 +1122,12 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
       {/* ═══════════════ COMPARE COLOR & SHADE MODAL ═══════════════ */}
       {(isCompareOpen && (colorVariants.length > 0 || shadeColors.length > 0)) && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[99998] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
           onClick={() => setIsCompareOpen(false)}
           role="presentation"
         >
           <div
-            className="relative w-full max-w-4xl bg-white shadow-2xl max-h-[90vh] flex flex-col"
+            className="relative w-full max-w-4xl bg-white shadow-2xl max-h-[90vh] flex flex-col z-[99999]"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -1136,7 +1136,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             <button
               type="button"
               onClick={() => setIsCompareOpen(false)}
-              className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center bg-black text-white hover:bg-stone-800 transition-colors rounded-full"
+              className="absolute right-4 top-4 z-[99999] flex h-10 w-10 items-center justify-center bg-black text-white hover:bg-stone-800 transition-colors rounded-full shadow-lg"
               aria-label="Close compare"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
