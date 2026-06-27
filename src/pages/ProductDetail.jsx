@@ -577,7 +577,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                         key={mobileSlides[activeImageIndex].url}
                         ref={videoRef}
                         src={mobileSlides[activeImageIndex].url}
-                        className="w-full h-full object-contain"
+                        poster={product.image}
+                        className={classNames(
+                          'w-full h-full transition-all duration-300',
+                          isPlayingVideo ? 'object-contain' : 'object-cover',
+                        )}
                         style={{ minHeight: '500px' }}
                         playsInline
                         onPlay={() => setIsPlayingVideo(true)}
