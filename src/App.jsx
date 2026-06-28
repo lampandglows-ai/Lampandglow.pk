@@ -531,7 +531,13 @@ function AppContent() {
     }
   }, [productsLoading, categoriesLoading])
 
+  const isFirstMount = useRef(true)
   useEffect(() => {
+    // Skip the first mount — the initial useState(true) already handles it
+    if (isFirstMount.current) {
+      isFirstMount.current = false
+      return
+    }
     setLoading(true)
     setLoadingProgress(0)
     const minTimer = setTimeout(() => {
@@ -542,7 +548,7 @@ function AppContent() {
       }
     }, 1000)
     return () => clearTimeout(minTimer)
-  }, [location.pathname, productsLoading, categoriesLoading])
+  }, [location.pathname])
 
   useEffect(() => {
     const header = headerRef.current
