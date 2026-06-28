@@ -7,7 +7,6 @@ import Footer from './components/Footer.jsx'
 import ProductDetail from './pages/ProductDetail.jsx'
 import BlogsList from './pages/BlogsList.jsx'
 import BlogDetail from './pages/BlogDetail.jsx'
-import WishlistPage from './pages/WishlistPage.jsx'
 import ReelsPage from './pages/ReelsPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
@@ -16,7 +15,6 @@ import CollectionsPage from './pages/CollectionsPage.jsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
-import OrdersPage from './pages/OrdersPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
@@ -67,6 +65,72 @@ import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
+// Vintage Edison bulb used on the "Lamp and Glow" loading screen
+function LampBulb({ lit = false, bounce = false, size = 84 }) {
+  return (
+    <div
+      className={`relative ${bounce ? 'animate-bulb-drop' : ''}`}
+      style={{ width: size, height: size * 1.6 }}
+    >
+      {lit && (
+        <div
+          className="absolute animate-pulse-glow pointer-events-none"
+          style={{
+            top: '18%',
+            left: '50%',
+            width: size * 1.9,
+            height: size * 1.9,
+            transform: 'translate(-50%, -50%)',
+            background:
+              'radial-gradient(circle, rgba(255,189,77,0.55) 0%, rgba(255,170,40,0.22) 45%, rgba(255,170,40,0) 72%)',
+            filter: 'blur(6px)',
+          }}
+        />
+      )}
+      <svg viewBox="0 0 100 160" width={size} height={size * 1.6} className="relative block">
+        <defs>
+          <linearGradient id="lg-bulb-cap" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#3c372e" />
+            <stop offset="50%" stopColor="#171410" />
+            <stop offset="100%" stopColor="#3c372e" />
+          </linearGradient>
+          <radialGradient id="lg-bulb-glow" cx="45%" cy="40%" r="65%">
+            <stop offset="0%" stopColor="rgba(255,205,90,0.65)" />
+            <stop offset="55%" stopColor="rgba(255,170,50,0.28)" />
+            <stop offset="100%" stopColor="rgba(255,170,50,0)" />
+          </radialGradient>
+        </defs>
+
+        <rect x="37" y="0" width="26" height="30" rx="2" fill="url(#lg-bulb-cap)" stroke="#050402" strokeWidth="0.5" />
+        {[7, 13, 19, 25].map((y) => (
+          <line key={y} x1="38" y1={y} x2="62" y2={y} stroke="#050402" strokeWidth="1" opacity="0.6" />
+        ))}
+
+        <path
+          d="M38,30 C20,37 9,53 9,75 C9,112 27,140 50,142 C73,140 91,112 91,75 C91,53 80,37 62,30 Z"
+          fill={lit ? 'url(#lg-bulb-glow)' : 'rgba(255,255,255,0.025)'}
+          stroke={lit ? 'rgba(255,210,120,0.55)' : 'rgba(255,255,255,0.16)'}
+          strokeWidth="1"
+        />
+
+        <line x1="44" y1="30" x2="44" y2="90" stroke={lit ? '#ffd24d' : '#5a4a35'} strokeWidth="1.3" />
+        <line x1="56" y1="30" x2="56" y2="90" stroke={lit ? '#ffd24d' : '#5a4a35'} strokeWidth="1.3" />
+        <path
+          d="M44,90 C39,98 49,103 44,111 C39,119 49,124 44,132 L56,132 C61,124 51,119 56,111 C61,103 51,98 56,90"
+          fill="none"
+          stroke={lit ? '#ffd24d' : '#5a4a35'}
+          strokeWidth="1.5"
+          style={{
+            filter: lit
+              ? 'drop-shadow(0 0 4px #ffd24d) drop-shadow(0 0 12px #ffb02e)'
+              : 'none',
+          }}
+        />
+      </svg>
+    </div>
+  )
+}
+
 // Protected Admin Route Component
 function ProtectedAdminRoute({ children }) {
   const { isAdminLoggedIn } = useAdminAuth()
@@ -79,7 +143,7 @@ function ProtectedAdminRoute({ children }) {
 function AppContent() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, isLoggedIn, logout } = useAuth()
+  const { user, isLoggedIn, logout, updateProfile } = useAuth()
   const { products, loading: productsLoading } = useProducts()
   const { categories: dynamicCategories, loading: categoriesLoading } = useCategories()
 
@@ -428,7 +492,7 @@ function AppContent() {
   }
 
   function navigateToWishlist() {
-    navigate('/wishlist')
+    navigate('/profile')
     setMobileNavOpen(false)
   }
 
@@ -441,47 +505,82 @@ function AppContent() {
     navigate('/')
   }
 
+  const handleProfileChange = async (key, value) => {
+    try {
+      await updateProfile({ [key]: value })
+    } catch (err) {
+      console.error('Failed to update profile:', err)
+    }
+  }
+
   const isAdminRoute = location.pathname.startsWith('/admin')
 
   if (loading) {
     const isComplete = loadingProgress >= 100
+    const pct = Math.round(Math.min(100, loadingProgress))
+    const WIRE_H = 150
+    const beamH = Math.max(0, ((WIRE_H - 16) * pct) / 100)
+
     return (
       <>
         <style>{`
-          @keyframes bulb-drop { 0% { transform: translateY(0); } 50% { transform: translateY(10px); } 100% { transform: translateY(0); } }
-          @keyframes bulb-light-up { 0% { filter: brightness(1) drop-shadow(0 0 0 rgba(255,212,0,0)); } 100% { filter: brightness(1.3) drop-shadow(0 0 30px rgba(255,212,0,0.9)) drop-shadow(0 0 60px rgba(255,212,0,0.5)); } }
+          @keyframes bulb-drop { 0% { transform: translateY(0); } 40% { transform: translateY(10px); } 70% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
+          @keyframes pulse-glow { 0%, 100% { opacity: 0.65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
           @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
-          @keyframes pulse-glow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-          .animate-bulb-drop { animation: bulb-drop 0.6s ease-in-out; }
-          .animate-bulb-light { animation: bulb-light-up 1.2s ease-out forwards; }
+          .animate-bulb-drop { animation: bulb-drop 0.7s ease-out; }
+          .animate-pulse-glow { animation: pulse-glow 2.6s ease-in-out infinite; }
           .animate-fade-out { animation: fade-out 0.8s ease-out forwards; }
-          .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
         `}</style>
-        <div className={`fixed inset-0 z-50 bg-white flex flex-col items-center justify-center ${isComplete ? 'animate-fade-out' : ''}`}>
-          <div className="w-full max-w-sm px-8">
-            <div className="mb-8 text-center">
-              <h1 className="text-3xl font-bold text-stone-900">Lamp and Glow</h1>
-            </div>
-            <div className="relative flex flex-col items-center">
-              <div className="relative h-64 w-1 bg-stone-200 rounded-full overflow-hidden">
-                <div
-                  className="absolute top-0 left-0 w-full bg-gradient-to-b from-[#5A2D0C] to-[#FFD400] rounded-full transition-all duration-300"
-                  style={{ height: `${loadingProgress}%` }}
-                />
-              </div>
-              <div className="w-px h-4 bg-stone-400"></div>
-              <div className={`relative ${isComplete ? 'animate-bulb-drop' : ''}`}>
-                <svg viewBox="0 0 24 24" className={`w-16 h-16 ${isComplete ? 'animate-bulb-light' : 'text-stone-300'}`} fill="currentColor">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zM9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z"/>
-                </svg>
-                {isComplete && (
-                  <div className="absolute inset-0 bg-[#FFD400] rounded-full blur-2xl opacity-80 animate-pulse-glow"></div>
-                )}
-              </div>
-            </div>
-            <p className="text-xs text-stone-500 mt-8 text-center font-medium">
-              {Math.round(Math.min(100, loadingProgress))}%
-            </p>
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-start pt-[12vh] ${isComplete ? 'animate-fade-out' : ''}`}
+          style={{ background: 'radial-gradient(ellipse at 50% 32%, #161210 0%, #0c0a08 65%)' }}
+        >
+          <h1
+            className="text-3xl text-[#f1e8d4] mb-2"
+            style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+          >
+            Lamp and Glow
+          </h1>
+
+          <div className="flex items-center justify-center gap-[7px] w-[170px] mb-4">
+            <span className="flex-1 h-px bg-[#cda049]/50" />
+            <span className="w-[3px] h-[3px] rounded-full bg-[#cda049]" />
+            <span className="w-[6px] h-[6px] bg-[#cda049] rotate-45" />
+            <span className="w-[3px] h-[3px] rounded-full bg-[#cda049]" />
+            <span className="flex-1 h-px bg-[#cda049]/50" />
+          </div>
+
+          <p className="text-sm text-[#cda049] tracking-wide mb-11">Ready to Glow</p>
+
+          <span
+            className="w-2 h-2 rounded-full bg-[#cda049] block"
+            style={{ boxShadow: '0 0 6px 2px rgba(205,160,73,0.6)' }}
+          />
+
+          <div className="relative w-[3px] rounded" style={{ height: WIRE_H, background: '#57534b' }}>
+            {!isComplete && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 top-4 w-[5px] rounded-[3px] transition-[height] duration-200 ease-linear"
+                style={{
+                  height: `${beamH}px`,
+                  background: 'linear-gradient(to bottom, #fff6d8, #ffd24d 55%, #c9961f)',
+                  boxShadow: '0 0 8px 2px rgba(255,210,77,0.85), 0 0 22px 6px rgba(255,180,40,0.45)',
+                }}
+              />
+            )}
+          </div>
+
+          <LampBulb lit={isComplete} bounce={isComplete} />
+
+          <div className="mt-6 text-center min-h-[44px]">
+            {!isComplete ? (
+              <p className="text-sm text-[#f1e8d4] m-0">Loading... {pct}%</p>
+            ) : (
+              <>
+                <p className="text-sm text-[#f1e8d4] m-0 mb-1">Loading Complete!</p>
+                <p className="text-xs text-[#cda049] tracking-wide m-0">Bulb drops and glows</p>
+              </>
+            )}
           </div>
         </div>
       </>
@@ -572,8 +671,9 @@ function AppContent() {
                   <div className="w-full bg-stone-50 min-h-screen p-4 lg:p-6">
                     <ProfileSection
                       orders={orders}
+                      wishlist={wishlist}
                       profile={user}
-                      handleProfileChange={() => {}}
+                      handleProfileChange={handleProfileChange}
                       onLogout={handleLogout}
                     />
                   </div>
@@ -611,8 +711,9 @@ function AppContent() {
                 <div className="w-full bg-stone-50 min-h-screen p-4 lg:p-6">
                   <ProfileSection
                     orders={orders}
+                    wishlist={wishlist}
                     profile={user}
-                    handleProfileChange={() => {}}
+                    handleProfileChange={handleProfileChange}
                     onLogout={handleLogout}
                   />
                 </div>
@@ -635,17 +736,7 @@ function AppContent() {
             }
           />
           <Route path="/shipping-policy" element={<ShippingPolicyPage theme={theme} />} />
-          <Route
-            path="/wishlist"
-            element={
-              <WishlistPage
-                wishlist={wishlist}
-                handleToggleWishlist={handleToggleWishlist}
-                handleAddToCart={handleAddToCart}
-                theme={theme}
-              />
-            }
-          />
+
           <Route
             path="/products"
             element={
@@ -677,7 +768,7 @@ function AppContent() {
               />
             }
           />
-          <Route path="/orders" element={<OrdersPage orders={orders} theme={theme} />} />
+
           <Route
             path="/checkout"
             element={
