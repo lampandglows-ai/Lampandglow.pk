@@ -579,7 +579,7 @@ function AppContent() {
             )}
           </div>
 
-          <LampBulb lit={isComplete} bounce={isComplete} />
+          <LampBulb lit={pct >= 90} bounce={isComplete} />
 
           <div className="mt-6 text-center min-h-[44px]">
             {!isComplete ? (
