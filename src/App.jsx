@@ -586,8 +586,7 @@ function AppContent() {
               <p className="text-sm text-[#f1e8d4] m-0">Loading... {pct}%</p>
             ) : (
               <>
-                <p className="text-sm text-[#f1e8d4] m-0 mb-1">Loading Complete!</p>
-                <p className="text-xs text-[#cda049] tracking-wide m-0">Bulb drops and glows</p>
+               
               </>
             )}
           </div>
