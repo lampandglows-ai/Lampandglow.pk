@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, User, AlertCircle, Loader } from 'lucide-react';
 
 export default function SignupPage({ theme = 'light' }) {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,7 +33,7 @@ export default function SignupPage({ theme = 'light' }) {
     setLoading(true);
 
     try {
-      await signup(email, password, name);
+      await signup(email, password, firstName, lastName);
       navigate('/');
     } catch (err) {
       setError(err.message || 'Signup failed. Please try again.');
@@ -58,18 +59,34 @@ export default function SignupPage({ theme = 'light' }) {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className={theme === 'dark' ? 'block text-sm font-medium text-stone-200 mb-1' : 'block text-sm font-medium text-stone-700 mb-1'}>Name</label>
-              <div className="relative">
-                <User size={18} className="absolute left-3 top-3 text-stone-400" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className={theme === 'dark' ? 'w-full pl-10 pr-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100 placeholder:text-stone-500' : 'w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-stone-900 placeholder:text-stone-400'}
-                  placeholder="John Doe"
-                />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={theme === 'dark' ? 'block text-sm font-medium text-stone-200 mb-1' : 'block text-sm font-medium text-stone-700 mb-1'}>First Name</label>
+                <div className="relative">
+                  <User size={18} className="absolute left-3 top-3 text-stone-400" />
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className={theme === 'dark' ? 'w-full pl-10 pr-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100 placeholder:text-stone-500' : 'w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-stone-900 placeholder:text-stone-400'}
+                    placeholder="John"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className={theme === 'dark' ? 'block text-sm font-medium text-stone-200 mb-1' : 'block text-sm font-medium text-stone-700 mb-1'}>Last Name</label>
+                <div className="relative">
+                  <User size={18} className="absolute left-3 top-3 text-stone-400" />
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    className={theme === 'dark' ? 'w-full pl-10 pr-4 py-2 border border-stone-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#2A2A2A] text-stone-100 placeholder:text-stone-500' : 'w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-stone-900 placeholder:text-stone-400'}
+                    placeholder="Doe"
+                  />
+                </div>
               </div>
             </div>
 

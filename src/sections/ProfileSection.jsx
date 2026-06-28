@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Mail, Phone, MapPin, AlertCircle, Loader, CheckCircle,
   ShoppingBag, Heart, MapPin as MapPinIcon, Star, Bell, Settings,
-  LogOut, SlidersHorizontal, Home
+  LogOut, SlidersHorizontal, Home, Camera
 } from 'lucide-react';
 
-export default function ProfileSection({ profile, orders, handleProfileChange, onLogout }) {
+export default function ProfileSection({ profile, orders, wishlist = [], handleProfileChange, onLogout }) {
+  const [profileImage, setProfileImage] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('orders');   // desktop sidebar tab
   const [mobileTab, setMobileTab] = useState('orders');   // mobile tab: orders | wishlist | details
@@ -32,8 +34,30 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
         state: profile.state || '',
         postalCode: profile.postalCode || ''
       });
+      if (profile.photoURL) setProfileImage(profile.photoURL);
     }
   }, [profile]);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile?.uid) return;
+    setUploadingImage(true);
+    try {
+      const { getStorage, ref, uploadBytes, getDownloadURL } = await import('firebase/storage');
+      const storage = getStorage();
+      const imageRef = ref(storage, `profile-images/${profile.uid}/${Date.now()}_${file.name}`);
+      await uploadBytes(imageRef, file);
+      const url = await getDownloadURL(imageRef);
+      setProfileImage(url);
+      await handleProfileChange('photoURL', url);
+      setMessage('Profile image updated!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err) {
+      setError('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +96,6 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
   const desktopNavItems = [
     { id: 'orders',        icon: ShoppingBag, label: 'My orders' },
     { id: 'wishlist',      icon: Heart,       label: 'Wishlist' },
-    { id: 'addresses',     icon: MapPinIcon,  label: 'Addresses' },
     { id: 'reviews',       icon: Star,        label: 'Reviews' },
     { id: 'notifications', icon: Bell,        label: 'Notifications' },
     { id: 'settings',      icon: Settings,    label: 'Settings' },
@@ -122,8 +145,18 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
       <div className="relative">
         <div className="h-24 bg-[#3B1F04]" />
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-6">
-          <div className="w-12 h-12 rounded-full bg-[#EF9F27] border-2 border-white flex items-center justify-center text-sm font-bold text-[#412402]">
-            {initials}
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full bg-[#EF9F27] border-2 border-white flex items-center justify-center overflow-hidden text-sm font-bold text-[#412402]">
+              {profile?.photoURL || profileImage ? (
+                <img src={profile?.photoURL || profileImage} alt={fullName} className="w-full h-full object-cover" />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
+            <label className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#5A2D0C] text-white flex items-center justify-center cursor-pointer">
+              <Camera size={12} />
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+            </label>
           </div>
         </div>
       </div>
@@ -263,10 +296,20 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
       <aside className="bg-[#412402]">
         <div className="px-5 pt-5 pb-4">
           <div className="flex items-center gap-2 text-[#FAC775] text-xs font-medium tracking-widest mb-5">
-            <User size={14} /> Lamp &amp; Glow
+            {fullName}
           </div>
-          <div className="w-12 h-12 rounded-full bg-[#EF9F27] flex items-center justify-center text-base font-semibold text-[#412402] mx-auto mb-2">
-            {initials}
+          <div className="relative w-12 h-12 mx-auto mb-2">
+            <div className="w-12 h-12 rounded-full bg-[#EF9F27] flex items-center justify-center overflow-hidden text-base font-semibold text-[#412402]">
+              {profile?.photoURL || profileImage ? (
+                <img src={profile?.photoURL || profileImage} alt={fullName} className="w-full h-full object-cover" />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
+            <label className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#5A2D0C] text-white flex items-center justify-center cursor-pointer">
+              <Camera size={12} />
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+            </label>
           </div>
           <p className="text-sm font-medium text-[#FAC775] text-center">{fullName}</p>
           <p className="text-xs text-[#854F0B] text-center mt-1">Member since 2024</p>
@@ -319,28 +362,34 @@ export default function ProfileSection({ profile, orders, handleProfileChange, o
         )}
 
         {activeTab === 'wishlist' && (
-          <div className="flex flex-col items-center justify-center py-16 gap-2">
-            <Heart size={36} className="text-stone-300" /><p className="text-sm text-stone-400">Your wishlist is empty</p>
+          <div className="space-y-4">
+            <div className="rounded-xl border border-stone-200 bg-white p-6">
+              <h3 className="text-base font-semibold text-stone-900 mb-4">My Wishlist</h3>
+              {(!wishlist || wishlist.length === 0) ? (
+                <div className="flex flex-col items-center py-12 gap-3">
+                  <Heart size={36} className="text-stone-300" />
+                  <p className="text-sm text-stone-400">Your wishlist is empty</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {wishlist.map((product) => (
+                    <div key={product.id} className="rounded-xl border border-stone-200 bg-stone-50 overflow-hidden">
+                      <div className="aspect-square bg-stone-100">
+                        {product.image ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" /> : null}
+                      </div>
+                      <div className="p-3">
+                        <p className="text-sm font-semibold text-stone-900">{product.name}</p>
+                        <p className="text-sm font-bold text-[#5A2D0C]">Rs {Number(product.price).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
-        {activeTab === 'addresses' && (
-          <div>
-            <h2 className="text-base font-semibold text-stone-900 mb-4">Saved addresses</h2>
-            {(profile?.addressLine1 || profile?.city) ? (
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-stone-50 border border-stone-200">
-                <MapPin size={16} className="text-stone-400 mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-stone-700">
-                  {[profile?.addressLine1, profile?.addressLine2, profile?.city, profile?.state, profile?.postalCode].filter(Boolean).join(', ')}
-                </p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 gap-2">
-                <MapPin size={36} className="text-stone-300" /><p className="text-sm text-stone-400">No addresses saved</p>
-              </div>
-            )}
-          </div>
-        )}
+
 
         {activeTab === 'reviews' && (
           <div className="flex flex-col items-center justify-center py-16 gap-2">

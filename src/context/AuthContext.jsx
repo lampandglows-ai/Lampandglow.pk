@@ -48,22 +48,23 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signup = async (email, password, name) => {
+  const signup = async (email, password, firstName, lastName) => {
     try {
       setError(null);
       const trimmedEmail = email?.trim();
       const result = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const firebaseUser = result.user;
 
-      // Update profile with display name
-      await firebaseUpdateProfile(firebaseUser, { displayName: name });
+      const displayName = `${firstName} ${lastName}`.trim();
+      await firebaseUpdateProfile(firebaseUser, { displayName });
 
-      // Create user document in Firestore
       const userDocRef = doc(db, 'users', firebaseUser.uid);
       await setDoc(userDocRef, {
         uid: firebaseUser.uid,
         email: firebaseUser.email,
-        displayName: name,
+        displayName: displayName,
+        firstName: firstName || '',
+        lastName: lastName || '',
         createdAt: new Date().toISOString(),
         role: 'user',
       });
@@ -71,7 +72,9 @@ export const AuthProvider = ({ children }) => {
       const userData = {
         uid: firebaseUser.uid,
         email: firebaseUser.email,
-        displayName: name,
+        displayName: displayName,
+        firstName: firstName || '',
+        lastName: lastName || '',
         role: 'user',
       };
 
