@@ -350,6 +350,22 @@ export default function AdminProductsPage() {
         notes: ''
       },
       videos: [],
+      whyLoveItems: [
+        'Sculptural Simplicity – Smooth, rounded wood base in rich tones that ground your space',
+        'Soft Diffused Light – Wide shade offers an elegant glow, ideal for evening ambience',
+        'Handcrafted Quality – Each piece is individually made with care and attention to detail',
+        'Versatile Placement – Perfect for living rooms, bedrooms, reading corners, and offices'
+      ],
+      careInstructions: [
+        'Wipe wood with a dry or lightly damp cloth',
+        'Dust shade gently with a soft brush or lint-free cloth',
+        'Avoid exposure to moisture or direct sunlight'
+      ],
+      noteText: 'Note: Each base is handcrafted and may display subtle variations in wood grain and tone — part of its natural charm.',
+      freeShippingContent: 'Free standard shipping on orders over 10,000 PKR\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
+      freeReturnsContent: 'At Lamp&Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.\n\nYou may return most new, unopened items within 7 days of delivery for a full refund. If the return is due to our error, we will cover the return shipping costs.\n\nHow to Initiate a Return:\n1. Log in to your account.\n2. Navigate to the "Complete Orders" section under My Account.\n3. Click the "Return Item(s)" button and follow the instructions.\n4. You will receive an email notification once your return has been processed.',
+      ourPromiseContent: 'Every product is handcrafted with premium-quality wood and materials. We ensure:\n\n- Built and shipped within 3-5 business days.\n- Quality check before every dispatch.\n- Dedicated customer support via WhatsApp and email.',
+      shippingReturnContent: 'Returns Policy:\nYou may return most new, unopened items within 7 days of delivery for a full refund. We\'ll also pay the return shipping costs if the return is a result of our error (you received an incorrect or defective item, etc.).\n\nYou should expect to receive your refund within four weeks of giving your package to the return shipper.\n\nShipping:\nWe can ship to virtually any address in Pakistan. Free standard shipping on orders over 10,000 PKR. Orders are typically dispatched within 1-2 business days.\n\nAll in-stock products will be delivered within 3 to 5 days. Custom designs will take 8 to 12 days to complete and ship.',
     })
     setShowForm(false)
   }
