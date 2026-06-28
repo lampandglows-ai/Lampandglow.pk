@@ -528,7 +528,9 @@ function AppContent() {
     const isComplete = loadingProgress >= 100
     const pct = Math.round(Math.min(100, loadingProgress))
     const WIRE_H = 150
-    const beamH = Math.max(0, ((WIRE_H - 16) * pct) / 100)
+    const TRAVEL_H = WIRE_H - 16
+    const MIN_BEAM_H = TRAVEL_H * 0.18
+    const beamH = Math.max(MIN_BEAM_H, (TRAVEL_H * pct) / 100)
 
     return (
       <>
@@ -569,7 +571,7 @@ function AppContent() {
           <div className="relative w-[2px] rounded" style={{ height: WIRE_H, background: '#57534b' }}>
             {!isComplete && (
               <div
-                className="absolute left-1/2 -translate-x-1/2 top-4 w-[3px] rounded-[3px] transition-[height] duration-200 ease-linear"
+                className="absolute left-1/2 -translate-x-1/2 top-4 w-[3px] rounded-[3px] transition-[height] duration-500 ease-out"
                 style={{
                   height: `${beamH}px`,
                   background: 'linear-gradient(to bottom, #fff6d8, #ffd24d 55%, #c9961f)',
@@ -579,14 +581,14 @@ function AppContent() {
             )}
           </div>
 
-          <LampBulb lit={pct >= 90} bounce={isComplete} />
+          <LampBulb lit={isComplete} bounce={isComplete} />
 
           <div className="mt-6 text-center min-h-[44px]">
             {!isComplete ? (
               <p className="text-sm text-[#f1e8d4] m-0">Loading... {pct}%</p>
             ) : (
               <>
-               
+              
               </>
             )}
           </div>
