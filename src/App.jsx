@@ -65,94 +65,153 @@ import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
-// Vintage Edison bulb used on the "Lamp and Glow" loading screen
-function LampBulb({ lit = false, soft = false, bounce = false, size = 50 }) {
-  const filamentColor = lit ? '#ffd24d' : soft ? '#e3b65a' : '#5a4a35'
-  const glassFill = lit ? 'url(#lg-bulb-glow)' : soft ? 'url(#lg-bulb-glow-soft)' : 'rgba(255,255,255,0.025)'
-  const glassStroke = lit || soft ? 'rgba(255,210,120,0.55)' : 'rgba(255,255,255,0.16)'
-  const filamentFilter = lit
-    ? 'drop-shadow(0 0 4px #ffd24d) drop-shadow(0 0 12px #ffb02e)'
-    : soft
-      ? 'drop-shadow(0 0 2px #e3b65a) drop-shadow(0 0 6px #caa046)'
-      : 'none'
+// ─── Network Graph Loading Screen ────────────────────────────────────────────
+function NetworkLoader({ progress }) {
+  const pct = Math.round(Math.min(100, progress))
+
+  const nodes = [
+    { cx: 100, cy: 28,  r: 7,  delay: 0    },
+    { cx: 158, cy: 62,  r: 5.5,delay: 0.25 },
+    { cx: 42,  cy: 62,  r: 5.5,delay: 0.5  },
+    { cx: 175, cy: 124, r: 5.5,delay: 0.75 },
+    { cx: 25,  cy: 124, r: 5.5,delay: 1.0  },
+    { cx: 100, cy: 158, r: 7,  delay: 1.25 },
+    { cx: 100, cy: 93,  r: 4,  delay: 0.6  },
+  ]
+
+  const edges = [
+    { x1: 100, y1: 28,  x2: 158, y2: 62,  delay: 0    },
+    { x1: 100, y1: 28,  x2: 42,  y2: 62,  delay: 0.2  },
+    { x1: 158, y1: 62,  x2: 175, y2: 124, delay: 0.4  },
+    { x1: 42,  y1: 62,  x2: 25,  y2: 124, delay: 0.6  },
+    { x1: 175, y1: 124, x2: 100, y2: 158, delay: 0.8  },
+    { x1: 25,  y1: 124, x2: 100, y2: 158, delay: 1.0  },
+    { x1: 100, y1: 28,  x2: 100, y2: 158, delay: 1.2, opacity: 0.3 },
+    { x1: 158, y1: 62,  x2: 25,  y2: 124, delay: 0.3, opacity: 0.25 },
+    { x1: 42,  y1: 62,  x2: 175, y2: 124, delay: 0.5, opacity: 0.25 },
+  ]
 
   return (
-    <div
-      className={`relative ${bounce ? 'animate-bulb-drop' : ''}`}
-      style={{ width: size, height: size * 1.6 }}
-    >
-      {lit && (
-        <div
-          className="absolute animate-pulse-glow pointer-events-none"
-          style={{
-            top: '18%',
-            left: '50%',
-            width: size * 1.9,
-            height: size * 1.9,
-            transform: 'translate(-50%, -50%)',
-            background:
-              'radial-gradient(circle, rgba(255,189,77,0.55) 0%, rgba(255,170,40,0.22) 45%, rgba(255,170,40,0) 72%)',
-            filter: 'blur(6px)',
-          }}
-        />
-      )}
-      {!lit && soft && (
-        <div
-          className="absolute animate-pulse-glow-soft pointer-events-none"
-          style={{
-            top: '18%',
-            left: '50%',
-            width: size * 1.4,
-            height: size * 1.4,
-            transform: 'translate(-50%, -50%)',
-            background:
-              'radial-gradient(circle, rgba(227,182,90,0.35) 0%, rgba(227,182,90,0.12) 50%, rgba(227,182,90,0) 75%)',
-            filter: 'blur(6px)',
-          }}
-        />
-      )}
-      <svg viewBox="0 0 100 160" width={size} height={size * 1.6} className="relative block">
-        <defs>
-          <linearGradient id="lg-bulb-cap" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#3c372e" />
-            <stop offset="50%" stopColor="#171410" />
-            <stop offset="100%" stopColor="#3c372e" />
-          </linearGradient>
-          <radialGradient id="lg-bulb-glow" cx="45%" cy="40%" r="65%">
-            <stop offset="0%" stopColor="rgba(255,205,90,0.65)" />
-            <stop offset="55%" stopColor="rgba(255,170,50,0.28)" />
-            <stop offset="100%" stopColor="rgba(255,170,50,0)" />
-          </radialGradient>
-          <radialGradient id="lg-bulb-glow-soft" cx="45%" cy="40%" r="65%">
-            <stop offset="0%" stopColor="rgba(227,182,90,0.32)" />
-            <stop offset="55%" stopColor="rgba(227,182,90,0.12)" />
-            <stop offset="100%" stopColor="rgba(227,182,90,0)" />
-          </radialGradient>
-        </defs>
+    <>
+      <style>{`
+        @keyframes lg-net-edge {
+          from { stroke-dashoffset: 220; opacity: 0; }
+          to   { stroke-dashoffset: 0;   opacity: 1; }
+        }
+        @keyframes lg-net-node {
+          0%, 100% { opacity: 0.45; transform: scale(1);   }
+          50%       { opacity: 1;    transform: scale(1.55); }
+        }
+        @keyframes lg-bar-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
+        }
+        @keyframes lg-fade-out {
+          from { opacity: 1; }
+          to   { opacity: 0; pointer-events: none; }
+        }
+        .lg-net-edge {
+          stroke-dasharray: 220;
+          stroke-dashoffset: 220;
+          animation: lg-net-edge 1s ease-out forwards;
+        }
+        .lg-net-node {
+          animation: lg-net-node 2.4s ease-in-out infinite;
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        .lg-screen-fade-out { animation: lg-fade-out 0.7s ease-out forwards; }
+      `}</style>
 
-        <rect x="37" y="0" width="26" height="30" rx="2" fill="url(#lg-bulb-cap)" stroke="#050402" strokeWidth="0.5" />
-        {[7, 13, 19, 25].map((y) => (
-          <line key={y} x1="38" y1={y} x2="62" y2={y} stroke="#050402" strokeWidth="1" opacity="0.6" />
-        ))}
+      <div
+        className={pct >= 100 ? 'lg-screen-fade-out' : ''}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: '#0a0a0a',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '20px',
+        }}
+      >
+        {/* Network SVG */}
+        <svg width="200" height="186" viewBox="0 0 200 186" style={{ overflow: 'visible' }}>
+          <defs>
+            <radialGradient id="lg-ng" cx="40%" cy="35%" r="65%">
+              <stop offset="0%"   stopColor="#7aaeff" />
+              <stop offset="100%" stopColor="#3a6fd8" />
+            </radialGradient>
+          </defs>
 
-        <path
-          d="M38,30 C20,37 9,53 9,75 C9,112 27,140 50,142 C73,140 91,112 91,75 C91,53 80,37 62,30 Z"
-          fill={glassFill}
-          stroke={glassStroke}
-          strokeWidth="1"
-        />
+          {edges.map((e, i) => (
+            <line
+              key={i}
+              className="lg-net-edge"
+              x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
+              stroke="#3a6fd8"
+              strokeWidth="1.2"
+              opacity={e.opacity ?? 1}
+              style={{ animationDelay: `${e.delay}s` }}
+            />
+          ))}
 
-        <line x1="44" y1="30" x2="44" y2="90" stroke={filamentColor} strokeWidth="1.3" />
-        <line x1="56" y1="30" x2="56" y2="90" stroke={filamentColor} strokeWidth="1.3" />
-        <path
-          d="M44,90 C39,98 49,103 44,111 C39,119 49,124 44,132 L56,132 C61,124 51,119 56,111 C61,103 51,98 56,90"
-          fill="none"
-          stroke={filamentColor}
-          strokeWidth="1.5"
-          style={{ filter: filamentFilter }}
-        />
-      </svg>
-    </div>
+          {nodes.map((n, i) => (
+            <circle
+              key={i}
+              className="lg-net-node"
+              cx={n.cx} cy={n.cy} r={n.r}
+              fill="url(#lg-ng)"
+              style={{ animationDelay: `${n.delay}s` }}
+            />
+          ))}
+        </svg>
+
+        {/* Label */}
+        <p style={{
+          margin: 0,
+          color: '#4a6080',
+          fontSize: '13px',
+          letterSpacing: '0.12em',
+          fontFamily: 'sans-serif',
+          textTransform: 'lowercase',
+        }}>
+          loading
+        </p>
+
+        {/* Progress bar */}
+        <div style={{ width: '200px' }}>
+          <div style={{
+            height: '3px',
+            background: '#161c28',
+            borderRadius: '99px',
+            overflow: 'hidden',
+            position: 'relative',
+          }}>
+            <div style={{
+              position: 'absolute',
+              left: 0, top: 0, bottom: 0,
+              width: `${pct}%`,
+              borderRadius: '99px',
+              background: 'linear-gradient(90deg, #1e3f80, #4a7fff, #7aaeff, #4a7fff, #1e3f80)',
+              backgroundSize: '300% 100%',
+              animation: 'lg-bar-shimmer 2s linear infinite',
+              transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            }} />
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '8px',
+            fontFamily: 'sans-serif',
+          }}>
+            
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -175,7 +234,6 @@ function AppContent() {
   const [activeSection, setActiveSection] = useState('home')
   const [loading, setLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
-  const [fadeReady, setFadeReady] = useState(false)
   const [theme, setTheme] = useState(() => {
     const saved = window.localStorage.getItem('lg-theme')
     return saved === 'dark' ? 'dark' : 'light'
@@ -198,9 +256,7 @@ function AppContent() {
   })
   const [reviewSortBy, setReviewSortBy] = useState('recent')
 
-  useEffect(() => {
-    loadReviews()
-  }, [])
+  useEffect(() => { loadReviews() }, [])
 
   useEffect(() => {
     if (user?.uid) {
@@ -383,7 +439,6 @@ function AppContent() {
 
   const handleSubmitReview = async (newReview) => {
     if (!newReview || !newReview.comment || !user) return false
-    
     const hasAlreadyReviewed = reviews.some(
       (r) => r.productId === newReview.productId && r.userId === user.uid
     )
@@ -391,7 +446,6 @@ function AppContent() {
       alert('You have already reviewed this product.')
       return false
     }
-
     try {
       const savedReview = await reviewsService.addReview(newReview)
       setReviews((prev) => [savedReview, ...prev])
@@ -404,35 +458,11 @@ function AppContent() {
   }
 
   function handleNavigate(section) {
-    if (section === 'blogs') {
-      navigate('/blogs')
-      setActiveSection('blogs')
-      setMobileNavOpen(false)
-      return
-    }
-    if (section === 'reels') {
-      navigate('/reels')
-      setActiveSection('reels')
-      setMobileNavOpen(false)
-      return
-    }
-    if (section === 'profile') {
-      navigate('/profile')
-      setActiveSection('profile')
-      setMobileNavOpen(false)
-      return
-    }
-    if (section === 'cart') {
-      navigate('/cart')
-      setActiveSection('cart')
-      setMobileNavOpen(false)
-      return
-    }
-    if (section === 'categories') {
-      navigate('/collections')
-      setMobileNavOpen(false)
-      return
-    }
+    if (section === 'blogs') { navigate('/blogs'); setActiveSection('blogs'); setMobileNavOpen(false); return }
+    if (section === 'reels') { navigate('/reels'); setActiveSection('reels'); setMobileNavOpen(false); return }
+    if (section === 'profile') { navigate('/profile'); setActiveSection('profile'); setMobileNavOpen(false); return }
+    if (section === 'cart') { navigate('/cart'); setActiveSection('cart'); setMobileNavOpen(false); return }
+    if (section === 'categories') { navigate('/collections'); setMobileNavOpen(false); return }
     if (location.pathname !== '/') navigate('/')
     setActiveSection(section)
     setMobileNavOpen(false)
@@ -442,21 +472,23 @@ function AppContent() {
   const headerRef = useRef(null)
   const [headerHeight, setHeaderHeight] = useState(120)
 
+  // ── Loading progress ticker ──────────────────────────────────────────────
   useEffect(() => {
     if (!loading) return
     const interval = setInterval(() => {
       setLoadingProgress((prev) => {
         if (prev >= 90) { clearInterval(interval); return prev }
-        return prev + Math.random() * 30
+        return prev + Math.random() * 28
       })
-    }, 200)
+    }, 220)
     return () => clearInterval(interval)
   }, [loading])
 
   useEffect(() => {
     if (!productsLoading && !categoriesLoading) {
       setLoadingProgress(100)
-      const timer = setTimeout(() => setLoading(false), 2300)
+      // Let the fade-out animation play (0.7s), then unmount
+      const timer = setTimeout(() => setLoading(false), 900)
       return () => clearTimeout(timer)
     }
   }, [productsLoading, categoriesLoading])
@@ -467,20 +499,12 @@ function AppContent() {
     const minLoadTimer = setTimeout(() => {
       if (!productsLoading && !categoriesLoading) {
         setLoadingProgress(100)
-        const completeTimer = setTimeout(() => setLoading(false), 2300)
+        const completeTimer = setTimeout(() => setLoading(false), 900)
         return () => clearTimeout(completeTimer)
       }
-    }, 2000)
+    }, 1800)
     return () => clearTimeout(minLoadTimer)
   }, [location.pathname, productsLoading, categoriesLoading])
-
-  useEffect(() => {
-    if (loadingProgress >= 100) {
-      const t = setTimeout(() => setFadeReady(true), 1500)
-      return () => clearTimeout(t)
-    }
-    setFadeReady(false)
-  }, [loadingProgress])
 
   useEffect(() => {
     const header = headerRef.current
@@ -525,19 +549,9 @@ function AppContent() {
     else if (action.type === 'url') window.open(action.value, '_blank')
   }
 
-  function navigateToWishlist() {
-    navigate('/profile')
-    setMobileNavOpen(false)
-  }
-
-  function toggleTheme() {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
-  }
-
-  function handleLogout() {
-    logout()
-    navigate('/')
-  }
+  function navigateToWishlist() { navigate('/profile'); setMobileNavOpen(false) }
+  function toggleTheme() { setTheme((prev) => (prev === 'dark' ? 'light' : 'dark')) }
+  function handleLogout() { logout(); navigate('/') }
 
   const handleProfileChange = async (key, value) => {
     try {
@@ -549,85 +563,9 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin')
 
+  // ── Render loading screen ────────────────────────────────────────────────
   if (loading) {
-    const isComplete = loadingProgress >= 100
-    const pct = Math.round(Math.min(100, loadingProgress))
-    const isStuck = pct >= 90 && !isComplete
-    const WIRE_H = 150
-    const TRAVEL_H = WIRE_H - 16
-    const MIN_BEAM_H = TRAVEL_H * 0.18
-    const beamH = Math.max(MIN_BEAM_H, (TRAVEL_H * pct) / 100)
-
-    return (
-      <>
-        <style>{`
-          @keyframes bulb-drop { 0% { transform: translateY(0); } 40% { transform: translateY(10px); } 70% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
-          @keyframes pulse-glow { 0%, 100% { opacity: 0.65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
-          @keyframes pulse-glow-soft { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.04); } }
-          @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
-          .animate-bulb-drop { animation: bulb-drop 0.7s ease-out; }
-          .animate-pulse-glow { animation: pulse-glow 2.6s ease-in-out infinite; }
-          .animate-pulse-glow-soft { animation: pulse-glow-soft 1.6s ease-in-out infinite; }
-          .animate-fade-out { animation: fade-out 0.8s ease-out forwards; }
-        `}</style>
-        <div
-          className={`fixed inset-0 z-50 flex flex-col items-center justify-start pt-[12vh] ${fadeReady ? 'animate-fade-out' : ''}`}
-          style={{ background: 'radial-gradient(ellipse at 50% 32%, #161210 0%, #0c0a08 65%)' }}
-        >
-          <h1
-            className="text-3xl text-[#f1e8d4] mb-2"
-            style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-          >
-            Lamp and Glow
-          </h1>
-
-          <div className="flex items-center justify-center gap-[7px] w-[170px] mb-4">
-            <span className="flex-1 h-px bg-[#cda049]/50" />
-            <span className="w-[3px] h-[3px] rounded-full bg-[#cda049]" />
-            <span className="w-[6px] h-[6px] bg-[#cda049] rotate-45" />
-            <span className="w-[3px] h-[3px] rounded-full bg-[#cda049]" />
-            <span className="flex-1 h-px bg-[#cda049]/50" />
-          </div>
-
-          <p className="text-sm text-[#cda049] tracking-wide mb-11">Ready to Glow</p>
-
-          <span
-            className="w-2 h-2 rounded-full bg-[#cda049] block"
-            style={{ boxShadow: '0 0 6px 2px rgba(205,160,73,0.6)' }}
-          />
-
-          <div className="relative w-[2px] rounded" style={{ height: WIRE_H, background: '#57534b' }}>
-            {!isComplete && (
-              <div
-                className="absolute left-1/2 -translate-x-1/2 top-4 w-[3px] rounded-[3px] transition-[height] duration-500 ease-out"
-                style={{
-                  height: `${beamH}px`,
-                  background: 'linear-gradient(to bottom, #fff6d8, #ffd24d 55%, #c9961f)',
-                  boxShadow: '0 0 8px 2px rgba(255,210,77,0.85), 0 0 22px 6px rgba(255,180,40,0.45)',
-                }}
-              />
-            )}
-          </div>
-
-          <LampBulb lit={isComplete} soft={isStuck} bounce={isComplete} />
-
-          <div className="mt-6 text-center min-h-[44px]">
-            {!isComplete ? (
-              <p
-                className="text-sm text-[#f1e8d4] m-0"
-                style={{ textShadow: isStuck ? '0 0 8px rgba(227,182,90,0.7)' : '0 0 5px rgba(255,210,77,0.4)' }}
-              >
-                Loading... {pct}%
-              </p>
-            ) : (
-              <>
-               
-              </>
-            )}
-          </div>
-        </div>
-      </>
-    )
+    return <NetworkLoader progress={loadingProgress} />
   }
 
   return (
@@ -746,7 +684,6 @@ function AppContent() {
           <Route path="/signin" element={<LoginPage theme={theme} />} />
           <Route path="/signup" element={<SignupPage theme={theme} />} />
 
-          {/* Profile route — no ProfilePage wrapper, renders ProfileSection directly */}
           <Route
             path="/profile"
             element={
@@ -811,7 +748,6 @@ function AppContent() {
               />
             }
           />
-
           <Route
             path="/checkout"
             element={
