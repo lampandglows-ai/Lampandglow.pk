@@ -66,7 +66,7 @@ import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
 // Vintage Edison bulb used on the "Lamp and Glow" loading screen
-function LampBulb({ lit = false, bounce = false, size = 84 }) {
+function LampBulb({ lit = false, bounce = false, size = 50 }) {
   return (
     <div
       className={`relative ${bounce ? 'animate-bulb-drop' : ''}`}
@@ -150,6 +150,7 @@ function AppContent() {
   const [activeSection, setActiveSection] = useState('home')
   const [loading, setLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [fadeReady, setFadeReady] = useState(false)
   const [theme, setTheme] = useState(() => {
     const saved = window.localStorage.getItem('lg-theme')
     return saved === 'dark' ? 'dark' : 'light'
@@ -430,7 +431,7 @@ function AppContent() {
   useEffect(() => {
     if (!productsLoading && !categoriesLoading) {
       setLoadingProgress(100)
-      const timer = setTimeout(() => setLoading(false), 2000)
+      const timer = setTimeout(() => setLoading(false), 2300)
       return () => clearTimeout(timer)
     }
   }, [productsLoading, categoriesLoading])
@@ -441,12 +442,20 @@ function AppContent() {
     const minLoadTimer = setTimeout(() => {
       if (!productsLoading && !categoriesLoading) {
         setLoadingProgress(100)
-        const completeTimer = setTimeout(() => setLoading(false), 500)
+        const completeTimer = setTimeout(() => setLoading(false), 2300)
         return () => clearTimeout(completeTimer)
       }
     }, 2000)
     return () => clearTimeout(minLoadTimer)
   }, [location.pathname, productsLoading, categoriesLoading])
+
+  useEffect(() => {
+    if (loadingProgress >= 100) {
+      const t = setTimeout(() => setFadeReady(true), 1500)
+      return () => clearTimeout(t)
+    }
+    setFadeReady(false)
+  }, [loadingProgress])
 
   useEffect(() => {
     const header = headerRef.current
@@ -532,7 +541,7 @@ function AppContent() {
           .animate-fade-out { animation: fade-out 0.8s ease-out forwards; }
         `}</style>
         <div
-          className={`fixed inset-0 z-50 flex flex-col items-center justify-start pt-[12vh] ${isComplete ? 'animate-fade-out' : ''}`}
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-start pt-[12vh] ${fadeReady ? 'animate-fade-out' : ''}`}
           style={{ background: 'radial-gradient(ellipse at 50% 32%, #161210 0%, #0c0a08 65%)' }}
         >
           <h1
@@ -557,10 +566,10 @@ function AppContent() {
             style={{ boxShadow: '0 0 6px 2px rgba(205,160,73,0.6)' }}
           />
 
-          <div className="relative w-[3px] rounded" style={{ height: WIRE_H, background: '#57534b' }}>
+          <div className="relative w-[2px] rounded" style={{ height: WIRE_H, background: '#57534b' }}>
             {!isComplete && (
               <div
-                className="absolute left-1/2 -translate-x-1/2 top-4 w-[5px] rounded-[3px] transition-[height] duration-200 ease-linear"
+                className="absolute left-1/2 -translate-x-1/2 top-4 w-[3px] rounded-[3px] transition-[height] duration-200 ease-linear"
                 style={{
                   height: `${beamH}px`,
                   background: 'linear-gradient(to bottom, #fff6d8, #ffd24d 55%, #c9961f)',
