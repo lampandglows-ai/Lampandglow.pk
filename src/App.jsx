@@ -65,40 +65,102 @@ import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
-// ─── Spinning Circle Loader ───────────────────────────────────────────────────
-function SpinnerLoader() {
+// ─── Progress Bar Loader ──────────────────────────────────────────────────────
+function ProgressLoader({ progress }) {
+  const pct = Math.round(Math.min(100, Math.max(0, progress)))
+
   return (
     <>
       <style>{`
-        @keyframes lg-spin {
-          to { transform: rotate(360deg); }
+        @keyframes lg-border-spin {
+          0%   { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        @keyframes lg-fill-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
         }
         @keyframes lg-fade-out {
           from { opacity: 1; }
           to   { opacity: 0; pointer-events: none; }
         }
+        .lg-screen { transition: opacity 0.5s ease; }
+        .lg-screen-done { animation: lg-fade-out 0.5s ease forwards; }
       `}</style>
+
       <div
+        className={pct >= 100 ? 'lg-screen-done' : 'lg-screen'}
         style={{
           position: 'fixed',
           inset: 0,
           zIndex: 9999,
-          background: '#0a0a0a',
+          background: '#000',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: '0 48px',
         }}
       >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: '50%',
-            border: '3px solid rgba(255,255,255,0.1)',
-            borderTopColor: '#ffffff',
-            animation: 'lg-spin 0.75s linear infinite',
-          }}
-        />
+        {/* Label row */}
+        <div style={{
+          width: '100%',
+          maxWidth: 480,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 10,
+        }}>
+          <span style={{
+            color: '#fff',
+            fontSize: 20,
+            fontStyle: 'italic',
+            fontFamily: 'Georgia, serif',
+            letterSpacing: '0.01em',
+          }}>
+            Loading...
+          </span>
+          <span style={{
+            color: '#fff',
+            fontSize: 20,
+            fontFamily: 'Georgia, serif',
+            letterSpacing: '0.02em',
+          }}>
+            {pct}%
+          </span>
+        </div>
+
+        {/* Outer multicolor animated border wrapper */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: 480,
+          padding: 3,
+          borderRadius: 999,
+          background: 'linear-gradient(90deg, #ff0080, #ff8c00, #ffe000, #00e5ff, #7b2fff, #ff0080, #ff8c00)',
+          backgroundSize: '300% 100%',
+          animation: 'lg-border-spin 2.5s linear infinite',
+        }}>
+          {/* Inner black track */}
+          <div style={{
+            borderRadius: 999,
+            background: '#000',
+            padding: '3px',
+            overflow: 'hidden',
+          }}>
+            {/* Fill bar */}
+            <div style={{
+              height: 28,
+              borderRadius: 999,
+              width: `${pct}%`,
+              minWidth: pct > 0 ? 28 : 0,
+              background: 'linear-gradient(90deg, #fff 0%, #ccc 50%, #fff 100%)',
+              backgroundSize: '200% 100%',
+              animation: 'lg-fill-shimmer 1.5s linear infinite',
+              transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+            }} />
+          </div>
+        </div>
       </div>
     </>
   )
@@ -122,6 +184,7 @@ function AppContent() {
 
   const [activeSection, setActiveSection] = useState('home')
   const [loading, setLoading] = useState(true)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [theme, setTheme] = useState(() => {
     const saved = window.localStorage.getItem('lg-theme')
     return saved === 'dark' ? 'dark' : 'light'
@@ -354,22 +417,37 @@ function AppContent() {
   const headerRef = useRef(null)
   const [headerHeight, setHeaderHeight] = useState(120)
 
+  // ── Progress ticker ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!loading) return
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 90) { clearInterval(interval); return prev }
+        return Math.min(90, prev + Math.random() * 25)
+      })
+    }, 200)
+    return () => clearInterval(interval)
+  }, [loading])
+
   useEffect(() => {
     if (!productsLoading && !categoriesLoading) {
-      const timer = setTimeout(() => setLoading(false), 300)
+      setLoadingProgress(100)
+      const timer = setTimeout(() => setLoading(false), 700)
       return () => clearTimeout(timer)
     }
   }, [productsLoading, categoriesLoading])
 
   useEffect(() => {
     setLoading(true)
-    const minLoadTimer = setTimeout(() => {
+    setLoadingProgress(0)
+    const minTimer = setTimeout(() => {
       if (!productsLoading && !categoriesLoading) {
-        const completeTimer = setTimeout(() => setLoading(false), 300)
-        return () => clearTimeout(completeTimer)
+        setLoadingProgress(100)
+        const doneTimer = setTimeout(() => setLoading(false), 700)
+        return () => clearTimeout(doneTimer)
       }
-    }, 800)
-    return () => clearTimeout(minLoadTimer)
+    }, 1000)
+    return () => clearTimeout(minTimer)
   }, [location.pathname, productsLoading, categoriesLoading])
 
   useEffect(() => {
@@ -429,7 +507,7 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin')
 
-  if (loading) return <SpinnerLoader />
+  if (loading) return <ProgressLoader progress={loadingProgress} />
 
   return (
     <div
@@ -645,7 +723,7 @@ function AppContent() {
           <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
           <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
-          <Route path="/admin/customers" element={<ProtectedAdminRoute><AdminCustomersPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/customers"ected={<ProtectedAdminRoute><AdminCustomersPage /></ProtectedAdminRoute>} />
           <Route path="/admin/coupons" element={<ProtectedAdminRoute><AdminCouponsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/payments" element={<ProtectedAdminRoute><AdminPaymentHistoryPage /></ProtectedAdminRoute>} />
           <Route path="/admin/categories" element={<ProtectedAdminRoute><AdminCategoriesPage /></ProtectedAdminRoute>} />
