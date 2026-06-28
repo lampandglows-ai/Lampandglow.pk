@@ -69,27 +69,56 @@ import AdminShippingPage from './pages/AdminShippingPage.jsx'
 function ProgressLoader({ progress }) {
   const pct = Math.round(Math.min(100, Math.max(0, progress)))
 
+  // Bar geometry
+  const W = 420        // bar inner width
+  const H = 34         // bar inner height
+  const R = H / 2      // corner radius = full pill
+  const PAD = 4        // gap between outer stroke and fill
+  const SW = 3         // stroke width of outer border
+
+  // SVG viewBox: add margin for the stroke
+  const M = SW + 2
+  const VW = W + M * 2
+  const VH = H + M * 2
+
+  // Perimeter of the rounded-rect (pill shape)
+  const perimeter = 2 * (W - H) + Math.PI * H  // straight sides + two semicircles
+
+  // How much of the border to draw based on pct
+  const drawn = (pct / 100) * perimeter
+  const dashArray = `${drawn} ${perimeter}`
+
+  // Multicolor gradient stops — hue rotates around the pill
+  const colors = [
+    '#ff0080', '#ff4500', '#ffcc00',
+    '#00e676', '#00b0ff', '#7c4dff', '#ff0080',
+  ]
+
   return (
     <>
       <style>{`
-        @keyframes lg-border-spin {
-          0%   { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
+        @keyframes lg-color-shift {
+          0%   { filter: hue-rotate(0deg);   }
+          100% { filter: hue-rotate(360deg); }
         }
         @keyframes lg-fill-shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position:  200% center; }
+          0%   { background-position: -300% center; }
+          100% { background-position:  300% center; }
         }
         @keyframes lg-fade-out {
           from { opacity: 1; }
           to   { opacity: 0; pointer-events: none; }
         }
-        .lg-screen { transition: opacity 0.5s ease; }
-        .lg-screen-done { animation: lg-fade-out 0.5s ease forwards; }
+        .lg-border-ring {
+          animation: lg-color-shift 4s linear infinite;
+        }
+        .lg-screen-done {
+          animation: lg-fade-out 0.6s ease forwards;
+        }
       `}</style>
 
       <div
-        className={pct >= 100 ? 'lg-screen-done' : 'lg-screen'}
+        className={pct >= 100 ? 'lg-screen-done' : ''}
         style={{
           position: 'fixed',
           inset: 0,
@@ -99,13 +128,14 @@ function ProgressLoader({ progress }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '0 48px',
+          padding: '0 40px',
+          gap: 0,
         }}
       >
         {/* Label row */}
         <div style={{
           width: '100%',
-          maxWidth: 480,
+          maxWidth: VW,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'baseline',
@@ -113,53 +143,117 @@ function ProgressLoader({ progress }) {
         }}>
           <span style={{
             color: '#fff',
-            fontSize: 20,
+            fontSize: 22,
             fontStyle: 'italic',
             fontFamily: 'Georgia, serif',
-            letterSpacing: '0.01em',
+            letterSpacing: '0.02em',
           }}>
-            Loading...
+            Ready To Glow
           </span>
           <span style={{
             color: '#fff',
             fontSize: 20,
             fontFamily: 'Georgia, serif',
-            letterSpacing: '0.02em',
           }}>
             {pct}%
           </span>
         </div>
 
-        {/* Outer multicolor animated border wrapper */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 480,
-          padding: 3,
-          borderRadius: 999,
-          background: 'linear-gradient(90deg, #ff0080, #ff8c00, #ffe000, #00e5ff, #7b2fff, #ff0080, #ff8c00)',
-          backgroundSize: '300% 100%',
-          animation: 'lg-border-spin 2.5s linear infinite',
-        }}>
-          {/* Inner black track */}
-          <div style={{
-            borderRadius: 999,
-            background: '#000',
-            padding: '3px',
-            overflow: 'hidden',
-          }}>
-            {/* Fill bar */}
-            <div style={{
-              height: 28,
-              borderRadius: 999,
-              width: `${pct}%`,
-              minWidth: pct > 0 ? 28 : 0,
-              background: 'linear-gradient(90deg, #fff 0%, #ccc 50%, #fff 100%)',
-              backgroundSize: '200% 100%',
-              animation: 'lg-fill-shimmer 1.5s linear infinite',
-              transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-            }} />
-          </div>
+        {/* SVG progress bar */}
+        <div
+          className="lg-border-ring"
+          style={{ width: '100%', maxWidth: VW }}
+        >
+          <svg
+            viewBox={`0 0 ${VW} ${VH}`}
+            width="100%"
+            style={{ display: 'block', overflow: 'visible' }}
+          >
+            <defs>
+              {/* Multicolor gradient that goes around the pill */}
+              <linearGradient id="lg-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                {colors.map((c, i) => (
+                  <stop
+                    key={i}
+                    offset={`${(i / (colors.length - 1)) * 100}%`}
+                    stopColor={c}
+                  />
+                ))}
+              </linearGradient>
+
+              {/* White shimmer for fill bar */}
+              <linearGradient id="lg-fill-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stopColor="#cccccc" />
+                <stop offset="40%"  stopColor="#ffffff" />
+                <stop offset="60%"  stopColor="#ffffff" />
+                <stop offset="100%" stopColor="#cccccc" />
+              </linearGradient>
+
+              {/* Clip to pill shape for the fill bar */}
+              <clipPath id="lg-fill-clip">
+                <rect
+                  x={M + PAD}
+                  y={M + PAD}
+                  width={W - PAD * 2}
+                  height={H - PAD * 2}
+                  rx={(R - PAD)}
+                  ry={(R - PAD)}
+                />
+              </clipPath>
+            </defs>
+
+            {/* Track (dim background pill outline) */}
+            <rect
+              x={M}
+              y={M}
+              width={W}
+              height={H}
+              rx={R}
+              ry={R}
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth={SW}
+            />
+
+            {/* Multicolor progress border — draws from top-center clockwise */}
+            <rect
+              x={M}
+              y={M}
+              width={W}
+              height={H}
+              rx={R}
+              ry={R}
+              fill="none"
+              stroke="url(#lg-grad)"
+              strokeWidth={SW}
+              strokeLinecap="round"
+              strokeDasharray={dashArray}
+              strokeDashoffset={0}
+              // Start from top-left of pill going clockwise
+              // SVG default starts at right-center; rotate -90° to start at top
+              // For a pill we want to start at the very left-center
+              transform={`rotate(180, ${VW / 2}, ${VH / 2})`}
+              style={{
+                transition: 'stroke-dasharray 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+
+            {/* White fill bar clipped to pill interior */}
+            <g clipPath="url(#lg-fill-clip)">
+              <rect
+                x={M + PAD}
+                y={M + PAD}
+                width={Math.max(0, ((W - PAD * 2) * pct) / 100)}
+                height={H - PAD * 2}
+                rx={R - PAD}
+                ry={R - PAD}
+                fill="url(#lg-fill-grad)"
+                style={{
+                  transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            </g>
+          </svg>
         </div>
       </div>
     </>
@@ -723,7 +817,7 @@ function AppContent() {
           <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
           <Route path="/admin/products" element={<ProtectedAdminRoute><AdminProductsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/orders" element={<ProtectedAdminRoute><AdminOrdersPage /></ProtectedAdminRoute>} />
-          <Route path="/admin/customers"ected={<ProtectedAdminRoute><AdminCustomersPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/customers" element={<ProtectedAdminRoute><AdminCustomersPage /></ProtectedAdminRoute>} />
           <Route path="/admin/coupons" element={<ProtectedAdminRoute><AdminCouponsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/payments" element={<ProtectedAdminRoute><AdminPaymentHistoryPage /></ProtectedAdminRoute>} />
           <Route path="/admin/categories" element={<ProtectedAdminRoute><AdminCategoriesPage /></ProtectedAdminRoute>} />
