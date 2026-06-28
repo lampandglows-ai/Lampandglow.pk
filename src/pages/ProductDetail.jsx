@@ -963,7 +963,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                          </linearGradient>
                        </defs>
                      </svg>
-                     Compare Color & Shade
+                      {shadeColors.length > 0 && colorVariants.length > 0
+                        ? 'Compare Color & Shade'
+                        : colorVariants.length > 1
+                          ? 'Compare Color'
+                          : 'Compare Shade'}
                    </button>
                  )}
                </div>
@@ -1235,7 +1239,11 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Compare Color & Shade"
+            aria-label={shadeColors.length > 0 && colorVariants.length > 0
+              ? 'Compare Color & Shade'
+              : colorVariants.length > 1
+                ? 'Compare Color'
+                : 'Compare Shade'}
           >
             <button
               type="button"
@@ -1249,7 +1257,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             </button>
 
             <div className="p-8 sm:p-12 overflow-y-auto">
-              <h3 className="mb-6 text-base font-bold text-stone-900">Compare Color & Shade</h3>
+              <h3 className="mb-6 text-base font-bold text-stone-900">
+                {shadeColors.length > 0 && colorVariants.length > 0
+                  ? 'Compare Color & Shade'
+                  : colorVariants.length > 1
+                    ? 'Compare Color'
+                    : 'Compare Shade'}
+              </h3>
 
               {/* Color & Shade Selection Buttons - Same Row */}
               {(colorVariants.length > 0 || shadeColors.length > 0) && (
