@@ -65,151 +65,40 @@ import { TESTIMONIALS } from './data/testimonials.js'
 import { slugify } from './utils/slugify.js'
 import AdminShippingPage from './pages/AdminShippingPage.jsx'
 
-// ─── Network Graph Loading Screen ────────────────────────────────────────────
-function NetworkLoader({ progress }) {
-  const pct = Math.round(Math.min(100, progress))
-
-  const nodes = [
-    { cx: 100, cy: 28,  r: 7,  delay: 0    },
-    { cx: 158, cy: 62,  r: 5.5,delay: 0.25 },
-    { cx: 42,  cy: 62,  r: 5.5,delay: 0.5  },
-    { cx: 175, cy: 124, r: 5.5,delay: 0.75 },
-    { cx: 25,  cy: 124, r: 5.5,delay: 1.0  },
-    { cx: 100, cy: 158, r: 7,  delay: 1.25 },
-    { cx: 100, cy: 93,  r: 4,  delay: 0.6  },
-  ]
-
-  const edges = [
-    { x1: 100, y1: 28,  x2: 158, y2: 62,  delay: 0    },
-    { x1: 100, y1: 28,  x2: 42,  y2: 62,  delay: 0.2  },
-    { x1: 158, y1: 62,  x2: 175, y2: 124, delay: 0.4  },
-    { x1: 42,  y1: 62,  x2: 25,  y2: 124, delay: 0.6  },
-    { x1: 175, y1: 124, x2: 100, y2: 158, delay: 0.8  },
-    { x1: 25,  y1: 124, x2: 100, y2: 158, delay: 1.0  },
-    { x1: 100, y1: 28,  x2: 100, y2: 158, delay: 1.2, opacity: 0.3 },
-    { x1: 158, y1: 62,  x2: 25,  y2: 124, delay: 0.3, opacity: 0.25 },
-    { x1: 42,  y1: 62,  x2: 175, y2: 124, delay: 0.5, opacity: 0.25 },
-  ]
-
+// ─── Spinning Circle Loader ───────────────────────────────────────────────────
+function SpinnerLoader() {
   return (
     <>
       <style>{`
-        @keyframes lg-net-edge {
-          from { stroke-dashoffset: 220; opacity: 0; }
-          to   { stroke-dashoffset: 0;   opacity: 1; }
-        }
-        @keyframes lg-net-node {
-          0%, 100% { opacity: 0.45; transform: scale(1);   }
-          50%       { opacity: 1;    transform: scale(1.55); }
-        }
-        @keyframes lg-bar-shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position:  200% center; }
+        @keyframes lg-spin {
+          to { transform: rotate(360deg); }
         }
         @keyframes lg-fade-out {
           from { opacity: 1; }
           to   { opacity: 0; pointer-events: none; }
         }
-        .lg-net-edge {
-          stroke-dasharray: 220;
-          stroke-dashoffset: 220;
-          animation: lg-net-edge 1s ease-out forwards;
-        }
-        .lg-net-node {
-          animation: lg-net-node 2.4s ease-in-out infinite;
-          transform-box: fill-box;
-          transform-origin: center;
-        }
-        .lg-screen-fade-out { animation: lg-fade-out 0.7s ease-out forwards; }
       `}</style>
-
       <div
-        className={pct >= 100 ? 'lg-screen-fade-out' : ''}
         style={{
           position: 'fixed',
           inset: 0,
           zIndex: 9999,
           background: '#0a0a0a',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '20px',
         }}
       >
-        {/* Network SVG */}
-        <svg width="200" height="186" viewBox="0 0 200 186" style={{ overflow: 'visible' }}>
-          <defs>
-            <radialGradient id="lg-ng" cx="40%" cy="35%" r="65%">
-              <stop offset="0%"   stopColor="#7aaeff" />
-              <stop offset="100%" stopColor="#3a6fd8" />
-            </radialGradient>
-          </defs>
-
-          {edges.map((e, i) => (
-            <line
-              key={i}
-              className="lg-net-edge"
-              x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
-              stroke="#3a6fd8"
-              strokeWidth="1.2"
-              opacity={e.opacity ?? 1}
-              style={{ animationDelay: `${e.delay}s` }}
-            />
-          ))}
-
-          {nodes.map((n, i) => (
-            <circle
-              key={i}
-              className="lg-net-node"
-              cx={n.cx} cy={n.cy} r={n.r}
-              fill="url(#lg-ng)"
-              style={{ animationDelay: `${n.delay}s` }}
-            />
-          ))}
-        </svg>
-
-        {/* Label */}
-        <p style={{
-          margin: 0,
-          color: '#4a6080',
-          fontSize: '13px',
-          letterSpacing: '0.12em',
-          fontFamily: 'sans-serif',
-          textTransform: 'lowercase',
-        }}>
-          loading
-        </p>
-
-        {/* Progress bar */}
-        <div style={{ width: '200px' }}>
-          <div style={{
-            height: '3px',
-            background: '#161c28',
-            borderRadius: '99px',
-            overflow: 'hidden',
-            position: 'relative',
-          }}>
-            <div style={{
-              position: 'absolute',
-              left: 0, top: 0, bottom: 0,
-              width: `${pct}%`,
-              borderRadius: '99px',
-              background: 'linear-gradient(90deg, #1e3f80, #4a7fff, #7aaeff, #4a7fff, #1e3f80)',
-              backgroundSize: '300% 100%',
-              animation: 'lg-bar-shimmer 2s linear infinite',
-              transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            }} />
-          </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: '8px',
-            fontFamily: 'sans-serif',
-          }}>
-            
-          </div>
-        </div>
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: '50%',
+            border: '3px solid rgba(255,255,255,0.1)',
+            borderTopColor: '#ffffff',
+            animation: 'lg-spin 0.75s linear infinite',
+          }}
+        />
       </div>
     </>
   )
@@ -233,7 +122,6 @@ function AppContent() {
 
   const [activeSection, setActiveSection] = useState('home')
   const [loading, setLoading] = useState(true)
-  const [loadingProgress, setLoadingProgress] = useState(0)
   const [theme, setTheme] = useState(() => {
     const saved = window.localStorage.getItem('lg-theme')
     return saved === 'dark' ? 'dark' : 'light'
@@ -407,10 +295,7 @@ function AppContent() {
 
   const handlePlaceOrder = async (payload) => {
     try {
-      if (!user?.uid) {
-        navigate('/login')
-        return null
-      }
+      if (!user?.uid) { navigate('/login'); return null }
       const order = await ordersService.createOrder(user.uid, {
         fullName: payload.fullName,
         phone: payload.phone,
@@ -442,10 +327,7 @@ function AppContent() {
     const hasAlreadyReviewed = reviews.some(
       (r) => r.productId === newReview.productId && r.userId === user.uid
     )
-    if (hasAlreadyReviewed) {
-      alert('You have already reviewed this product.')
-      return false
-    }
+    if (hasAlreadyReviewed) { alert('You have already reviewed this product.'); return false }
     try {
       const savedReview = await reviewsService.addReview(newReview)
       setReviews((prev) => [savedReview, ...prev])
@@ -472,37 +354,21 @@ function AppContent() {
   const headerRef = useRef(null)
   const [headerHeight, setHeaderHeight] = useState(120)
 
-  // ── Loading progress ticker ──────────────────────────────────────────────
-  useEffect(() => {
-    if (!loading) return
-    const interval = setInterval(() => {
-      setLoadingProgress((prev) => {
-        if (prev >= 90) { clearInterval(interval); return prev }
-        return prev + Math.random() * 28
-      })
-    }, 220)
-    return () => clearInterval(interval)
-  }, [loading])
-
   useEffect(() => {
     if (!productsLoading && !categoriesLoading) {
-      setLoadingProgress(100)
-      // Let the fade-out animation play (0.7s), then unmount
-      const timer = setTimeout(() => setLoading(false), 900)
+      const timer = setTimeout(() => setLoading(false), 300)
       return () => clearTimeout(timer)
     }
   }, [productsLoading, categoriesLoading])
 
   useEffect(() => {
     setLoading(true)
-    setLoadingProgress(0)
     const minLoadTimer = setTimeout(() => {
       if (!productsLoading && !categoriesLoading) {
-        setLoadingProgress(100)
-        const completeTimer = setTimeout(() => setLoading(false), 900)
+        const completeTimer = setTimeout(() => setLoading(false), 300)
         return () => clearTimeout(completeTimer)
       }
-    }, 1800)
+    }, 800)
     return () => clearTimeout(minLoadTimer)
   }, [location.pathname, productsLoading, categoriesLoading])
 
@@ -563,10 +429,7 @@ function AppContent() {
 
   const isAdminRoute = location.pathname.startsWith('/admin')
 
-  // ── Render loading screen ────────────────────────────────────────────────
-  if (loading) {
-    return <NetworkLoader progress={loadingProgress} />
-  }
+  if (loading) return <SpinnerLoader />
 
   return (
     <div
