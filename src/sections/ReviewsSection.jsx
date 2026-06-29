@@ -1,3 +1,52 @@
+const AVATAR_COLORS = [
+  'bg-amber-100 text-amber-700',
+  'bg-rose-100 text-rose-700',
+  'bg-emerald-100 text-emerald-700',
+  'bg-sky-100 text-sky-700',
+  'bg-violet-100 text-violet-700',
+  'bg-orange-100 text-orange-700',
+]
+
+// Slight alternating tilt so the list reads as a cascading stack of cards,
+// echoing the reference screenshot, without growing more extreme as the list gets long.
+const TILTS = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2', 'rotate-0', '-rotate-3']
+
+function getInitials(name) {
+  if (!name || !name.trim()) return '?'
+  const parts = name.trim().split(/\s+/)
+  return parts
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join('')
+}
+
+function getAvatarColor(name) {
+  const seed = (name || '?').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  return AVATAR_COLORS[seed % AVATAR_COLORS.length]
+}
+
+function getRelativeTime(dateString) {
+  const date = new Date(dateString)
+  const diffMs = Date.now() - date.getTime()
+  const diffSec = Math.floor(diffMs / 1000)
+
+  if (diffSec < 60) return 'Just now'
+  const diffMin = Math.floor(diffSec / 60)
+  if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`
+  const diffHour = Math.floor(diffMin / 60)
+  if (diffHour < 24) return `${diffHour} hour${diffHour !== 1 ? 's' : ''} ago`
+  const diffDay = Math.floor(diffHour / 24)
+  if (diffDay < 7) return `${diffDay} day${diffDay !== 1 ? 's' : ''} ago`
+  const diffWeek = Math.floor(diffDay / 7)
+  if (diffWeek < 5) return `${diffWeek} week${diffWeek !== 1 ? 's' : ''} ago`
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function isNew(dateString) {
+  const diffMs = Date.now() - new Date(dateString).getTime()
+  return diffMs < 7 * 24 * 60 * 60 * 1000
+}
+
 export default function ReviewsSection({
   products,
   reviewForm,
@@ -141,43 +190,61 @@ export default function ReviewsSection({
               </p>
             </form>
 
-            <div className="space-y-3">
+            <div>
               {sortedReviews.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-stone-300 bg-white p-6 text-xs sm:text-sm text-stone-600">
                   <p>No reviews yet. Be the first to share your Lamp &amp; Glow experience.</p>
                 </div>
               ) : (
-                <ul className="space-y-3">
-                  {sortedReviews.map((review) => {
+                <ul className="py-2">
+                  {sortedReviews.map((review, index) => {
                     const product = products.find((p) => p.id === review.productId)
+                    const tilt = TILTS[index % TILTS.length]
+                    const initials = getInitials(review.name)
+                    const avatarColor = getAvatarColor(review.name)
+                    const showNew = isNew(review.createdAt)
+
                     return (
                       <li
                         key={review.id}
-                        className="group rounded-3xl border border-stone-200 bg-white p-5 text-xs sm:text-sm flex flex-col gap-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-[#FFD400]/30/80 motion-reduce:transform-none motion-reduce:transition-none"
+                        style={{ zIndex: index + 1 }}
+                        className={`group relative ${index === 0 ? '' : '-mt-4'} ${tilt} rounded-3xl border border-stone-200 bg-white p-5 text-xs sm:text-sm shadow-sm transition-all duration-300 hover:rotate-0 hover:-translate-y-1 hover:shadow-lg hover:z-50 motion-reduce:transform-none motion-reduce:transition-none`}
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#5A2D0C] truncate">
-                              {product?.name ?? 'Lamp & Glow product'}
-                            </p>
-                            <p className="mt-0.5 text-[11px] text-stone-500">by {review.name || 'Anonymous'}</p>
+                        {/* decorative report-style marker, like a verified-listing icon */}
+                        <span className="absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full border border-stone-300 text-[10px] font-semibold text-stone-400">
+                          !
+                        </span>
+
+                        <div className="flex items-start gap-3 pr-6">
+                          <div
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${avatarColor}`}
+                          >
+                            {initials}
                           </div>
-                          <div className="text-right text-[11px] text-stone-500 shrink-0">
-                            <div className="text-[#FFD400]">
-                              {'★'.repeat(review.rating)}
-                              <span className="text-stone-300">{'★'.repeat(5 - review.rating)}</span>
-                            </div>
-                            <p>
-                              {new Date(review.createdAt).toLocaleDateString(undefined, {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })}
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-blue-700 truncate">
+                              {review.name || 'Anonymous'}
+                            </p>
+                            <p className="text-[11px] text-stone-500 truncate">
+                              {product?.name ?? 'Lamp & Glow product'}
                             </p>
                           </div>
                         </div>
-                        <div className="h-0.5 w-full rounded-full bg-gradient-to-r from-amber-200/0 via-amber-200/70 to-amber-200/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                        <p className="text-xs sm:text-sm text-stone-700">{review.comment}</p>
+
+                        <div className="mt-3 flex items-center gap-2">
+                          <span className="text-[#FFD400] text-sm leading-none">
+                            {'★'.repeat(review.rating)}
+                            <span className="text-stone-300">{'★'.repeat(5 - review.rating)}</span>
+                          </span>
+                          <span className="text-[11px] text-stone-500">{getRelativeTime(review.createdAt)}</span>
+                          {showNew && (
+                            <span className="inline-flex items-center rounded-md border border-stone-300 px-1.5 py-0.5 text-[10px] font-semibold text-stone-600">
+                              NEW
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="mt-2 text-xs sm:text-sm text-stone-700">{review.comment}</p>
                       </li>
                     )
                   })}

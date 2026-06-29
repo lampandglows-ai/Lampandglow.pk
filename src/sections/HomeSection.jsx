@@ -17,6 +17,7 @@ export default function HomeSection({
   onViewAllCategories,
   onPickCategory,
   onViewAllProducts,
+  reviews,
 }) {
   return (
     <section className="hero-gradient-bg min-w-0 overflow-x-hidden">
@@ -39,7 +40,7 @@ export default function HomeSection({
 
       <HomeBlogs />
 
-      <HomeTestimonials testimonials={testimonials} />
+      <HomeTestimonials products={products} reviews={reviews} />
     </section>
   )
 }

@@ -662,6 +662,7 @@ function AppContent() {
                       navigate(`/collections/${slugify(categoryId)}`)
                     }}
                     onViewAllProducts={() => handleNavigate('products')}
+                    reviews={sortedReviews}
                   />
                 )}
                 {activeSection === 'products' && (
