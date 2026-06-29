@@ -387,7 +387,6 @@ const Header = forwardRef(function Header({
                 />
               </div>
             )}
-            <span className="hidden sm:block text-[10px] font-black tracking-[0.2em] text-stone-400 uppercase">Lamp & Glow</span>
           </button>
 
           {/* Desktop nav */}
