@@ -390,7 +390,7 @@ export default function Footer({ theme = 'light' }) {
 
       {footerConfig.whatsapp && (
         <a
-          href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}`}
+          href={`https://wa.me/${footerConfig.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi! I'm interested in your products from Lamp and Glow. Website: ${window.location.href}`)}`}
           target="_blank"
           rel="noreferrer"
           className="fill-btn fixed z-40 inline-flex items-center justify-center rounded-xl bg-emerald-500 p-3 text-white shadow-lg cursor-grab active:cursor-grabbing select-none touch-none"
