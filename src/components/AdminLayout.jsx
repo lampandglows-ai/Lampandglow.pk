@@ -120,9 +120,9 @@ export default function AdminLayout({ children }) {
       path: '/admin/hero-banners',
     },
     {
-      label: 'Shipping Policy',
+      label: 'Shipping Fees',
       icon: Truck,
-      path: '/admin/shipping-policy',
+      path: '/admin/shipping-fees',
     },
     {
       label: 'Pages',
