@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect, forwardRef } from 'react'
+import { useMemo, useState, useEffect, useRef, forwardRef } from 'react'
 import { createPortal } from 'react-dom'
 import { FaHeart, FaSearch, FaShoppingCart, FaUserAlt } from 'react-icons/fa'
-import { Moon, Sun, LogIn, Sparkles } from 'lucide-react'
+import { Moon, Sun, LogIn, Sparkles, ChevronDown } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { slugify } from '../utils/slugify.js'
@@ -14,6 +14,7 @@ function classNames(...classes) {
 const Header = forwardRef(function Header({
   activeSection,
   cartItemsCount,
+  categories,
   handleNavigate,
   mobileNavOpen,
   navigateToWishlist,
@@ -23,6 +24,7 @@ const Header = forwardRef(function Header({
   setSearchQuery,
   theme,
   toggleTheme,
+  transparentOverlay = false,
   wishlistItemsCount = 0,
 }, ref) {
   const navigate = useNavigate()
@@ -30,9 +32,13 @@ const Header = forwardRef(function Header({
   const { user, isLoggedIn } = useAuth()
   const [logoError, setLogoError] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [searchExpanded, setSearchExpanded] = useState(false)
+  const searchInputRef = useRef(null)
+  const mobileSearchInputRef = useRef(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const [headerTranslate, setHeaderTranslate] = useState(0)
   const [hoveredNav, setHoveredNav] = useState(null)
+  const showTransparent = transparentOverlay && !isScrolled
 
   useEffect(() => {
     let resizeObserver = null
@@ -75,15 +81,22 @@ const Header = forwardRef(function Header({
   }, [])
 
   useEffect(() => {
-    if (!searchOpen) return
+    if (!searchOpen && !searchExpanded) return
     const handlePointerDown = (event) => {
       if (!event.target.closest('[data-search-root="true"]')) {
         setSearchOpen(false)
+        setSearchExpanded(false)
       }
     }
     window.addEventListener('pointerdown', handlePointerDown)
     return () => window.removeEventListener('pointerdown', handlePointerDown)
-  }, [searchOpen])
+  }, [searchOpen, searchExpanded])
+
+  useEffect(() => {
+    if (!searchExpanded) return
+    searchInputRef.current?.focus()
+    mobileSearchInputRef.current?.focus()
+  }, [searchExpanded])
 
   useEffect(() => {
     if (!mobileNavOpen) return
@@ -349,13 +362,15 @@ const Header = forwardRef(function Header({
         ref={ref}
         className={classNames(
           'fixed left-0 right-0 top-0 z-[150] transition-all duration-500',
-          isScrolled
-            ? theme === 'dark'
-              ? 'bg-[#1F1F1F]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
-              : 'bg-white/90 backdrop-blur-xl border-b border-[#E5E5E5] shadow-[0_4px_30px_rgba(0,0,0,0.08)]'
-            : theme === 'dark'
-              ? 'bg-[#1F1F1F] border-b border-white/10'
-              : 'bg-white border-b border-[#E5E5E5]',
+          showTransparent
+            ? 'bg-transparent border-b border-transparent'
+            : isScrolled
+              ? theme === 'dark'
+                ? 'bg-[#1F1F1F]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+                : 'bg-white/90 backdrop-blur-xl border-b border-[#E5E5E5] shadow-[0_4px_30px_rgba(0,0,0,0.08)]'
+              : theme === 'dark'
+                ? 'bg-[#1F1F1F] border-b border-white/10'
+                : 'bg-white border-b border-[#E5E5E5]',
         )}
         style={{ transform: `translateY(${headerTranslate}px)` }}
       >
@@ -393,91 +408,178 @@ const Header = forwardRef(function Header({
           <nav
             className={classNames(
               'hidden lg:flex items-center gap-1 ml-4',
-              theme === 'dark' ? 'text-stone-200' : 'text-[#222222]',
+              showTransparent ? 'text-white' : theme === 'dark' ? 'text-stone-200' : 'text-[#222222]',
             )}
           >
             {navLinks.map(({ key, label, icon }) => (
-              <button
+              <div
                 key={key}
-                onClick={() => key === 'products' ? navigate('/products') : handleNavigate(key)}
+                className="relative"
                 onMouseEnter={() => setHoveredNav(key)}
                 onMouseLeave={() => setHoveredNav(null)}
-                className={classNames(
-                  'relative px-4 py-2 text-[11px] font-black tracking-[0.15em] transition-all duration-300 group',
-                  isNavActive(key) && (theme === 'dark' ? 'text-[#FFD400]' : 'text-[#5A2D0C]'),
-                  !isNavActive(key) && (theme === 'dark' ? 'text-stone-400 hover:text-stone-100' : 'text-stone-500 hover:text-[#222222]'),
-                )}
               >
-                <span className="relative z-10 flex items-center gap-1.5">
-                  <span className={classNames(
-                    'transition-transform duration-300',
-                    isNavActive(key) ? 'scale-110' : 'group-hover:scale-110 group-hover:rotate-[-5deg]',
-                  )}>
-                    {icon}
+                <button
+                  onClick={() => key === 'products' ? navigate('/products') : handleNavigate(key)}
+                  className={classNames(
+                    'relative px-4 py-2 text-[11px] font-black tracking-[0.15em] transition-all duration-300 group',
+                    isNavActive(key) && (showTransparent ? 'text-[#FFD400]' : theme === 'dark' ? 'text-[#FFD400]' : 'text-[#5A2D0C]'),
+                    !isNavActive(key) && (showTransparent ? 'text-white/85 hover:text-white' : theme === 'dark' ? 'text-stone-400 hover:text-stone-100' : 'text-stone-500 hover:text-[#222222]'),
+                  )}
+                >
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <span className={classNames(
+                      'transition-transform duration-300',
+                      isNavActive(key) ? 'scale-110' : 'group-hover:scale-110 group-hover:rotate-[-5deg]',
+                    )}>
+                      {icon}
+                    </span>
+                    {label}
+                    {key === 'categories' && (
+                      <ChevronDown className={classNames(
+                        'w-3 h-3 transition-transform duration-300',
+                        hoveredNav === 'categories' ? 'rotate-180' : '',
+                      )} />
+                    )}
                   </span>
-                  {label}
-                </span>
-                {/* Animated underline */}
-                <span className={classNames(
-                  'absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300',
-                  isNavActive(key)
-                    ? 'w-3/4 bg-gradient-to-r from-[#FFD400] to-amber-500'
-                    : 'w-0 bg-gradient-to-r from-[#FFD400] to-amber-500 group-hover:w-3/4',
-                )} />
-              </button>
+                  {/* Animated underline */}
+                  <span className={classNames(
+                    'absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300',
+                    isNavActive(key)
+                      ? 'w-3/4 bg-gradient-to-r from-[#FFD400] to-amber-500'
+                      : 'w-0 bg-gradient-to-r from-[#FFD400] to-amber-500 group-hover:w-3/4',
+                  )} />
+                </button>
+
+                {/* Categories dropdown */}
+                {key === 'categories' && categories?.length > 0 && hoveredNav === 'categories' && (
+                  <div className="absolute left-0 top-full pt-2 w-72 z-50">
+                    <div className="bg-transparent rounded-2xl overflow-hidden">
+                      <div className="max-h-[360px] overflow-y-auto py-2 scrollbar-hide">
+                        {categories.map((cat) => (
+                          <button
+                            key={cat.firestoreId || cat.id}
+                            type="button"
+                            onClick={() => {
+                              navigate(`/collections/${slugify(cat.id)}`)
+                              setHoveredNav(null)
+                            }}
+                            className={classNames(
+                              'w-full px-4 py-2.5 text-left text-sm font-medium transition-all duration-200 flex items-center gap-3',
+                              theme === 'dark' ? 'text-stone-200 hover:bg-white/5' : 'text-stone-700 hover:bg-stone-50',
+                            )}
+                          >
+                            <div className="h-8 w-8 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0 border border-stone-200">
+                              {cat.image ? (
+                                <img src={cat.image} alt="" className="h-full w-full object-cover" />
+                              ) : null}
+                            </div>
+                            <span className="truncate">{cat.title}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleNavigate('categories')
+                          setHoveredNav(null)
+                        }}
+                        className={classNames(
+                          'w-full px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wide border-t transition-colors',
+                          theme === 'dark'
+                            ? 'text-[#FFD400] border-white/10 hover:bg-white/5'
+                            : 'text-[#5A2D0C] border-stone-100 hover:bg-stone-50',
+                        )}
+                      >
+                        View all collections
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
           {/* Desktop search */}
-          <div className="hidden md:flex flex-1 max-w-md mx-auto relative" data-search-root="true">
-            <div
-              className={classNames(
-                'w-full flex items-center gap-3 rounded-full border shadow-sm px-4 py-2 transition-all duration-300',
-                isScrolled
-                  ? theme === 'dark'
-                    ? 'border-white/10 bg-white/5 focus-within:border-[#FFD400]/50 focus-within:shadow-[0_0_15px_rgba(255,212,0,0.1)]'
-                    : 'border-stone-200 bg-stone-50 focus-within:border-[#FFD400]/50 focus-within:shadow-[0_0_15px_rgba(255,212,0,0.1)]'
-                  : theme === 'dark'
-                    ? 'border-white/10 bg-white/5 focus-within:border-[#FFD400]/50'
-                    : 'border-stone-200 bg-stone-50 focus-within:border-[#FFD400]/50',
-              )}
-            >
-              <FaSearch className={classNames(
-                'transition-colors duration-300 flex-shrink-0',
-                theme === 'dark' ? 'text-stone-400' : 'text-stone-500'
-              )} />
-              <input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setSearchOpen(true)}
-                onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    navigate('/products')
-                    setSearchOpen(false)
-                  }
-                }}
-                type="text"
-                placeholder="Search entire store here..."
+          <div
+            className={classNames(
+              'hidden md:flex items-center relative',
+              searchExpanded ? 'flex-1 max-w-md mx-auto' : 'flex-1 justify-end',
+            )}
+            data-search-root="true"
+          >
+            {!searchExpanded ? (
+              <button
+                type="button"
+                onClick={() => setSearchExpanded(true)}
+                aria-label="Open search"
                 className={classNames(
-                  'w-full bg-transparent text-sm font-medium placeholder:text-stone-400 focus:outline-none',
-                  theme === 'dark' ? 'text-stone-100' : 'text-stone-800',
+                  'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-white/10 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                  showTransparent ? 'text-white' : theme === 'dark' ? 'text-stone-100 hover:text-[#FFD400]' : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
                 )}
-              />
-              {searchQuery && (
+              >
+                <FaSearch className="h-4 w-4" />
+              </button>
+            ) : (
+              <div
+                className={classNames(
+                  'w-full flex items-center gap-3 rounded-full border shadow-sm px-4 py-2 transition-all duration-300',
+                  isScrolled
+                    ? theme === 'dark'
+                      ? 'border-white/10 bg-white/5 focus-within:border-[#FFD400]/50 focus-within:shadow-[0_0_15px_rgba(255,212,0,0.1)]'
+                      : 'border-stone-200 bg-stone-50 focus-within:border-[#FFD400]/50 focus-within:shadow-[0_0_15px_rgba(255,212,0,0.1)]'
+                    : theme === 'dark'
+                      ? 'border-white/10 bg-white/5 focus-within:border-[#FFD400]/50'
+                      : 'border-stone-200 bg-stone-50 focus-within:border-[#FFD400]/50',
+                )}
+              >
+                <FaSearch className={classNames(
+                  'transition-colors duration-300 flex-shrink-0',
+                  theme === 'dark' ? 'text-stone-400' : 'text-stone-500'
+                )} />
+                <input
+                  ref={searchInputRef}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchOpen(true)}
+                  onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      navigate('/products')
+                      setSearchOpen(false)
+                    }
+                    if (e.key === 'Escape') {
+                      setSearchOpen(false)
+                      setSearchExpanded(false)
+                    }
+                  }}
+                  type="text"
+                  placeholder="Search entire store here..."
+                  className={classNames(
+                    'w-full bg-transparent text-sm font-medium placeholder:text-stone-400 focus:outline-none',
+                    theme === 'dark' ? 'text-stone-100' : 'text-stone-800',
+                  )}
+                />
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => {
+                    if (searchQuery) {
+                      setSearchQuery('')
+                    } else {
+                      setSearchOpen(false)
+                      setSearchExpanded(false)
+                    }
+                  }}
                   className="flex-shrink-0 p-1 rounded-full hover:bg-stone-200/50 transition-colors"
+                  aria-label="Close search"
                 >
                   <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
-            {searchOpen && (
+            {searchExpanded && searchOpen && (
               <div
                 className={classNames(
                   'absolute left-0 right-0 top-full mt-2 rounded-2xl border shadow-2xl overflow-hidden z-30 animate-fadeIn',
@@ -553,10 +655,12 @@ const Header = forwardRef(function Header({
               type="button"
               onClick={toggleTheme}
               className={classNames(
-                'hidden sm:inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 hover:shadow-md hover:rotate-12',
-                theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:bg-white/10 hover:text-[#FFD400]'
-                  : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50 hover:text-[#FFD400]',
+                'hidden sm:inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 hover:rotate-12',
+                showTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'text-stone-100 hover:bg-white/10 hover:text-[#FFD400]'
+                    : 'text-[#222222] hover:bg-black/5 hover:text-[#FFD400]',
               )}
               aria-label="Toggle theme"
             >
@@ -568,10 +672,12 @@ const Header = forwardRef(function Header({
               <button
                 onClick={() => handleNavigate('profile')}
                 className={classNames(
-                  'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 hover:shadow-md hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
-                  theme === 'dark'
-                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
-                    : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
+                  'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                  showTransparent
+                    ? 'text-white hover:bg-white/10'
+                    : theme === 'dark'
+                      ? 'text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                      : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
                 )}
                 aria-label="Profile"
               >
@@ -581,10 +687,12 @@ const Header = forwardRef(function Header({
               <button
                 onClick={() => navigate('/login')}
                 className={classNames(
-                  'inline-flex h-9 w-9 sm:h-10 sm:w-auto sm:px-4 items-center justify-center gap-1.5 rounded-full border text-xs sm:text-sm font-bold transition-all duration-300 hover:shadow-md hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
-                  theme === 'dark'
-                    ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
-                    : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
+                  'inline-flex h-9 w-9 sm:h-10 sm:w-auto sm:px-4 items-center justify-center gap-1.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                  showTransparent
+                    ? 'text-white hover:bg-white/10'
+                    : theme === 'dark'
+                      ? 'text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                      : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
                 )}
                 aria-label="Sign In"
               >
@@ -597,10 +705,12 @@ const Header = forwardRef(function Header({
             <button
               onClick={navigateToWishlist}
               className={classNames(
-                'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 hover:shadow-md hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
-                theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
-                  : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
+                'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                showTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                    : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
               )}
               aria-label="Wishlist"
             >
@@ -616,10 +726,12 @@ const Header = forwardRef(function Header({
             <button
               onClick={() => handleNavigate('cart')}
               className={classNames(
-                'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 hover:shadow-md hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
-                theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
-                  : 'border-[#E5E5E5] bg-white text-[#222222] hover:text-[#FFD400] hover:bg-stone-50',
+                'relative inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
+                showTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                    : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
               )}
               aria-label="Cart"
             >
@@ -629,14 +741,33 @@ const Header = forwardRef(function Header({
               </span>
             </button>
 
+            {/* Mobile search toggle — desktop has its own icon inline above */}
+            <button
+              type="button"
+              onClick={() => setSearchExpanded((prev) => !prev)}
+              className={classNames(
+                'md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300',
+                showTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'text-stone-100 hover:bg-white/10'
+                    : 'text-[#222222] hover:bg-black/5',
+              )}
+              aria-label="Toggle search"
+            >
+              <FaSearch className="h-4 w-4" />
+            </button>
+
             {/* Hamburger */}
             <button
               onClick={() => setMobileNavOpen((prev) => !prev)}
               className={classNames(
-                'lg:hidden inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 hover:shadow-md',
-                theme === 'dark'
-                  ? 'border-white/15 bg-white/5 text-stone-100 hover:bg-white/10'
-                  : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50',
+                'lg:hidden inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300',
+                showTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : theme === 'dark'
+                    ? 'text-stone-100 hover:bg-white/10'
+                    : 'text-[#222222] hover:bg-black/5',
               )}
               aria-label="Toggle navigation menu"
             >
@@ -651,7 +782,8 @@ const Header = forwardRef(function Header({
           </div>
         </div>
 
-        {/* ── Mobile search bar (below main bar, md and below) ── */}
+        {/* ── Mobile search bar (below main bar, md and below) — toggled by the search icon ── */}
+        {searchExpanded && (
         <div
           className={classNames(
             'md:hidden border-t',
@@ -668,6 +800,7 @@ const Header = forwardRef(function Header({
               >
                 <FaSearch className={classNames('flex-shrink-0', theme === 'dark' ? 'text-stone-400' : 'text-stone-500')} />
                 <input
+                  ref={mobileSearchInputRef}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchOpen(true)}
@@ -677,6 +810,10 @@ const Header = forwardRef(function Header({
                       navigate('/products')
                       setSearchOpen(false)
                     }
+                    if (e.key === 'Escape') {
+                      setSearchOpen(false)
+                      setSearchExpanded(false)
+                    }
                   }}
                   type="text"
                   placeholder="Search entire store here..."
@@ -685,17 +822,23 @@ const Header = forwardRef(function Header({
                     theme === 'dark' ? 'text-stone-100' : 'text-stone-800',
                   )}
                 />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="flex-shrink-0 p-1 rounded-full hover:bg-stone-200/50 transition-colors"
-                  >
-                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (searchQuery) {
+                      setSearchQuery('')
+                    } else {
+                      setSearchOpen(false)
+                      setSearchExpanded(false)
+                    }
+                  }}
+                  className="flex-shrink-0 p-1 rounded-full hover:bg-stone-200/50 transition-colors"
+                  aria-label="Close search"
+                >
+                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
 
               {searchOpen && (
@@ -764,6 +907,7 @@ const Header = forwardRef(function Header({
             </div>
           </div>
         </div>
+        )}
       </header>
 
       {/* Drawer rendered via portal — outside <header> so it escapes its stacking context */}

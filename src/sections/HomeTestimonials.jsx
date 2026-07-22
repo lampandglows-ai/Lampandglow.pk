@@ -1,138 +1,228 @@
-const AVATAR_COLORS = [
-  'bg-amber-100 text-amber-700',
-  'bg-rose-100 text-rose-700',
-  'bg-emerald-100 text-emerald-700',
-  'bg-sky-100 text-sky-700',
-  'bg-violet-100 text-violet-700',
-  'bg-orange-100 text-orange-700',
+import { useEffect, useMemo, useRef, useState } from 'react'
+import Slider from 'react-slick'
+import { ChevronLeft, ChevronRight, Quote } from 'lucide-react'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+
+function ReviewCard({ review, productImage }) {
+  return (
+    <div className="h-full rounded-3xl border border-stone-200 bg-white p-5 sm:p-7 shadow-sm">
+      <div className="flex justify-center text-[#FFD400] text-base sm:text-lg leading-none mb-3">
+        {'★'.repeat(review.rating)}
+        <span className="text-stone-300">{'★'.repeat(5 - review.rating)}</span>
+      </div>
+
+      <div className="text-center mb-4">
+        <span className="text-sm sm:text-base font-bold text-stone-900">{review.name || 'Anonymous'}</span>
+        {review.handle && <span className="ml-1.5 text-xs text-stone-400">{review.handle}</span>}
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 items-start">
+        <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-stone-100">
+          {productImage ? (
+            <img src={productImage} alt={review.name || 'Product'} className="h-full w-full object-cover" />
+          ) : null}
+
+          {review.screenshotImage && (
+            <div className="absolute left-1.5 bottom-1.5 w-[62%] rounded-md overflow-hidden shadow-lg ring-1 ring-black/10 -rotate-2">
+              <img src={review.screenshotImage} alt="Review screenshot" className="w-full h-auto object-cover" />
+            </div>
+          )}
+        </div>
+
+        <div className="relative min-h-[10rem] flex flex-col justify-between">
+          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+            <span className="text-stone-400">— </span>
+            {review.comment}
+          </p>
+          <Quote className="w-5 h-5 text-stone-200 self-end mt-2" fill="currentColor" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const BREAKPOINTS = [
+  { query: '(max-width: 639px)', slidesToShow: 1 },
+  { query: '(max-width: 1023px)', slidesToShow: 2 },
 ]
 
-const TILTS = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2', 'rotate-0', '-rotate-3']
-
-function getInitials(name) {
-  if (!name || !name.trim()) return '?'
-  const parts = name.trim().split(/\s+/)
-  return parts
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join('')
-}
-
-function getAvatarColor(name) {
-  const seed = (name || '?').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
-  return AVATAR_COLORS[seed % AVATAR_COLORS.length]
-}
-
-function getRelativeTime(dateString) {
-  const date = new Date(dateString)
-  const diffMs = Date.now() - date.getTime()
-  const diffSec = Math.floor(diffMs / 1000)
-
-  if (diffSec < 60) return 'Just now'
-  const diffMin = Math.floor(diffSec / 60)
-  if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`
-  const diffHour = Math.floor(diffMin / 60)
-  if (diffHour < 24) return `${diffHour} hour${diffHour !== 1 ? 's' : ''} ago`
-  const diffDay = Math.floor(diffHour / 24)
-  if (diffDay < 7) return `${diffDay} day${diffDay !== 1 ? 's' : ''} ago`
-  const diffWeek = Math.floor(diffDay / 7)
-  if (diffWeek < 5) return `${diffWeek} week${diffWeek !== 1 ? 's' : ''} ago`
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
-function isNew(dateString) {
-  const diffMs = Date.now() - new Date(dateString).getTime()
-  return diffMs < 7 * 24 * 60 * 60 * 1000
+function getSlidesToShow() {
+  if (typeof window === 'undefined') return 4
+  if (window.matchMedia('(max-width: 639px)').matches) return 1
+  if (window.matchMedia('(max-width: 1023px)').matches) return 2
+  return 4
 }
 
 export default function HomeTestimonials({ products, reviews }) {
-  return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#F5F1EA]">
-      <div className="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden">
-        <div className="relative px-5 sm:px-8 py-6 sm:py-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F5F1EA] via-white to-[#F5F1EA]" />
-          <div className="relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
+  const sliderRef = useRef(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [slidesToShow, setSlidesToShow] = useState(getSlidesToShow)
+
+  useEffect(() => {
+    const mqls = BREAKPOINTS.map((b) => window.matchMedia(b.query))
+    const update = () => setSlidesToShow(getSlidesToShow())
+    update()
+    mqls.forEach((mql) => {
+      if (mql.addEventListener) mql.addEventListener('change', update)
+      else mql.addListener(update)
+    })
+    return () => {
+      mqls.forEach((mql) => {
+        if (mql.removeEventListener) mql.removeEventListener('change', update)
+        else mql.removeListener(update)
+      })
+    }
+  }, [])
+
+  const visibleReviews = useMemo(
+    () => (reviews || []).filter((r) => r.isActive !== false),
+    [reviews],
+  )
+
+  const getProductImage = (review) => {
+    if (review.productImage) return review.productImage
+    const product = products?.find((p) => p.id === review.productId)
+    if (product?.images && product.images.length > 0) return product.images[0]
+    return product?.image || null
+  }
+
+  const useSlider = visibleReviews.length > 4
+  const displayReviews = useSlider ? visibleReviews : visibleReviews.slice(0, 4)
+  const canGoPrev = currentSlide > 0
+  const canGoNext = currentSlide + slidesToShow < visibleReviews.length
+
+  const settings = {
+    dots: true,
+    arrows: false,
+    infinite: false,
+    autoplay: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    swipe: true,
+    touchMove: true,
+    afterChange: (index) => setCurrentSlide(index),
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+  }
+
+  if (visibleReviews.length === 0) {
+    return (
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#F5F1EA]">
+        <div className="rounded-3xl border border-[#E5E5E5] bg-white shadow-sm overflow-hidden">
+          <div className="relative px-5 sm:px-8 py-6 sm:py-8">
+            <div className="relative flex flex-col items-center text-center gap-4">
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
-                Reviews & Ratings
+                Loved by Our Customers
               </h1>
-              <p className="mt-2 text-xs sm:text-sm text-stone-600 max-w-xl">
-                Share your experience with Lamp & Glow products and explore what other customers are saying.
-              </p>
             </div>
           </div>
-        </div>
-
-        <div className="px-5 sm:px-8 pb-8">
-          {reviews.length === 0 ? (
+          <div className="px-5 sm:px-8 pb-8">
             <div className="rounded-3xl border border-dashed border-stone-300 bg-white p-6 text-xs sm:text-sm text-stone-600">
               <p>No reviews yet. Be the first to share your Lamp & Glow experience.</p>
             </div>
-          ) : (
-            <ul className="py-2">
-              {reviews.map((review, index) => {
-                const product = products.find((p) => p.id === review.productId)
-                const tilt = TILTS[index % TILTS.length]
-                const initials = getInitials(review.name)
-                const avatarColor = getAvatarColor(review.name)
-                const showNew = isNew(review.createdAt)
-                const reviewerCount = reviews.filter((r) => r.name === review.name).length
-
-                return (
-                  <li
-                    key={review.id}
-                    style={{ zIndex: index + 1 }}
-                    className={`group relative ${index === 0 ? '' : '-mt-4'} ${tilt} rounded-3xl border border-stone-200 bg-white p-5 text-xs sm:text-sm shadow-sm transition-all duration-300 hover:rotate-0 hover:-translate-y-1 hover:shadow-lg hover:z-50 motion-reduce:transform-none motion-reduce:transition-none`}
-                  >
-                    {/* decorative report-style marker, like a verified-listing icon */}
-                    <span className="absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full border border-stone-300 text-[10px] font-semibold text-stone-400">
-                      !
-                    </span>
-
-                    <div className="flex items-start gap-3 pr-6">
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${avatarColor}`}
-                      >
-                        {initials}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-blue-700 truncate">
-                          {review.name || 'Anonymous'}
-                        </p>
-                        <p className="text-[11px] text-stone-500">
-                          {reviewerCount} review{reviewerCount !== 1 ? 's' : ''} · 0 photos
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="text-[#FFD400] text-sm leading-none">
-                        {'★'.repeat(review.rating)}
-                        <span className="text-stone-300">{'★'.repeat(5 - review.rating)}</span>
-                      </span>
-                      <span className="text-[11px] text-stone-500">{getRelativeTime(review.createdAt)}</span>
-                      {showNew && (
-                        <span className="inline-flex items-center rounded-md border border-stone-300 px-1.5 py-0.5 text-[10px] font-semibold text-stone-600">
-                          NEW
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="mt-2 text-xs sm:text-sm text-stone-700">{review.comment}</p>
-
-                    {product?.name && (
-                      <div className="mt-3 pt-3 border-t border-stone-100">
-                        <p className="text-[11px] font-semibold text-stone-700">Product</p>
-                        <p className="text-[11px] text-stone-500">{product.name}</p>
-                      </div>
-                    )}
-                  </li>
-                )
-              })}
-            </ul>
-          )}
+          </div>
         </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 bg-[#F5F1EA]">
+      <style>{`
+        .home-reviews-slider .slick-list {
+          margin: 0 -0.625rem;
+        }
+        .home-reviews-slider .slick-slide > div {
+          padding: 0 0.625rem;
+          height: 100%;
+        }
+        .home-reviews-slider .slick-track {
+          display: flex !important;
+        }
+        .home-reviews-slider .slick-slide {
+          height: auto;
+        }
+        .home-reviews-slider .slick-dots {
+          position: static;
+          margin-top: 1.5rem;
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+        }
+        .home-reviews-slider .slick-dots li {
+          margin: 0;
+          width: auto;
+          height: auto;
+        }
+        .home-reviews-slider .slick-dots li button {
+          width: 9px;
+          height: 9px;
+          padding: 0;
+        }
+        .home-reviews-slider .slick-dots li button:before {
+          content: '';
+          width: 9px;
+          height: 9px;
+          border-radius: 9999px;
+          background: #D6D3D1;
+          opacity: 1;
+          top: 0;
+          left: 0;
+        }
+        .home-reviews-slider .slick-dots li.slick-active button:before {
+          background: #FFD400;
+        }
+      `}</style>
+
+      <div className="text-center mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
+          Loved by Our Customers
+        </h1>
       </div>
+
+      {!useSlider ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {displayReviews.map((review) => (
+            <ReviewCard key={review.id} review={review} productImage={getProductImage(review)} />
+          ))}
+        </div>
+      ) : (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => sliderRef.current?.slickPrev()}
+            disabled={!canGoPrev}
+            aria-label="Previous reviews"
+            className="hidden sm:flex absolute -left-4 sm:-left-5 top-[38%] -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-md ring-1 ring-stone-200 text-stone-700 hover:text-[#FFD400] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => sliderRef.current?.slickNext()}
+            disabled={!canGoNext}
+            aria-label="Next reviews"
+            className="hidden sm:flex absolute -right-4 sm:-right-5 top-[38%] -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-md ring-1 ring-stone-200 text-stone-700 hover:text-[#FFD400] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div className="home-reviews-slider">
+            <Slider ref={sliderRef} {...settings}>
+              {visibleReviews.map((review) => (
+                <div key={review.id} className="h-full">
+                  <ReviewCard review={review} productImage={getProductImage(review)} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

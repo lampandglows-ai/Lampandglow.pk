@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react'
-import { Trash2, Star, Search, AlertCircle, CheckCircle, Loader2, MessageSquare, Reply, X } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Trash2, Star, Search, AlertCircle, CheckCircle, Loader2, MessageSquare, Reply, X, Plus, Edit, Upload, Eye, EyeOff } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import reviewsService from '../utils/reviewsService.js'
 import productsService from '../utils/productsService.js'
 import { useAuth } from '../context/AuthContext.jsx'
 
+const emptyReviewForm = {
+  name: '', handle: '', rating: 5, comment: '',
+  screenshotImage: '', productId: '', productImage: '', isActive: true,
+}
 
 export default function AdminReviewsPage() {
   const { user } = useAuth()
@@ -17,6 +21,15 @@ export default function AdminReviewsPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [replyingTo, setReplyingTo] = useState(null)
   const [replyText, setReplyText] = useState('')
+
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [uploadingScreenshot, setUploadingScreenshot] = useState(false)
+  const [uploadingProductImage, setUploadingProductImage] = useState(false)
+  const [reviewForm, setReviewForm] = useState(emptyReviewForm)
+  const screenshotInputRef = useRef(null)
+  const productImageInputRef = useRef(null)
 
   // Load reviews and products from Firebase
   useEffect(() => {
@@ -111,6 +124,117 @@ export default function AdminReviewsPage() {
     }
   }
 
+  const resetReviewForm = () => {
+    setReviewForm(emptyReviewForm)
+    setEditingId(null)
+    setShowForm(false)
+    if (screenshotInputRef.current) screenshotInputRef.current.value = ''
+    if (productImageInputRef.current) productImageInputRef.current.value = ''
+  }
+
+  const handleOpenAddReview = () => {
+    setReviewForm(emptyReviewForm)
+    setEditingId(null)
+    setShowForm(true)
+  }
+
+  const handleOpenEditReview = (review) => {
+    setReviewForm({
+      name: review.name || '',
+      handle: review.handle || '',
+      rating: review.rating || 5,
+      comment: review.comment || '',
+      screenshotImage: review.screenshotImage || '',
+      productId: review.productId || '',
+      productImage: review.productImage || '',
+      isActive: review.isActive !== false,
+    })
+    setEditingId(review.id)
+    setShowForm(true)
+  }
+
+  const handleReviewFormChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setReviewForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
+  }
+
+  const handleScreenshotUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingScreenshot(true)
+    try {
+      const url = await reviewsService.uploadReviewImage(file)
+      setReviewForm((prev) => ({ ...prev, screenshotImage: url }))
+    } catch {
+      setMessage({ type: 'error', text: 'Screenshot upload failed.' })
+    } finally {
+      setUploadingScreenshot(false)
+    }
+  }
+
+  const handleProductImageUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingProductImage(true)
+    try {
+      const url = await reviewsService.uploadReviewImage(file)
+      setReviewForm((prev) => ({ ...prev, productImage: url }))
+    } catch {
+      setMessage({ type: 'error', text: 'Product image upload failed.' })
+    } finally {
+      setUploadingProductImage(false)
+    }
+  }
+
+  const handleSubmitReviewForm = async (e) => {
+    e.preventDefault()
+    if (!reviewForm.comment.trim()) {
+      setMessage({ type: 'error', text: 'Please paste the review text.' })
+      return
+    }
+
+    setSaving(true)
+    try {
+      const payload = {
+        name: reviewForm.name.trim() || 'Anonymous',
+        handle: reviewForm.handle.trim(),
+        rating: Number(reviewForm.rating) || 5,
+        comment: reviewForm.comment.trim(),
+        screenshotImage: reviewForm.screenshotImage || '',
+        productId: reviewForm.productId || '',
+        productImage: reviewForm.productImage || '',
+        isActive: reviewForm.isActive,
+      }
+
+      if (editingId) {
+        await reviewsService.updateReview(editingId, payload)
+        setReviews((prev) => prev.map((r) => (r.id === editingId ? { ...r, ...payload } : r)))
+        setMessage({ type: 'success', text: 'Review updated successfully!' })
+      } else {
+        const created = await reviewsService.addReview(payload)
+        setReviews((prev) => [created, ...prev])
+        setMessage({ type: 'success', text: 'Review added successfully!' })
+      }
+      resetReviewForm()
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to save review.' })
+    } finally {
+      setSaving(false)
+      setTimeout(() => setMessage({ type: '', text: '' }), 3000)
+    }
+  }
+
+  const handleToggleReviewActive = async (review) => {
+    try {
+      const nextActive = review.isActive === false
+      await reviewsService.updateReview(review.id, { isActive: nextActive })
+      setReviews((prev) => prev.map((r) => (r.id === review.id ? { ...r, isActive: nextActive } : r)))
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to toggle visibility.' })
+      setTimeout(() => setMessage({ type: '', text: '' }), 3000)
+    }
+  }
+
   const getProductName = (productId) => {
     const product = products.find((p) => p.id === productId)
     return product?.name || 'Unknown Product'
@@ -168,9 +292,17 @@ export default function AdminReviewsPage() {
             <h2 className="text-3xl font-bold text-gray-900">Reviews Management</h2>
             <p className="text-gray-600 mt-1">Manage customer reviews across all products</p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MessageSquare className="w-5 h-5" />
-            <span className="font-semibold">{reviews.length} Total Reviews</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <MessageSquare className="w-5 h-5" />
+              <span className="font-semibold">{reviews.length} Total Reviews</span>
+            </div>
+            <button
+              onClick={handleOpenAddReview}
+              className="bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold py-2 px-6 rounded-lg hover:shadow-lg transition flex items-center gap-2 transform hover:scale-105"
+            >
+              <Plus className="w-5 h-5" /> Add Review
+            </button>
           </div>
         </div>
 
@@ -363,6 +495,20 @@ export default function AdminReviewsPage() {
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => handleToggleReviewActive(review)}
+                          className={`p-2 rounded-lg transition ${review.isActive === false ? 'text-gray-400 hover:bg-gray-100' : 'text-green-600 hover:bg-green-50'}`}
+                          title={review.isActive === false ? 'Hidden from homepage — click to show' : 'Visible on homepage — click to hide'}
+                        >
+                          {review.isActive === false ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                        <button
+                          onClick={() => handleOpenEditReview(review)}
+                          className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition"
+                          title="Edit review"
+                        >
+                          <Edit className="w-5 h-5" />
+                        </button>
                         {!review.adminReply ? (
                           <button
                             onClick={() => setReplyingTo(review.id)}
@@ -396,6 +542,157 @@ export default function AdminReviewsPage() {
           </div>
         )}
       </div>
+
+      {/* Add / Edit Review Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-8">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-900">{editingId ? 'Edit Review' : 'Add Review'}</h3>
+              <button onClick={resetReviewForm} className="p-2 hover:bg-gray-100 rounded-lg transition">
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitReviewForm} className="p-6 space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Reviewer Name</label>
+                  <input
+                    type="text" name="name" value={reviewForm.name} onChange={handleReviewFormChange}
+                    placeholder="e.g., Asad"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Handle <span className="text-gray-400 font-normal">(optional)</span></label>
+                  <input
+                    type="text" name="handle" value={reviewForm.handle} onChange={handleReviewFormChange}
+                    placeholder="e.g., @asad"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setReviewForm((prev) => ({ ...prev, rating: star }))}
+                    >
+                      <Star className={`w-7 h-7 ${star <= reviewForm.rating ? 'fill-[#FFD400] text-[#FFD400]' : 'fill-gray-200 text-gray-200'}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Review Text</label>
+                <textarea
+                  name="comment" value={reviewForm.comment} onChange={handleReviewFormChange}
+                  rows={4} placeholder="Paste the customer's review text here..."
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white resize-none"
+                />
+              </div>
+
+              {/* Screenshot upload */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Review Screenshot <span className="text-gray-400 font-normal">(optional)</span></label>
+                <div className="border border-dashed border-gray-300 rounded-xl p-4 bg-gray-50/50">
+                  {reviewForm.screenshotImage ? (
+                    <div className="relative">
+                      <img src={reviewForm.screenshotImage} alt="Screenshot preview" className="w-full h-40 object-cover rounded-lg" />
+                      <button
+                        type="button"
+                        onClick={() => setReviewForm((prev) => ({ ...prev, screenshotImage: '' }))}
+                        className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm text-red-500 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div onClick={() => screenshotInputRef.current?.click()} className="flex flex-col items-center justify-center py-6 cursor-pointer">
+                      <Upload className="w-7 h-7 text-gray-400 mb-2" />
+                      <p className="text-sm text-gray-500 font-medium">Click to upload a screenshot of the review</p>
+                    </div>
+                  )}
+                  <input ref={screenshotInputRef} type="file" accept="image/*" onChange={handleScreenshotUpload} className="hidden" />
+                  {uploadingScreenshot && <div className="flex items-center justify-center mt-3 text-sm text-gray-500"><Loader2 className="w-4 h-4 animate-spin mr-2" />Uploading...</div>}
+                </div>
+              </div>
+
+              {/* Product select + manual product image */}
+              <div className="border border-gray-200 rounded-xl p-5 bg-gray-50/50 space-y-4">
+                <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Product</h4>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-2">Select an existing product</label>
+                  <select
+                    name="productId" value={reviewForm.productId} onChange={handleReviewFormChange}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500 bg-white text-sm"
+                  >
+                    <option value="">-- None --</option>
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-2">
+                    Or upload a product image <span className="text-gray-400 font-normal">(overrides the selected product's image)</span>
+                  </label>
+                  <div className="border border-dashed border-gray-300 rounded-xl p-4 bg-white">
+                    {reviewForm.productImage ? (
+                      <div className="relative">
+                        <img src={reviewForm.productImage} alt="Product preview" className="w-full h-40 object-cover rounded-lg" />
+                        <button
+                          type="button"
+                          onClick={() => setReviewForm((prev) => ({ ...prev, productImage: '' }))}
+                          className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm text-red-500 transition"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div onClick={() => productImageInputRef.current?.click()} className="flex flex-col items-center justify-center py-6 cursor-pointer">
+                        <Upload className="w-7 h-7 text-gray-400 mb-2" />
+                        <p className="text-sm text-gray-500 font-medium">Click to upload a product image</p>
+                      </div>
+                    )}
+                    <input ref={productImageInputRef} type="file" accept="image/*" onChange={handleProductImageUpload} className="hidden" />
+                    {uploadingProductImage && <div className="flex items-center justify-center mt-3 text-sm text-gray-500"><Loader2 className="w-4 h-4 animate-spin mr-2" />Uploading...</div>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox" id="reviewIsActive" name="isActive" checked={reviewForm.isActive} onChange={handleReviewFormChange}
+                  className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 border-gray-300"
+                />
+                <label htmlFor="reviewIsActive" className="text-sm font-medium text-gray-700">Show on homepage</label>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={resetReviewForm} className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving || uploadingScreenshot || uploadingProductImage}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-[#F5F1EA]0 text-white font-semibold rounded-xl hover:shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {saving ? 'Saving...' : editingId ? 'Update Review' : 'Create Review'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   )
 }

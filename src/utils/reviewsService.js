@@ -1,4 +1,4 @@
-import { db } from './firebase';
+import { db, storage } from './firebase';
 import {
   collection,
   getDocs,
@@ -10,6 +10,7 @@ import {
   where,
   orderBy,
 } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export const reviewsService = {
   // Get all reviews
@@ -91,6 +92,33 @@ export const reviewsService = {
       };
     } catch (error) {
       console.error('Error adding review:', error);
+      throw error;
+    }
+  },
+
+  // Update an existing review (used for admin-authored review edits)
+  updateReview: async (reviewId, reviewData) => {
+    try {
+      const reviewRef = doc(db, 'reviews', reviewId)
+      await updateDoc(reviewRef, {
+        ...reviewData,
+        updatedAt: new Date().toISOString(),
+      })
+      return { id: reviewId, ...reviewData }
+    } catch (error) {
+      console.error('Error updating review:', error)
+      throw error
+    }
+  },
+
+  // Upload a review screenshot or a manual product image
+  uploadReviewImage: async (file) => {
+    try {
+      const storageRef = ref(storage, `reviews/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      console.error('Error uploading review image:', error);
       throw error;
     }
   },

@@ -262,41 +262,41 @@ export default function Footer({ theme = 'light' }) {
 
       <div className="border-t border-[#E5E5E5] bg-[#1F1F1F]">
         <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-10 gap-x-8 lg:gap-x-4">
             {/* Contact Info Column */}
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left sm:border-r sm:border-[#333333] sm:pr-6 lg:pr-4">
               <p className={headingClass}>
                 {footerConfig.city || 'Contact'}
               </p>
               <div className={linkListClass}>
                 {footerConfig.address && (
-                  <div className="flex justify-center sm:justify-start gap-3">
+                  <div className="flex justify-center sm:justify-start gap-3 min-w-0 w-full">
                     <FaMapMarkerAlt className={iconClass} />
-                    <span>{footerConfig.address}</span>
+                    <span className="break-words text-left">{footerConfig.address}</span>
                   </div>
                 )}
                 {footerConfig.city && !footerConfig.address && (
-                  <div className="flex justify-center sm:justify-start gap-3">
+                  <div className="flex justify-center sm:justify-start gap-3 min-w-0 w-full">
                     <FaMapMarkerAlt className={iconClass} />
-                    <span>{footerConfig.city}</span>
+                    <span className="break-words text-left">{footerConfig.city}</span>
                   </div>
                 )}
                 {footerConfig.phone && (
-                  <div className="flex justify-center sm:justify-start gap-3">
+                  <div className="flex justify-center sm:justify-start gap-3 min-w-0 w-full">
                     <FaWhatsapp className={iconClass} />
-                    <span>Phone: {footerConfig.phone}</span>
+                    <span className="break-words text-left">Phone: {footerConfig.phone}</span>
                   </div>
                 )}
                 {footerConfig.whatsapp && footerConfig.showWhatsAppInFooter !== false && (
-                  <div className="flex justify-center sm:justify-start gap-3">
+                  <div className="flex justify-center sm:justify-start gap-3 min-w-0 w-full">
                     <FaWhatsapp className={iconClass} />
-                    <span>WhatsApp: {footerConfig.whatsapp}</span>
+                    <span className="break-words text-left">WhatsApp: {footerConfig.whatsapp}</span>
                   </div>
                 )}
                 {footerConfig.email && (
-                  <div className="flex justify-center sm:justify-start gap-3">
+                  <div className="flex justify-center sm:justify-start gap-3 min-w-0 w-full">
                     <FaEnvelope className={iconClass} />
-                    <a href={`mailto:${footerConfig.email}`} className="hover:underline">
+                    <a href={`mailto:${footerConfig.email}`} className="hover:underline break-all text-left">
                       {footerConfig.email}
                     </a>
                   </div>
@@ -329,7 +329,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Dynamic Footer Link Sections */}
             {visibleSections.map((section) => (
-              <div key={section} className="text-center sm:text-left">
+              <div key={section} className="text-center sm:text-left sm:border-r sm:border-[#333333] sm:pr-6 lg:pr-4">
                 <p className={headingClass}>
                   {getSectionTitle(section)}
                 </p>
@@ -342,28 +342,28 @@ export default function Footer({ theme = 'light' }) {
             ))}
 
             {/* Newsletter Column - wider, shorter, self-start so it doesn't stretch to match taller columns */}
-            <div className="self-start text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-xl bg-[#5A2D0C] p-3 -mx-2 sm:mx-0">
-              <p className="text-sm font-semibold text-[#FFFFFF]">
+            <div className="self-start text-center sm:text-left sm:col-span-2 lg:col-span-2 rounded-2xl bg-gradient-to-br from-[#8a5a28] via-[#5A2D0C] to-[#33190a] p-5 sm:p-6 -mx-2 sm:mx-0">
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wider text-[#FFD400]">
                 Newsletter Sign Up
               </p>
-              <p className="mt-1 text-sm text-white/90">
+              <p className="mt-2 text-sm text-white/70 leading-relaxed">
                 Receive the latest updates about our products and promotions.
               </p>
 
-              <form onSubmit={handleNewsletterSubmit} className="mt-2 mx-auto sm:mx-0">
-                <div className="flex flex-col sm:flex-row gap-1.5">
+              <form onSubmit={handleNewsletterSubmit} className="mt-4 mx-auto sm:mx-0">
+                <div className="flex flex-col sm:flex-row gap-2.5">
                   <input
                     type="email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Email address"
                     required
-                    className="w-full flex-1 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
+                    className="w-full flex-1 rounded-lg border border-white/15 bg-black/20 px-4 py-2.5 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
                   />
                   <button
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className="fill-btn fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-3 py-1.5 text-sm font-semibold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="fill-btn fill-amber group relative shrink-0 whitespace-nowrap rounded-lg bg-[#FFD400] px-6 py-2.5 text-sm font-bold text-[#222222] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     <span className="fill-layer" aria-hidden="true" />
                     <span className="relative z-10 transition-colors group-hover:text-white">

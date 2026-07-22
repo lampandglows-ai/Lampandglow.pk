@@ -33,6 +33,8 @@ import AdminOnboardingPage from './pages/AdminOnboardingPage.jsx'
 import AdminWebsitePopupsPage from './pages/AdminWebsitePopupsPage.jsx'
 import AdminAnnouncementsPage from './pages/AdminAnnouncementsPage.jsx'
 import AdminHeroBannersPage from './pages/AdminHeroBannersPage.jsx'
+import AdminCollectionSlidesPage from './pages/AdminCollectionSlidesPage.jsx'
+import AdminInstagramGridPage from './pages/AdminInstagramGridPage.jsx'
 import AdminShippingPolicyPage from './pages/AdminShippingPolicyPage.jsx'
 import AdminPagesPage from './pages/AdminPagesPage.jsx'
 import AdminReelsPage from './pages/AdminReelsPage.jsx'
@@ -47,6 +49,7 @@ import AdminReviewsPage from './pages/AdminReviewsPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
+import RecentPurchasePopup from './components/RecentPurchasePopup.jsx'
 import AnnouncementBar from './components/AnnouncementBar.jsx'
 
 import HomeSection from './sections/HomeSection.jsx'
@@ -59,6 +62,8 @@ import useProducts from './hooks/useProducts.js'
 import useCategories from './hooks/useCategories.js'
 import ordersService from './utils/ordersService.js'
 import heroBannersService from './utils/heroBannersService.js'
+import collectionSlidesService from './utils/collectionSlidesService.js'
+import instagramGridService from './utils/instagramGridService.js'
 import wishlistService from './utils/wishlistService.js'
 import reviewsService from './utils/reviewsService.js'
 import { TESTIMONIALS } from './data/testimonials.js'
@@ -508,6 +513,8 @@ function AppContent() {
   }
 
   const [heroSlides, setHeroSlides] = useState([])
+  const [collectionSlides, setCollectionSlides] = useState([])
+  const [instagramImages, setInstagramImages] = useState([])
   const headerRef = useRef(null)
   const [headerHeight, setHeaderHeight] = useState(120)
 
@@ -587,6 +594,47 @@ function AppContent() {
     loadBanners()
   }, [])
 
+  useEffect(() => {
+    const loadCollectionSlides = async () => {
+      try {
+        const slides = await collectionSlidesService.getActiveSlides()
+        const mapped = slides.map((s) => ({
+          id: s.id,
+          image: s.image,
+          alt: s.alt || s.title,
+          eyebrow: s.eyebrow || '',
+          title: s.title || '',
+          description: s.description || '',
+          imageSide: s.imageSide || 'left',
+          buttonLabel: s.buttonLabel || '',
+          buttonAction: s.buttonAction || null,
+        }))
+        setCollectionSlides(mapped)
+      } catch (e) {
+        console.error('Error loading collection slides:', e)
+      }
+    }
+    loadCollectionSlides()
+  }, [])
+
+  useEffect(() => {
+    const loadInstagramImages = async () => {
+      try {
+        const items = await instagramGridService.getActiveItems()
+        const mapped = items.map((i) => ({
+          id: i.id,
+          image: i.image,
+          alt: i.alt || '',
+          url: i.url || '',
+        }))
+        setInstagramImages(mapped)
+      } catch (e) {
+        console.error('Error loading Instagram grid images:', e)
+      }
+    }
+    loadInstagramImages()
+  }, [])
+
   function handleHeroAction(action) {
     if (!action) return
     if (action.type === 'section') handleNavigate(action.value)
@@ -606,6 +654,7 @@ function AppContent() {
   }
 
   const isAdminRoute = location.pathname.startsWith('/admin')
+  const isHomeHero = location.pathname === '/' && activeSection === 'home'
 
   if (loading) return <ProgressLoader progress={loadingProgress} />
 
@@ -626,6 +675,7 @@ function AppContent() {
           ref={headerRef}
           activeSection={activeSection}
           cartItemsCount={cartItemsCount}
+          categories={dynamicCategories}
           handleNavigate={handleNavigate}
           mobileNavOpen={mobileNavOpen}
           navigateToWishlist={navigateToWishlist}
@@ -635,6 +685,7 @@ function AppContent() {
           setSearchQuery={setSearchQuery}
           theme={theme}
           toggleTheme={toggleTheme}
+          transparentOverlay={isHomeHero}
           wishlistItemsCount={wishlist.length}
         />
       )}
@@ -653,15 +704,14 @@ function AppContent() {
                     theme={theme}
                     heroSlides={heroSlides}
                     onHeroAction={handleHeroAction}
+                    headerHeight={headerHeight}
+                    collectionSlides={collectionSlides}
+                    onCollectionAction={handleHeroAction}
+                    instagramImages={instagramImages}
                     products={products}
-                    categories={dynamicCategories}
                     testimonials={TESTIMONIALS}
-                    onViewAllCategories={() => handleNavigate('categories')}
-                    onPickCategory={(categoryId) => {
-                      setSelectedCategory(categoryId)
-                      navigate(`/collections/${slugify(categoryId)}`)
-                    }}
                     onViewAllProducts={() => handleNavigate('products')}
+                    onAddToCart={handleAddToCart}
                     reviews={sortedReviews}
                   />
                 )}
@@ -833,6 +883,8 @@ function AppContent() {
           <Route path="/admin/website-popups" element={<ProtectedAdminRoute><AdminWebsitePopupsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/announcements" element={<ProtectedAdminRoute><AdminAnnouncementsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/hero-banners" element={<ProtectedAdminRoute><AdminHeroBannersPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/collection-slides" element={<ProtectedAdminRoute><AdminCollectionSlidesPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/instagram-grid" element={<ProtectedAdminRoute><AdminInstagramGridPage /></ProtectedAdminRoute>} />
           <Route path="/admin/shipping-policy" element={<ProtectedAdminRoute><AdminShippingPolicyPage /></ProtectedAdminRoute>} />
           <Route path="/admin/shipping-fees" element={<ProtectedAdminRoute><AdminShippingPage /></ProtectedAdminRoute>} />
           <Route path="/admin/pages" element={<ProtectedAdminRoute><AdminPagesPage /></ProtectedAdminRoute>} />
@@ -853,6 +905,7 @@ function AppContent() {
       </main>
 
       {!isAdminRoute && <WebsitePopup />}
+      {!isAdminRoute && <RecentPurchasePopup products={products} />}
       {!isAdminRoute && <Footer theme={theme} />}
     </div>
   )

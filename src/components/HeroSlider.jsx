@@ -60,9 +60,9 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
   }
 
   // Aspect ratios
-  // Desktop: 3780:1400 -> 37.037%
+  // Desktop: taller banner so the hero reads as a large, full-height section
   // Mobile: 4:4 (1:1 square) -> 100%
-  const paddingBottom = isMobile ? '100%' : '37.037%'
+  const paddingBottom = isMobile ? '100%' : '54%'
 
   return (
     <>
@@ -93,8 +93,8 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
         }
       `}</style>
 
-      <section className="hero-slider hero-gradient-bg px-2 xs:px-3 sm:px-5 lg:px-8 pt-2 sm:pt-3 lg:pt-4 pb-3 sm:pb-5 lg:pb-8">
-        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl ring-1 ring-[#FFD400]/25">
+      <section className="hero-slider hero-gradient-bg pb-3 sm:pb-5 lg:pb-8">
+        <div className="relative overflow-hidden shadow-2xl">
           <Slider key={isMobile ? 'mobile' : 'desktop'} {...settings}>
             {visibleSlides.map((slide) => (
               <div key={slide.id}>
@@ -127,34 +127,53 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.30), transparent)',
+                      background: 'rgba(0,0,0,0.18)',
                       pointerEvents: 'none',
                     }}
                   />
 
-                  {/* CTA button */}
-                  {slide.primaryLabel && slide.primaryAction && (
+                  {/* Centered text overlay */}
+                  {(slide.badge || slide.title || slide.subtitle || (slide.primaryLabel && slide.primaryAction)) && (
                     <div
                       style={{
                         position: 'absolute',
-                        bottom: 'clamp(10px, 3%, 28px)',
-                        left: 'clamp(10px, 3%, 28px)',
+                        inset: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        padding: '0 16px',
                       }}
                     >
-                      <button
-                        onClick={() => onPrimaryAction(slide.primaryAction)}
-                        className={[
-                          'inline-flex items-center justify-center rounded-full font-semibold btn-primary',
-                          'px-3 py-1.5 text-xs',
-                          'sm:px-5 sm:py-2 sm:text-sm',
-                          'lg:px-6 lg:py-2.5',
-                          'hover:shadow-md hover:-translate-y-0.5',
-                          'active:translate-y-0 active:scale-[0.98]',
-                          'motion-reduce:transform-none motion-reduce:transition-none',
-                        ].join(' ')}
-                      >
-                        {slide.primaryLabel}
-                      </button>
+                      {slide.badge && (
+                        <span className="text-white/90 text-[10px] sm:text-xs md:text-sm tracking-[0.3em] uppercase mb-2 sm:mb-3">
+                          {slide.badge}
+                        </span>
+                      )}
+                      {slide.title && (
+                        <h2 className="font-serif text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-2 sm:mb-4">
+                          {slide.title}
+                        </h2>
+                      )}
+                      {slide.subtitle && (
+                        <p className="text-[#FFD400] text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
+                          {slide.subtitle}
+                        </p>
+                      )}
+                      {slide.primaryLabel && slide.primaryAction && (
+                        <button
+                          onClick={() => onPrimaryAction(slide.primaryAction)}
+                          className={[
+                            'inline-flex items-center justify-center border border-white text-white font-medium tracking-wide',
+                            'px-6 py-2.5 text-xs sm:px-8 sm:py-3 sm:text-sm',
+                            'transition-colors duration-200 hover:bg-white hover:text-stone-900',
+                            'motion-reduce:transition-none',
+                          ].join(' ')}
+                        >
+                          {slide.primaryLabel}
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

@@ -29,6 +29,8 @@ import {
   Building2,
   Info,
   MessageSquare,
+  GalleryHorizontal,
+  Instagram,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -118,6 +120,16 @@ export default function AdminLayout({ children }) {
       label: 'Hero Banners',
       icon: Tv,
       path: '/admin/hero-banners',
+    },
+    {
+      label: 'Collection Slider',
+      icon: GalleryHorizontal,
+      path: '/admin/collection-slides',
+    },
+    {
+      label: 'Instagram Grid',
+      icon: Instagram,
+      path: '/admin/instagram-grid',
     },
     {
       label: 'Shipping Fees',
