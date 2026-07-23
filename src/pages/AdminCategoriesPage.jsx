@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2, FolderOpen } from 'lucide-react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 import categoriesService from '../utils/categoriesService.js'
 import { storage } from '../utils/firebase.js'
 
@@ -355,13 +356,11 @@ export default function AdminCategoriesPage() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Description
                   </label>
-                  <textarea
-                    name="description"
+                  <RichTextEditor
                     value={formData.description}
-                    onChange={handleInputChange}
+                    onChange={(html) => setFormData((prev) => ({ ...prev, description: html }))}
                     placeholder="Enter category description..."
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                    minHeight={160}
                   />
                 </div>
 

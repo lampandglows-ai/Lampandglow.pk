@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, ImagePlus, Loader2, Tag, Sparkles, Percent } from 'lucide-react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import AdminLayout from '../components/AdminLayout'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 import productsService from '../utils/productsService.js'
 import categoriesService from '../utils/categoriesService.js'
 import { storage } from '../utils/firebase.js'
@@ -817,13 +818,11 @@ export default function AdminProductsPage() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Description
                   </label>
-                  <textarea
-                    name="description"
+                  <RichTextEditor
                     value={formData.description}
-                    onChange={handleInputChange}
+                    onChange={(html) => setFormData((prev) => ({ ...prev, description: html }))}
                     placeholder="Enter product description..."
-                    rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                    minHeight={200}
                   />
                 </div>
 
@@ -832,13 +831,11 @@ export default function AdminProductsPage() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Short Description (optional)
                   </label>
-                  <textarea
-                    name="shortDescription"
+                  <RichTextEditor
                     value={formData.shortDescription}
-                    onChange={handleInputChange}
+                    onChange={(html) => setFormData((prev) => ({ ...prev, shortDescription: html }))}
                     placeholder="Enter a brief product summary (shown below reviews)..."
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                    minHeight={140}
                   />
                   <p className="text-xs text-gray-500 mt-1">This will appear at the top of the reviews section</p>
                 </div>
@@ -1479,12 +1476,10 @@ export default function AdminProductsPage() {
                     <h4 className="text-sm font-bold text-gray-800">Free Shipping Accordion Content</h4>
                     <p className="text-xs text-gray-500 mt-0.5">Content shown in the Free Shipping accordion on product detail page</p>
                   </div>
-                  <textarea
-                    name="freeShippingContent"
+                  <RichTextEditor
                     value={formData.freeShippingContent}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                    onChange={(html) => setFormData((prev) => ({ ...prev, freeShippingContent: html }))}
+                    minHeight={120}
                   />
                 </div>
 
@@ -1493,12 +1488,10 @@ export default function AdminProductsPage() {
                     <h4 className="text-sm font-bold text-gray-800">Free Returns Accordion Content</h4>
                     <p className="text-xs text-gray-500 mt-0.5">Content shown in the Free Returns accordion on product detail page</p>
                   </div>
-                  <textarea
-                    name="freeReturnsContent"
+                  <RichTextEditor
                     value={formData.freeReturnsContent}
-                    onChange={handleInputChange}
-                    rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                    onChange={(html) => setFormData((prev) => ({ ...prev, freeReturnsContent: html }))}
+                    minHeight={160}
                   />
                 </div>
 
@@ -1507,12 +1500,10 @@ export default function AdminProductsPage() {
                     <h4 className="text-sm font-bold text-gray-800">Our Promise Accordion Content</h4>
                     <p className="text-xs text-gray-500 mt-0.5">Content shown in the Our Promise accordion on product detail page</p>
                   </div>
-                  <textarea
-                    name="ourPromiseContent"
+                  <RichTextEditor
                     value={formData.ourPromiseContent}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                    onChange={(html) => setFormData((prev) => ({ ...prev, ourPromiseContent: html }))}
+                    minHeight={120}
                   />
                 </div>
 
@@ -1521,12 +1512,10 @@ export default function AdminProductsPage() {
                     <h4 className="text-sm font-bold text-gray-800">Shipping & Return Tab Content</h4>
                     <p className="text-xs text-gray-500 mt-0.5">Content shown in the Shipping & Return tab on product detail page</p>
                   </div>
-                  <textarea
-                    name="shippingReturnContent"
+                  <RichTextEditor
                     value={formData.shippingReturnContent}
-                    onChange={handleInputChange}
-                    rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y text-sm"
+                    onChange={(html) => setFormData((prev) => ({ ...prev, shippingReturnContent: html }))}
+                    minHeight={220}
                   />
                 </div>
 

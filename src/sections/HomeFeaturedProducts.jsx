@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useMemo, useRef } from 'react'
 import Slider from 'react-slick'
-import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ShoppingCart, Heart } from 'lucide-react'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { getDiscountInfo } from '../utils/discountHelpers.js'
@@ -25,7 +25,7 @@ function shuffleArray(array) {
   return shuffled
 }
 
-export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart }) {
+export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart, onToggleWishlist, isInWishlist }) {
   const sliderRef = useRef(null)
 
   // Randomly shuffle and pick a wider pool so the auto-scroll loop has variety
@@ -124,6 +124,8 @@ export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart 
               {randomProducts.map((product) => {
               const { hasDiscount, originalPrice, discountedPrice, discountPercent } = getDiscountInfo(product)
 
+              const inWishlist = isInWishlist ? isInWishlist(product.id) : false
+
               return (
                 <div key={product.id}>
                   <Link
@@ -159,13 +161,31 @@ export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart 
                     <div className="px-4 pt-4 pb-3">
                       <h3 className="text-sm font-semibold text-stone-900 leading-snug">{product.name}</h3>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                        {hasDiscount ? (
-                          <span className="text-stone-600 line-through">
-                            Rs.{formatPricePKR(originalPrice)}
-                          </span>
-                        ) : null}
-                        <span className="font-semibold text-orange-700">Rs.{formatPricePKR(discountedPrice)}</span>
+                      <div className="mt-2 flex items-center justify-between gap-2 text-sm">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          {hasDiscount ? (
+                            <span className="text-stone-600 line-through">
+                              Rs.{formatPricePKR(originalPrice)}
+                            </span>
+                          ) : null}
+                          <span className="font-semibold text-orange-700">Rs.{formatPricePKR(discountedPrice)}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onToggleWishlist && onToggleWishlist(product)
+                          }}
+                          aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                          className="flex-shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110"
+                        >
+                          <Heart
+                            className={`w-4 h-4 transition-colors ${inWishlist ? 'text-red-500' : 'text-stone-400 hover:text-red-400'}`}
+                            fill={inWishlist ? 'currentColor' : 'none'}
+                          />
+                        </button>
                       </div>
                     </div>
                   </Link>

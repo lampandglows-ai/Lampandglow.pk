@@ -61,7 +61,10 @@ export default function CollectionDetailPage({ handleToggleWishlist, isInWishlis
             <div className="mt-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-stone-900">{category.title}</h1>
               {category.description && (
-                <p className="mt-2 text-sm text-stone-500 max-w-2xl">{category.description}</p>
+                <div
+                  className="page-content mt-2 text-sm text-stone-500 max-w-2xl"
+                  dangerouslySetInnerHTML={{ __html: category.description }}
+                />
               )}
               <p className="mt-1 text-sm text-stone-400">
                 {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}

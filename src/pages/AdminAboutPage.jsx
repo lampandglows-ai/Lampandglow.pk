@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Save, AlertCircle, CheckCircle, Loader2, FileText } from 'lucide-react'
-import ReactQuill from 'react-quill-new'
-import 'react-quill-new/dist/quill.snow.css'
 import AdminLayout from '../components/AdminLayout'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 import aboutService from '../utils/aboutService'
 
 export default function AdminAboutPage() {
@@ -133,13 +132,11 @@ export default function AdminAboutPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Hero Description</label>
-              <textarea
-                name="heroDescription"
+              <RichTextEditor
                 value={formData.heroDescription}
-                onChange={handleChange}
-                rows={3}
+                onChange={(html) => handleEditorChange('heroDescription', html)}
                 placeholder="Description text for the hero section..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                minHeight={120}
               />
             </div>
           </div>
@@ -160,22 +157,12 @@ export default function AdminAboutPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Story Content</label>
-              <div className="border border-gray-300 rounded-xl overflow-hidden">
-                <ReactQuill
-                  theme="snow"
-                  value={formData.storyContent}
-                  onChange={(value) => handleEditorChange('storyContent', value)}
-                  className="h-64"
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline', 'strike'],
-                      [{ list: 'ordered' }, { list: 'bullet' }],
-                      ['link', 'clean'],
-                    ],
-                  }}
-                />
-              </div>
+              <RichTextEditor
+                value={formData.storyContent}
+                onChange={(html) => handleEditorChange('storyContent', html)}
+                placeholder="Tell your brand's story..."
+                minHeight={260}
+              />
             </div>
           </div>
 
@@ -195,22 +182,12 @@ export default function AdminAboutPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Mission Content</label>
-              <div className="border border-gray-300 rounded-xl overflow-hidden">
-                <ReactQuill
-                  theme="snow"
-                  value={formData.missionContent}
-                  onChange={(value) => handleEditorChange('missionContent', value)}
-                  className="h-48"
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline', 'strike'],
-                      [{ list: 'ordered' }, { list: 'bullet' }],
-                      ['link', 'clean'],
-                    ],
-                  }}
-                />
-              </div>
+              <RichTextEditor
+                value={formData.missionContent}
+                onChange={(html) => handleEditorChange('missionContent', html)}
+                placeholder="Describe your mission..."
+                minHeight={200}
+              />
             </div>
           </div>
 
@@ -288,13 +265,11 @@ export default function AdminAboutPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">CTA Description</label>
-              <textarea
-                name="ctaDescription"
+              <RichTextEditor
                 value={formData.ctaDescription}
-                onChange={handleChange}
-                rows={2}
+                onChange={(html) => handleEditorChange('ctaDescription', html)}
                 placeholder="Description for the call to action section..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 resize-y"
+                minHeight={100}
               />
             </div>
           </div>

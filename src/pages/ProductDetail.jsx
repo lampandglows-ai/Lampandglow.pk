@@ -804,9 +804,10 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
 
             {/* Short Description */}
             {product.shortDescription && (
-              <p className="mt-4 text-[13px] text-stone-600 leading-relaxed">
-                {product.shortDescription}
-              </p>
+              <div
+                className="page-content mt-4 text-[13px] text-stone-600 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: product.shortDescription }}
+              />
             )}
 
             {/* Price */}
@@ -1159,9 +1160,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 title="Free Shipping"
               >
                 {product.freeShippingContent ? (
-                  product.freeShippingContent.split('\n').map((line, i) => (
-                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
-                  ))
+                  <div className="page-content" dangerouslySetInnerHTML={{ __html: product.freeShippingContent }} />
                 ) : (
                   <>
                     <p>Free standard shipping on orders over 10,000 PKR</p>
@@ -1180,9 +1179,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 title="Free Returns"
               >
                 {product.freeReturnsContent ? (
-                  product.freeReturnsContent.split('\n').map((line, i) => (
-                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
-                  ))
+                  <div className="page-content" dangerouslySetInnerHTML={{ __html: product.freeReturnsContent }} />
                 ) : (
                   <>
                     <p>At Lamp&Glow, we stand by the quality of our handcrafted wooden lamps and want you to be completely satisfied with your purchase.</p>
@@ -1208,9 +1205,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
                 title="Our Promise"
               >
                 {product.ourPromiseContent ? (
-                  product.ourPromiseContent.split('\n').map((line, i) => (
-                    <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
-                  ))
+                  <div className="page-content" dangerouslySetInnerHTML={{ __html: product.ourPromiseContent }} />
                 ) : (
                   <>
                     <p>Every product is handcrafted with premium-quality wood and materials. We ensure:</p>
@@ -1425,15 +1420,13 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">{product.name}</h3>
-                  <p className="mt-1 text-stone-500 italic">
-                    {product.description?.split('\n')[1] }
-                  </p>
                 </div>
 
-                <p>
-                  {product.description ||
-                    `The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}
-                </p>
+                {product.description ? (
+                  <div className="page-content" dangerouslySetInnerHTML={{ __html: product.description }} />
+                ) : (
+                  <p>{`The ${product.name} is an elegant tribute to creativity and craftsmanship, offering a versatile design with endless combinations. Handcrafted from solid wood, this lightweight yet durable piece is perfect for adding a stylish and functional element to your living space.`}</p>
+                )}
 
                 {Array.isArray(product.whyLoveItems) && product.whyLoveItems.length > 0 && product.whyLoveItems.some(item => item.trim()) && (
                   <div>
@@ -1526,13 +1519,7 @@ export default function ProductDetail({ products, onAddToCart, reviews, handleTo
             ) : activeTab === 'shipping' ? (
               <div className="max-w-3xl text-sm text-stone-700 leading-7 space-y-6">
                 {product.shippingReturnContent ? (
-                  product.shippingReturnContent.split('\n').map((line, i) => {
-                    if (!line.trim()) return <div key={i} className="h-2" />
-                    if (line.startsWith('Returns Policy:') || line.startsWith('Shipping:')) {
-                      return <h3 key={i} className="text-base font-bold text-stone-900">{line.replace(/:$/, '')}</h3>
-                    }
-                    return <p key={i} className="mt-2">{line}</p>
-                  })
+                  <div className="page-content" dangerouslySetInnerHTML={{ __html: product.shippingReturnContent }} />
                 ) : (
                   <>
                     <div>

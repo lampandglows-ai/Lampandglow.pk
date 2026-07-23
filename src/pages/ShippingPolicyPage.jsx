@@ -46,9 +46,10 @@ export default function ShippingPolicyPage() {
               <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
             </div>
           ) : content ? (
-            <div className="prose max-w-none whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-stone-700">
-              {content}
-            </div>
+            <div
+              className="page-content text-sm sm:text-base leading-relaxed text-stone-700"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
           ) : (
             <p className="text-sm text-stone-500">
               Shipping policy information will be available soon.

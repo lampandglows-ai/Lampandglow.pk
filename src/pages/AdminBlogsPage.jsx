@@ -6,33 +6,12 @@ import {
 } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
 import blogsService from '../utils/blogsService.js'
-import ReactQuill from 'react-quill-new'
-import 'react-quill-new/dist/quill.snow.css'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-600' },
   { value: 'published', label: 'Published', color: 'bg-green-100 text-green-700' },
   { value: 'scheduled', label: 'Scheduled', color: 'bg-blue-100 text-blue-700' },
-]
-
-const QUILL_MODULES = {
-  toolbar: [
-    [{ header: [1, 2, 3, false] }],
-    ['bold', 'italic', 'underline'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    [{ align: [] }],
-    ['link', 'image', 'video'],
-    ['blockquote'],
-    [{ color: [] }],
-    ['clean'],
-  ],
-}
-
-const QUILL_FORMATS = [
-  'header', 'bold', 'italic', 'underline',
-  'list', 'bullet', 'align',
-  'link', 'image', 'video',
-  'blockquote', 'color',
 ]
 
 function generateSlug(title) {
@@ -633,21 +612,12 @@ export default function AdminBlogsPage() {
                   {/* Rich Text Editor */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Blog Content</label>
-                    <div className="border border-gray-200 rounded-xl overflow-hidden">
-                      <ReactQuill
-                        theme="snow"
-                        value={formData.content}
-                        onChange={handleContentChange}
-                        modules={QUILL_MODULES}
-                        formats={QUILL_FORMATS}
-                        placeholder="Write your blog content here..."
-                        className="bg-white"
-                        style={{ minHeight: '300px' }}
-                      />
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Supports headings, bold, italic, lists, links, images, videos, quotes, colors, and alignment.
-                    </p>
+                    <RichTextEditor
+                      value={formData.content}
+                      onChange={handleContentChange}
+                      placeholder="Write your blog content here..."
+                      minHeight={320}
+                    />
                   </div>
                 </div>
               )}

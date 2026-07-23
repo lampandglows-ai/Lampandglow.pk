@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, Search, X, AlertCircle, CheckCircle, Eye, EyeOff, Loader2, Save } from 'lucide-react'
 import AdminLayout from '../components/AdminLayout'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 import pagesService from '../utils/pagesService'
 
 export default function AdminPagesPage() {
@@ -11,7 +12,6 @@ export default function AdminPagesPage() {
   const [editingId, setEditingId] = useState(null)
   const [message, setMessage] = useState({ type: '', text: '' })
   const [saving, setSaving] = useState(false)
-  const editorRef = useRef(null)
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -37,12 +37,6 @@ export default function AdminPagesPage() {
     loadPages()
   }, [])
 
-  // Create a stable innerHTML object so React only writes to the editor
-  // when the form first opens or when switching edit modes — never while typing.
-  const editorInitialHtml = useMemo(
-    () => ({ __html: formData.content }),
-    [showForm, editingId],
-  )
 
   // Generate slug from title
   const generateSlug = (title) => {
@@ -168,10 +162,6 @@ export default function AdminPagesPage() {
     } finally {
       setSaving(false)
     }
-  }
-
-  const applyFormatting = (command, value = null) => {
-    document.execCommand(command, false, value)
   }
 
   const filteredPages = pages.filter(
@@ -313,115 +303,12 @@ export default function AdminPagesPage() {
                     Page Content * (Rich Text Editor)
                   </label>
 
-                  {/* Formatting Toolbar */}
-                  <div className="mb-4 flex flex-wrap gap-2 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('bold')}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded font-bold text-sm bg-white dark:bg-gray-800"
-                        title="Bold"
-                      >
-                        B
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('italic')}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded italic text-sm bg-white dark:bg-gray-800"
-                        title="Italic"
-                      >
-                        I
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('underline')}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded underline text-sm bg-white dark:bg-gray-800"
-                        title="Underline"
-                      >
-                        U
-                      </button>
-                    </div>
-
-                    <div className="border-l border-gray-400 dark:border-gray-500" />
-
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('formatBlock', '<h1>')}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Heading 1"
-                      >
-                        H1
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('formatBlock', '<h2>')}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Heading 2"
-                      >
-                        H2
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('formatBlock', '<h3>')}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Heading 3"
-                      >
-                        H3
-                      </button>
-                    </div>
-
-                    <div className="border-l border-gray-400 dark:border-gray-500" />
-
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('insertUnorderedList')}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Bullet List"
-                      >
-                        • List
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('insertOrderedList')}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Numbered List"
-                      >
-                        1. List
-                      </button>
-                    </div>
-
-                    <div className="border-l border-gray-400 dark:border-gray-500" />
-
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => applyFormatting('createLink', prompt('Enter URL:'))}
-                        className="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-sm bg-white dark:bg-gray-800"
-                        title="Link"
-                      >
-                        🔗 Link
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Content Editor */}
-                  <div
-                    ref={editorRef}
-                    contentEditable
-                    onInput={(e) => {
-                      const html = e.currentTarget.innerHTML
-                      setFormData((prev) => ({
-                        ...prev,
-                        content: html,
-                      }))
-                    }}
-                    dangerouslySetInnerHTML={editorInitialHtml}
-                    className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-y-auto"
-                    suppressContentEditableWarning
+                  <RichTextEditor
+                    value={formData.content}
+                    onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+                    placeholder="Write your page content here..."
+                    minHeight={380}
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Rich text editor - format your content above</p>
                 </div>
               ) : (
                 /* List Section */

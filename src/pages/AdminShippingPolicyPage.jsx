@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Save, Loader2, Truck } from 'lucide-react'
 import shippingPolicyService from '../utils/shippingPolicyService.js'
+import RichTextEditor from '../components/RichTextEditor.jsx'
 
 export default function AdminShippingPolicyPage() {
   const [content, setContent] = useState('')
@@ -61,14 +62,12 @@ export default function AdminShippingPolicyPage() {
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
         <label className="block text-sm font-semibold text-gray-700 mb-2">Policy Content</label>
-        <textarea
+        <RichTextEditor
           value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={20}
-          placeholder="Enter your shipping policy here... You can use line breaks for new paragraphs."
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white text-sm leading-relaxed resize-y"
+          onChange={setContent}
+          placeholder="Enter your shipping policy here..."
+          minHeight={400}
         />
-        <p className="mt-2 text-xs text-gray-400">Tip: Use blank lines between paragraphs for better readability.</p>
 
         <div className="mt-6 flex items-center justify-end gap-3">
           <button

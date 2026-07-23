@@ -11,6 +11,7 @@ import ReelsPage from './pages/ReelsPage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import ContactUsPage from './pages/ContactUsPage.jsx'
+import CustomOrderPage from './pages/CustomOrderPage.jsx'
 import CollectionsPage from './pages/CollectionsPage.jsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
@@ -46,6 +47,7 @@ import AdminNewsletterPage from './pages/AdminNewsletterPage.jsx'
 import AdminBankDetailsPage from './pages/AdminBankDetailsPage.jsx'
 import AdminAboutPage from './pages/AdminAboutPage.jsx'
 import AdminReviewsPage from './pages/AdminReviewsPage.jsx'
+import AdminCustomOrdersPage from './pages/AdminCustomOrdersPage.jsx'
 import ShippingPolicyPage from './pages/ShippingPolicyPage.jsx'
 import PublicPage from './pages/PublicPage.jsx'
 import WebsitePopup from './components/WebsitePopup.jsx'
@@ -712,6 +714,8 @@ function AppContent() {
                     testimonials={TESTIMONIALS}
                     onViewAllProducts={() => handleNavigate('products')}
                     onAddToCart={handleAddToCart}
+                    onToggleWishlist={handleToggleWishlist}
+                    isInWishlist={isInWishlist}
                     reviews={sortedReviews}
                   />
                 )}
@@ -797,6 +801,7 @@ function AppContent() {
 
           <Route path="/contact" element={<ContactPage theme={theme} />} />
           <Route path="/contact-us" element={<ContactUsPage theme={theme} />} />
+          <Route path="/customorder" element={<CustomOrderPage />} />
           <Route path="/collections" element={<CollectionsPage theme={theme} />} />
           <Route
             path="/collections/:slug"
@@ -897,6 +902,7 @@ function AppContent() {
           <Route path="/admin/about" element={<ProtectedAdminRoute><AdminAboutPage /></ProtectedAdminRoute>} />
           <Route path="/admin/bank-details" element={<ProtectedAdminRoute><AdminBankDetailsPage /></ProtectedAdminRoute>} />
           <Route path="/admin/reviews" element={<ProtectedAdminRoute><AdminReviewsPage /></ProtectedAdminRoute>} />
+          <Route path="/admin/custom-orders" element={<ProtectedAdminRoute><AdminCustomOrdersPage /></ProtectedAdminRoute>} />
           <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
 
           {/* Public Pages Route */}

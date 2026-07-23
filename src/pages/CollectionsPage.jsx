@@ -7,6 +7,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+function stripHtml(html) {
+  if (!html) return ''
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 export default function CollectionsPage({ theme = 'light' }) {
   const navigate = useNavigate()
   const { categories, loading } = useCategories()
@@ -59,7 +64,7 @@ export default function CollectionsPage({ theme = 'light' }) {
                       {category.title}
                     </h2>
                     <p className="mt-1 text-[10px] sm:text-[11px] text-white/85 max-w-[26ch] leading-snug max-h-0 overflow-hidden opacity-0 group-hover:max-h-10 group-hover:opacity-100 transition-all duration-300 ease-out">
-                      {category.description}
+                      {stripHtml(category.description)}
                     </p>
                     <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#FFD400] group-hover:gap-2.5 transition-all duration-200">
                       Explore

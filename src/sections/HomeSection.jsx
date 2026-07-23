@@ -18,6 +18,8 @@ export default function HomeSection({
   theme,
   onViewAllProducts,
   onAddToCart,
+  onToggleWishlist,
+  isInWishlist,
   reviews,
 }) {
   return (
@@ -29,7 +31,14 @@ export default function HomeSection({
 
       <HomeHandpickCollection slides={collectionSlides} onAction={onCollectionAction} />
 
-      <HomeFeaturedProducts products={products} onViewAll={onViewAllProducts} onAddToCart={onAddToCart} theme={theme} />
+      <HomeFeaturedProducts
+        products={products}
+        onViewAll={onViewAllProducts}
+        onAddToCart={onAddToCart}
+        onToggleWishlist={onToggleWishlist}
+        isInWishlist={isInWishlist}
+        theme={theme}
+      />
 
       <HomeBlogs />
 

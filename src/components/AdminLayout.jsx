@@ -31,6 +31,7 @@ import {
   MessageSquare,
   GalleryHorizontal,
   Instagram,
+  Wand2,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
@@ -165,6 +166,11 @@ export default function AdminLayout({ children }) {
       label: 'Reviews',
       icon: MessageSquare,
       path: '/admin/reviews',
+    },
+    {
+      label: 'Custom Orders',
+      icon: Wand2,
+      path: '/admin/custom-orders',
     },
   ]
 
