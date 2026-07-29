@@ -6,7 +6,7 @@ export default function HomeHandpickCollection({ slides, onAction }) {
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`flex flex-col ${
+          className={`flex flex-col-reverse ${
             slide.imageSide === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
           } ${index > 0 ? 'border-t border-stone-100' : ''}`}
         >

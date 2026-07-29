@@ -91,6 +91,38 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
             bottom: 6px;
           }
         }
+
+        /* Hero text entrance animation — replays every time a slide becomes active */
+        .hero-slider .hero-anim {
+          opacity: 0;
+          animation: none;
+        }
+        .hero-slider .slick-active .hero-anim {
+          animation: heroTextUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .hero-slider .slick-active .hero-badge { animation-delay: 0.1s; }
+        .hero-slider .slick-active .hero-title { animation-delay: 0.25s; }
+        .hero-slider .slick-active .hero-subtitle { animation-delay: 0.45s; }
+        .hero-slider .slick-active .hero-cta { animation-delay: 0.6s; }
+
+        @keyframes heroTextUp {
+          from {
+            opacity: 0;
+            transform: translateY(28px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-slider .hero-anim {
+            opacity: 1;
+            animation: none !important;
+            transform: none !important;
+          }
+        }
       `}</style>
 
       <section className="hero-slider hero-gradient-bg pb-3 sm:pb-5 lg:pb-8">
@@ -147,17 +179,17 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                       }}
                     >
                       {slide.badge && (
-                        <span className="text-white/90 text-[10px] sm:text-xs md:text-sm tracking-[0.3em] uppercase mb-2 sm:mb-3">
+                        <span className="hero-anim hero-badge text-white/90 text-[10px] sm:text-xs md:text-sm tracking-[0.3em] uppercase mb-2 sm:mb-3">
                           {slide.badge}
                         </span>
                       )}
                       {slide.title && (
-                        <h2 className="font-serif text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-2 sm:mb-4">
+                        <h2 className="hero-anim hero-title font-serif text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-2 sm:mb-4">
                           {slide.title}
                         </h2>
                       )}
                       {slide.subtitle && (
-                        <p className="text-[#FFD400] text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
+                        <p className="hero-anim hero-subtitle text-[#FFD400] text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
                           {slide.subtitle}
                         </p>
                       )}
@@ -165,6 +197,7 @@ export default function HeroSlider({ slides, onPrimaryAction }) {
                         <button
                           onClick={() => onPrimaryAction(slide.primaryAction)}
                           className={[
+                            'hero-anim hero-cta',
                             'inline-flex items-center justify-center border border-white text-white font-medium tracking-wide',
                             'px-6 py-2.5 text-xs sm:px-8 sm:py-3 sm:text-sm',
                             'transition-colors duration-200 hover:bg-white hover:text-stone-900',
