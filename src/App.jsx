@@ -12,6 +12,8 @@ import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import ContactUsPage from './pages/ContactUsPage.jsx'
 import CustomOrderPage from './pages/CustomOrderPage.jsx'
+import NewArrivalsPage from './pages/NewArrivalsPage.jsx'
+import SaleProductsPage from './pages/SaleProductsPage.jsx'
 import CollectionsPage from './pages/CollectionsPage.jsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
@@ -802,6 +804,28 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage theme={theme} />} />
           <Route path="/contact-us" element={<ContactUsPage theme={theme} />} />
           <Route path="/customorder" element={<CustomOrderPage />} />
+          <Route
+            path="/newarivals"
+            element={(
+              <NewArrivalsPage
+                products={products}
+                handleAddToCart={handleAddToCart}
+                handleToggleWishlist={handleToggleWishlist}
+                isInWishlist={isInWishlist}
+              />
+            )}
+          />
+          <Route
+            path="/salesproducts"
+            element={(
+              <SaleProductsPage
+                products={products}
+                handleAddToCart={handleAddToCart}
+                handleToggleWishlist={handleToggleWishlist}
+                isInWishlist={isInWishlist}
+              />
+            )}
+          />
           <Route path="/collections" element={<CollectionsPage theme={theme} />} />
           <Route
             path="/collections/:slug"
