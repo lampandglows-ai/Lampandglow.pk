@@ -41,7 +41,7 @@ export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart,
     touchMove: true,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 640, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } },
     ],
   }
 

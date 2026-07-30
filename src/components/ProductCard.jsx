@@ -59,7 +59,7 @@ export default function ProductCard({ product, onAddToCart, onToggleWishlist, is
       <div className="px-4 pt-4 pb-3">
         <h3 className="text-sm font-semibold text-stone-900 leading-snug line-clamp-2 min-h-10">{product.name}</h3>
 
-        <div className="mt-2 flex items-center justify-between gap-2 text-sm">
+        <div className="mt-2 flex min-h-7 items-center justify-between gap-2 text-sm">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {hasDiscount ? (
               <span className="text-stone-600 line-through">
