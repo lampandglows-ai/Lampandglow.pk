@@ -21,8 +21,17 @@ export default function ProductCard({ product, onAddToCart, onToggleWishlist, is
       className="group block overflow-hidden rounded-3xl bg-white ring-1 ring-stone-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-[#FFD400]/30/70 motion-reduce:transform-none motion-reduce:transition-none"
     >
       <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+        {product.isNewArrival && (
+          <span className="absolute left-0 top-0 z-10 bg-[#5A2D0C] px-2 py-1 text-xs font-semibold text-white">
+            New Arrival
+          </span>
+        )}
         {hasDiscount ? (
-          <span className="absolute left-0 top-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white">
+          <span
+            className={`absolute left-0 z-10 bg-[#E53935] px-2 py-1 text-xs font-semibold text-white ${
+              product.isNewArrival ? 'top-7' : 'top-0'
+            }`}
+          >
             -{discountPercent}%
           </span>
         ) : null}
