@@ -33,7 +33,7 @@ export default function NewArrivalsPage({ products, handleAddToCart, handleToggl
             <p className="text-stone-500 text-sm">No new arrivals available right now.</p>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {newArrivals.map((product) => (
               <ProductCard
                 key={product.id}
