@@ -25,7 +25,7 @@ export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart,
     return shuffled.slice(0, 12)
   }, [products])
 
-  const canLoop = randomProducts.length > 4
+  const canLoop = randomProducts.length > 5
 
   const settings = {
     dots: false,
@@ -34,7 +34,7 @@ export default function HomeFeaturedProducts({ products, onViewAll, onAddToCart,
     autoplay: canLoop,
     autoplaySpeed: 2200,
     speed: 700,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: true,
     swipe: true,

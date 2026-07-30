@@ -9,7 +9,7 @@ export default function SaleProductsPage({ products, handleAddToCart, handleTogg
 
   return (
     <section className="w-full min-h-screen bg-[#fafafa]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="w-full px-4 sm:px-6 lg:px-0 py-12 sm:py-16">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -34,7 +34,7 @@ export default function SaleProductsPage({ products, handleAddToCart, handleTogg
             <p className="text-stone-500 text-sm">No products on sale right now.</p>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
             {saleProducts.map((product) => (
               <ProductCard
                 key={product.id}
