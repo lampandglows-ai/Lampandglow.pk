@@ -8,7 +8,7 @@ export default function NewArrivalsPage({ products, handleAddToCart, handleToggl
 
   return (
     <section className="w-full min-h-screen bg-[#fafafa]">
-      <div className="w-full px-4 sm:px-6 lg:px-0 py-12 sm:py-16">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <button
           type="button"
           onClick={() => navigate(-1)}
