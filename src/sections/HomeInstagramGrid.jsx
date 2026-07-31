@@ -1,7 +1,5 @@
-import Slider from 'react-slick'
+import { useEffect, useRef, useState } from 'react'
 import { Instagram } from 'lucide-react'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 
 function GridTile({ item, index }) {
   return (
@@ -27,28 +25,50 @@ function GridTile({ item, index }) {
   )
 }
 
+// Columns visible at once per breakpoint — matches the fixed 2-row layout below.
+function useColumnsPerView() {
+  const [cols, setCols] = useState(5)
+  useEffect(() => {
+    const calc = () => {
+      const w = window.innerWidth
+      if (w < 640) setCols(2)
+      else if (w < 1024) setCols(3)
+      else setCols(5)
+    }
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+  return cols
+}
+
 export default function HomeInstagramGrid({ images }) {
+  const containerRef = useRef(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const columnsPerView = useColumnsPerView()
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return undefined
+    const ro = new ResizeObserver((entries) => {
+      setContainerWidth(entries[0].contentRect.width)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   if (!images || images.length === 0) return null
 
-  const useSlider = images.length > 12
+  const useScroller = images.length > 10
 
-  const settings = {
-    dots: false,
-    arrows: false,
-    infinite: true,
-    autoplay: true,
-    autoplaySpeed: 2200,
-    speed: 700,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    pauseOnHover: true,
-    swipe: true,
-    touchMove: true,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 640, settings: { slidesToShow: 2 } },
-    ],
+  // Fixed 2 rows: pair images into columns of 2 (top/bottom).
+  const columns = []
+  for (let i = 0; i < images.length; i += 2) {
+    columns.push(images.slice(i, i + 2))
   }
+  const columnWidthStyle =
+    containerWidth > 0 ? `${containerWidth / columnsPerView}px` : `${100 / columnsPerView}%`
+  const scrollDuration = Math.max(18, columns.length * 3.5)
 
   return (
     <section className="bg-white py-14 sm:py-16">
@@ -56,34 +76,56 @@ export default function HomeInstagramGrid({ images }) {
         Instagram
       </h2>
 
-      {!useSlider ? (
+      {!useScroller ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
           {images.map((item, i) => (
             <GridTile key={item.id} item={item} index={i} />
           ))}
         </div>
       ) : (
-        <div className="instagram-grid-slider">
+        <div ref={containerRef} className="instagram-scroller overflow-hidden">
           <style>{`
-            .instagram-grid-slider .slick-list,
-            .instagram-grid-slider .slick-track {
-              display: flex !important;
+            .instagram-scroller-track {
+              animation: instagramScroll ${scrollDuration}s linear infinite;
             }
-            .instagram-grid-slider .slick-slide {
-              height: auto;
+            .instagram-scroller:hover .instagram-scroller-track {
+              animation-play-state: paused;
             }
-            .instagram-grid-slider .slick-slide > div {
-              height: 100%;
-              line-height: 0;
+            @keyframes instagramScroll {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
             }
           `}</style>
-          <Slider {...settings}>
-            {images.map((item, i) => (
-              <div key={item.id}>
-                <GridTile item={item} index={i} />
-              </div>
-            ))}
-          </Slider>
+          <div className="instagram-scroller-track flex w-max">
+            {/* First set */}
+            <div className="flex shrink-0">
+              {columns.map((col, ci) => (
+                <div
+                  key={`a-${ci}`}
+                  className="shrink-0 grid grid-rows-2"
+                  style={{ width: columnWidthStyle }}
+                >
+                  {col.map((item, i) => (
+                    <GridTile key={item.id} item={item} index={ci * 2 + i} />
+                  ))}
+                </div>
+              ))}
+            </div>
+            {/* Duplicate set — seamless loop */}
+            <div className="flex shrink-0" aria-hidden="true">
+              {columns.map((col, ci) => (
+                <div
+                  key={`b-${ci}`}
+                  className="shrink-0 grid grid-rows-2"
+                  style={{ width: columnWidthStyle }}
+                >
+                  {col.map((item, i) => (
+                    <GridTile key={`dup-${item.id}`} item={item} index={ci * 2 + i} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </section>
