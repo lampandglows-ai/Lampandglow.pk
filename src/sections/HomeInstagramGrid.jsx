@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { Instagram } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Instagram, ChevronLeft, ChevronRight } from 'lucide-react'
 
 function GridTile({ item, index }) {
   return (
@@ -25,50 +25,39 @@ function GridTile({ item, index }) {
   )
 }
 
-// Columns visible at once per breakpoint — matches the fixed 2-row layout below.
-function useColumnsPerView() {
-  const [cols, setCols] = useState(5)
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 1024px)').matches : true
+  )
   useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth
-      if (w < 640) setCols(2)
-      else if (w < 1024) setCols(3)
-      else setCols(5)
+    const mql = window.matchMedia('(min-width: 1024px)')
+    const onChange = (e) => setIsDesktop(e.matches)
+    if (mql.addEventListener) {
+      mql.addEventListener('change', onChange)
+      return () => mql.removeEventListener('change', onChange)
     }
-    calc()
-    window.addEventListener('resize', calc)
-    return () => window.removeEventListener('resize', calc)
+    mql.addListener(onChange)
+    return () => mql.removeListener(onChange)
   }, [])
-  return cols
+  return isDesktop
 }
 
 export default function HomeInstagramGrid({ images }) {
-  const containerRef = useRef(null)
-  const [containerWidth, setContainerWidth] = useState(0)
-  const columnsPerView = useColumnsPerView()
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return undefined
-    const ro = new ResizeObserver((entries) => {
-      setContainerWidth(entries[0].contentRect.width)
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
+  const isDesktop = useIsDesktop()
+  const [page, setPage] = useState(0)
 
   if (!images || images.length === 0) return null
 
-  const useScroller = images.length > 10
+  // Desktop: 5 columns x 2 rows = 10 per page. Mobile: 2 columns x 3 rows = 6 per page.
+  const itemsPerPage = isDesktop ? 10 : 6
+  const totalPages = Math.ceil(images.length / itemsPerPage)
+  const safePage = ((page % totalPages) + totalPages) % totalPages
+  const start = safePage * itemsPerPage
+  const currentImages = images.slice(start, start + itemsPerPage)
+  const showArrows = totalPages > 1
 
-  // Fixed 2 rows: pair images into columns of 2 (top/bottom).
-  const columns = []
-  for (let i = 0; i < images.length; i += 2) {
-    columns.push(images.slice(i, i + 2))
-  }
-  const columnWidthStyle =
-    containerWidth > 0 ? `${containerWidth / columnsPerView}px` : `${100 / columnsPerView}%`
-  const scrollDuration = Math.max(18, columns.length * 3.5)
+  const goPrev = () => setPage((p) => p - 1)
+  const goNext = () => setPage((p) => p + 1)
 
   return (
     <section className="bg-white py-14 sm:py-16">
@@ -76,58 +65,35 @@ export default function HomeInstagramGrid({ images }) {
         Instagram
       </h2>
 
-      {!useScroller ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
-          {images.map((item, i) => (
-            <GridTile key={item.id} item={item} index={i} />
+      <div className="relative px-10 sm:px-14">
+        {showArrows && (
+          <button
+            type="button"
+            onClick={goPrev}
+            aria-label="Previous images"
+            className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-md ring-1 ring-stone-200 text-stone-700 hover:text-[#FFD400] hover:shadow-lg transition-all duration-200"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
+
+        <div className={`grid ${isDesktop ? 'grid-cols-5' : 'grid-cols-2'}`}>
+          {currentImages.map((item, i) => (
+            <GridTile key={item.id} item={item} index={start + i} />
           ))}
         </div>
-      ) : (
-        <div ref={containerRef} className="instagram-scroller overflow-hidden">
-          <style>{`
-            .instagram-scroller-track {
-              animation: instagramScroll ${scrollDuration}s linear infinite;
-            }
-            .instagram-scroller:hover .instagram-scroller-track {
-              animation-play-state: paused;
-            }
-            @keyframes instagramScroll {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-          `}</style>
-          <div className="instagram-scroller-track flex w-max">
-            {/* First set */}
-            <div className="flex shrink-0">
-              {columns.map((col, ci) => (
-                <div
-                  key={`a-${ci}`}
-                  className="shrink-0 grid grid-rows-2"
-                  style={{ width: columnWidthStyle }}
-                >
-                  {col.map((item, i) => (
-                    <GridTile key={item.id} item={item} index={ci * 2 + i} />
-                  ))}
-                </div>
-              ))}
-            </div>
-            {/* Duplicate set — seamless loop */}
-            <div className="flex shrink-0" aria-hidden="true">
-              {columns.map((col, ci) => (
-                <div
-                  key={`b-${ci}`}
-                  className="shrink-0 grid grid-rows-2"
-                  style={{ width: columnWidthStyle }}
-                >
-                  {col.map((item, i) => (
-                    <GridTile key={`dup-${item.id}`} item={item} index={ci * 2 + i} />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
+        {showArrows && (
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next images"
+            className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-md ring-1 ring-stone-200 text-stone-700 hover:text-[#FFD400] hover:shadow-lg transition-all duration-200"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        )}
+      </div>
     </section>
   )
 }
