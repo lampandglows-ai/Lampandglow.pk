@@ -377,8 +377,8 @@ const Header = forwardRef(function Header({
         {/* Gradient accent line on top */}
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#FFD400] via-amber-400 to-orange-500 opacity-80" />
 
-        {/* ── Main bar ── */}
-        <div className="w-full px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center gap-2 sm:gap-4 relative">
+        {/* ── Main bar (desktop, lg and up) ── */}
+        <div className="hidden lg:flex w-full px-3 sm:px-6 lg:px-8 h-16 sm:h-20 items-center gap-2 sm:gap-4 relative">
 
           {/* Logo */}
           <button
@@ -741,12 +741,64 @@ const Header = forwardRef(function Header({
               </span>
             </button>
 
-            {/* Mobile search toggle — desktop has its own icon inline above */}
+          </div>
+        </div>
+
+        {/* ── Mobile bar (below lg): hamburger left, centered logo, search + cart right ── */}
+        <div className="lg:hidden w-full px-3 h-16 sm:h-20 flex items-center justify-between relative">
+          {/* Hamburger — left */}
+          <button
+            onClick={() => setMobileNavOpen((prev) => !prev)}
+            className={classNames(
+              'inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300',
+              showTransparent
+                ? 'text-white hover:bg-white/10'
+                : theme === 'dark'
+                  ? 'text-stone-100 hover:bg-white/10'
+                  : 'text-[#222222] hover:bg-black/5',
+            )}
+            aria-label="Toggle navigation menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-5 w-5 transition-transform duration-300">
+              {mobileNavOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+
+          {/* Logo — true center regardless of side icon widths */}
+          <button
+            onClick={() => handleNavigate('home')}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center group"
+            aria-label="Go to home"
+          >
+            {logoError ? (
+              <div className="h-[44px] w-[44px] p-2 transition-transform duration-300 group-hover:scale-105">
+                <div className="h-full w-full rounded-full bg-gradient-to-br from-[#FFD400] via-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">LG</span>
+                </div>
+              </div>
+            ) : (
+              <div className="h-[44px] w-[44px] p-2 transition-transform duration-300 group-hover:scale-105">
+                <img
+                  src={logoPng}
+                  alt="Lamp & Glow"
+                  className="h-full w-full object-contain drop-shadow-sm"
+                  onError={() => setLogoError(true)}
+                />
+              </div>
+            )}
+          </button>
+
+          {/* Right icons — search + cart */}
+          <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setSearchExpanded((prev) => !prev)}
               className={classNames(
-                'md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300',
+                'inline-flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300',
                 showTransparent
                   ? 'text-white hover:bg-white/10'
                   : theme === 'dark'
@@ -758,35 +810,33 @@ const Header = forwardRef(function Header({
               <FaSearch className="h-4 w-4" />
             </button>
 
-            {/* Hamburger */}
             <button
-              onClick={() => setMobileNavOpen((prev) => !prev)}
+              onClick={() => handleNavigate('cart')}
               className={classNames(
-                'lg:hidden inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300',
+                'relative inline-flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-[0.98] motion-reduce:transform-none',
                 showTransparent
                   ? 'text-white hover:bg-white/10'
                   : theme === 'dark'
-                    ? 'text-stone-100 hover:bg-white/10'
-                    : 'text-[#222222] hover:bg-black/5',
+                    ? 'text-stone-100 hover:text-[#FFD400] hover:bg-white/10'
+                    : 'text-[#222222] hover:text-[#FFD400] hover:bg-black/5',
               )}
-              aria-label="Toggle navigation menu"
+              aria-label="Cart"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-5 w-5 transition-transform duration-300">
-                {mobileNavOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 7h16M4 12h16M4 17h16" />
-                )}
-              </svg>
+              <FaShoppingCart className="h-4 w-4" />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#5A2D0C] to-[#7A4A20] text-[9px] font-bold text-white leading-none shadow-sm">
+                  {cartItemsCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
 
-        {/* ── Mobile search bar (below main bar, md and below) — toggled by the search icon ── */}
+        {/* ── Mobile search bar (below main bar, below lg) — toggled by the search icon ── */}
         {searchExpanded && (
         <div
           className={classNames(
-            'md:hidden border-t',
+            'lg:hidden border-t',
             theme === 'dark' ? 'border-white/10 bg-[#1F1F1F]' : 'border-stone-200 bg-white',
           )}
         >
@@ -844,7 +894,7 @@ const Header = forwardRef(function Header({
               {searchOpen && (
                 <>
                   <div
-                    className="fixed inset-x-0 top-[120px] sm:top-[136px] bottom-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+                    className="fixed inset-x-0 top-[120px] sm:top-[136px] bottom-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
                     onClick={() => setSearchOpen(false)}
                   />
                   <div
